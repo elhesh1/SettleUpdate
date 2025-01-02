@@ -1,0 +1,290 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content = "width=device-width,  initial-scale=1.0">
+        <link rel="stylesheet" href = "..\static\frontend\first.css">
+        <script src="..\static\buttonHelpers\labels.js"></script>
+        
+        <script src="..\static\frontend\advance.js"></script>
+        <script src = "..\static\frontend\first.js"></script>
+        <script src = "..\static\frontend\tabSetUps.js"></script>
+        <script src = "..\static\frontend\tables.js"></script>
+        <script src = "..\static\frontend\hover.js"></script>
+    </head>
+
+    <body>
+        <div class="Login">
+            
+        </div>
+    
+        <div class="grid-container" >
+            <div class="nested-grid">
+                <div class = "jobGrid" id=FarmerJobGrid>
+                    <h5 class="Tag" id="Farmers">Farmers:</h5>
+                    <h5 class="occNum" id="F">0</h2>
+                    <button class="B" id="BFU">+</button>
+                    <button class="B" id="BFD">-</button>
+
+                </div>
+
+                <div class = "jobGrid" id=HuntersJobGrid>
+                    <h5 class="Tag" id="Hunters">Hunters:</h5>
+                    <h5 class="occNum" id="H">0</h2>
+                    <button class="B" id="BHU">+</button>
+                    <button class="B" id="BHD">-</button>
+
+                </div>
+
+                <div class = "jobGrid" id=CooksJobGrid>
+                    <h5 class="Tag" id="Cooks">Bakers:</h5>
+                    <h5 class="occNum" id="C">0</h2>
+                    <button class="B" id="BCU">+</button>
+                    <button class="B" id="BCD">-</button>
+                </div>
+
+                <div class = "jobGrid" id=LoggersJobGrid>
+                    <h5 class="Tag" id="Loggers">Loggers:</h5>
+                    <h5 class="occNum" id="L">0</h2>
+                    <button class="B" id="BLU">+</button>
+                    <button class="B" id="BLD">-</button>
+
+                </div>
+
+                <div class = "jobGrid" id=ButchersJobGrid>
+                    <h5 class="Tag" id="Butchers">Butchers:</h5>
+                    <h5 class="occNum" id="B">0</h2>
+                    <button class="B" id="BBU">+</button>
+                    <button class="B" id="BBD">-</button>
+
+                </div>
+                <div class = "jobGrid" id=BuilderJobGrid>
+                    <h5 class="Tag" id="Builders">Builders:</h5>
+                    <h5 class="occNum" id="W2">0</h2>
+                    <button class="B" id="WCU">+</button>
+                    <button class="B" id="WCD">-</button>
+                </div>
+
+                <div id="IncreaseAdjustmentGrid">
+                    <button class="Adjust" id="One">1x</button>
+                    <button class="Adjust" id="Ten">10x</button>
+                    <button class="Adjust" id="Hundred">100x</button>
+                    <button class="Adjust" id="Max">Max</button>
+                    <!-- <button class="Adjust" id="SetCustom">Set</button>
+                    <button class="Adjust" id="ShowCustom">0</button> -->
+                    <button class="Game" id="Clear">Cl</button>
+                </div>
+            </div>
+
+            <span class="jobToolTip" id="StrengthToolTip">                
+                <h5 class="ToolTipTitle">Strength</h5>
+                <div class="flex-container" id = "StrengthToolTipText"></div>
+
+            </span>
+            <span class="jobToolTip" id="HealthToolTip">
+                <h5 class="ToolTipTitle">Health</h5>
+                <div class="flex-container" id = "HealthToolTipText"></div>
+
+            </span>
+
+            <span class="jobToolTip" id="FarmerJobToolTip">
+                <h5 class="ToolTipTitle">Farmers</h5>
+                <div class="flex-container" id = "FarmersToolTipText"></div>
+
+            </span>
+            <span class="jobToolTip" id="HuntersJobToolTip">                
+                <h5 class="ToolTipTitle">Hunters</h5>
+                <div class="flex-container" id = "HuntersToolTipText"></div>
+
+            </span>
+            <span class="jobToolTip" id="CooksJobToolTip">               
+                 <h5 class="ToolTipTitle">Cooks</h5>
+                 <div class="flex-container" id = "CooksToolTipText"></div>
+
+            </span>
+            <span class="jobToolTip" id="LoggersJobToolTip">               
+                 <h5 class="ToolTipTitle">Loggers</h5>
+                 <div class="flex-container" id = "LoggersToolTipText"></div>
+
+            </span>
+            <span class="jobToolTip" id="ButchersJobToolTip">                
+                <h5 class="ToolTipTitle">Butchers</h5>
+                <div class="flex-container" id = "ButchersToolTipText"></div>
+
+            </span>
+            <span class="jobToolTip" id="BuildersJobToolTip">                
+                <h5 class="ToolTipTitle">Builders</h5>
+                <div class="flex-container" id = "BuildersToolTipText"></div>
+
+            </span>
+
+            <span class="jobToolTip" id="peopleSupplyToolTip">                
+                <h5 class="ToolTipTitle">People</h5>
+                <div class="flex-container" id = "peopleSupplyToolTipText"></div>
+
+            </span>
+
+            <span class="jobToolTip" id="toolSupplyToolTip">                
+                <h5 class="ToolTipTitle">Tool</h5>
+                <div class="flex-container" id = "toolSupplyToolTipText"></div>
+
+            </span>
+
+            <span class="jobToolTip" id="resourceSupplyToolTip">                
+                <h5 class="ToolTipTitle">Resource</h5>
+                <div class="flex-container" id = "resourceSupplyToolTipText"></div>
+
+            </span>
+
+            <span class="jobToolTip" id="englandExplanationToolTip">                
+                <h5 class="ToolTipTitle">Supply Coming</h5>
+                <div class="flex-container" id = "englandExplanationToolTipText"></div>
+
+            </span>
+            <span class="jobToolTip" id="TownHallToolTip">   
+                <h5 class="ToolTipTitle">Town Hall</h5>
+                <div class="flex-container" id="TownHallToolTipText"></div>
+            </span>
+            <span class="jobToolTip" id="ToolShopToolTip">   
+                <h5 class="ToolTipTitle">Tool Shop</h5>
+                <div class="flex-container" id="ToolShopToolTipText"></div>
+            </span>
+            <span class="jobToolTip" id="RationToolTip">
+                <h5 class="ToolTipTitle">Rationing</h5>
+                <div class="flex-container" id = "RationToolTipText"></div>
+
+            </span>
+            <span class="jobToolTip" id="PlantedToolTip">               
+                <h5 class="ToolTipTitle">Planted</h5>
+                <div class="flex-container" id = "PlantedToolTipText"></div>
+
+           </span>
+
+            <div class="Game" id="top"></div>
+            <h5 class="Game" id="Week">Week: </h5>
+            <h5 class="Game" id="W">0</h5>
+            <h5 class="Game" id="Population">Population: </h5>
+            <div class="Hover" id="topFoodBar">
+                <h5  class="Game" id="HealthTop">Health:</h5>
+                <h5 class="HealthN" id="HealthTopN">80</h2>
+            </div>
+            
+            <h5 class="Game" id="Season">Spring</h5>
+            <h5 class="Game" id="Year">1620</h5>
+            <button class="Game" id="NextW">Advance</button>
+            <h5 class="Game" id="P">0</h5>
+            <h5 class="Game" id="Avaliable">Avaliable: </h5>
+            <h5 class="Game" id="A">0</h5>
+            <button class="Game" id="reset">Reset Game</button>
+
+            <h3 class="Game" id="buildingQueueTitle">Building Queue:</h3>
+            <button class="tabB" onclick="openTab(id,'Inventory')" id="InventoryT" >I</button>
+            <button class="tabB" onclick="openTab(id, 'Food')" id="FoodT">F</button>
+            <button class="tabB" onclick="openTab(id, 'Buildings')" id="BuildingsT">B</button>
+            <!-- <button class="tabB" onclick="openTab(id, 'Main')" id="MainT">M</button> -->
+            <button class="tabB" onclick="openTab(id, 'Countries')" id="CountriesT">C</button>
+            <button class="tabB" onclick="openTab(id, 'Factory')" id="FactoryT">F</button>
+
+
+            <div class="tabcontent" id="Inventory">
+                <h1 class='Title'>Inventory</h1>
+                <table>
+                    <div class="Game" id="tableContainer"></div>
+                </table>
+            </div>
+            
+            <div class="tabcontent" id="Countries">
+                <h1 class='Title'>Countries</h1>
+                <div class="Game" id = "countries-flex-container">
+                    <!-- <div class="country-flex-container" id="country-flex-England"><div class='countryTitleRow' id="countryGridEngland"> -->
+                            <!-- <div class="TopLine"></div>
+                            <h5 class='countryTitle' id="England">England - our overlord </h5> -->
+                            <!-- <h3 class="countryExplanation" id="EnglandExplanation"></h3> -->
+                        <!-- </div></div> -->
+
+
+
+                </div>
+            </div>          
+
+            <div class="tabcontent" id="Food"> 
+                <h1 class='Title'>Food</h1>
+                <p class="Game" id="FoodParagraph">A        
+                </p>
+
+
+                <div class="Hover" id="RationGrid">
+                <div class="slidecontainer" id = "foodRationRate">
+                    <input type="range" min="1" max="100" value="100" class="slider" id="myRange">
+                </div>
+                <h5 class="Tag" id="Ration">Ration:</h5>
+                <h5 class="Game" id="sliderValue">100</h5>
+                </div>
+                <div class="Hover" id="HealthGrid2">
+                    <h5 class="Tag" id="Health">Health:</h5>
+                    <h5 class="HealthN" id="HealthNTab">80</h2>
+
+                </div>
+
+                <div class="Hover" id="PlantedGrid">
+                    <h5 class="Tag" id="Plants">Crops Planted:</h5>
+                    <h5 class="Game" id="Planted">0</h2>
+                </div>
+
+
+                <div class="Hover" id="Strength">
+                    <h5 class="Tag" id="StrenghA">Strength:</h5>
+                    <h5 class="Game" id="StrengthB">0</h2>
+                </div>
+
+
+                
+            </div>
+
+
+
+            <div class="tabcontent" id="Buildings">
+                <h1 class=Title>Buildings</h1>
+                <h5 class="Game" id='HousingValue'>0</h5>
+                <h3 class='BuildingTitles' id="BuildingTitlesName">Name</h3>
+                <h3 class='BuildingTitles' id="BuildingTitlesNumber">#</h3>
+                <h3 class='BuildingTitles' id="BuildingTitlesQueue">Queue</h3>
+                <h3 class='BuildingTitles' id="BuildingTitlesPeopleWorking">People Working</h3>
+
+                <div id = "building-flex-container">
+
+         
+
+                 <div class="BuildingGrid" id = "TownHallBuildGrid">
+                    <h5 class="BuildingTitle levelName" id="TownHall">Town Hall </h5>
+                    <button class="BuildUpgrade levelButton"  id="xMU">Build</button> 
+                    <h5 class="BuildingNumber levelLevel"  id="TownHallcurrently">0</h5> 
+                </div> 
+                <div class="BuildingGrid" id = "ToolShopBuildGrid">
+                    <h5 class="BuildingTitle levelName" id="ToolShop">Tool Shop </h5>
+                    <button class="BuildUpgrade levelButton"  id="xTU">Build</button> 
+                    <h5 class="BuildingNumber levelLevel"  id="ToolShopcurrently">0</h5> 
+                </div> 
+                </div>  
+
+            </div>
+
+            <div class="tabcontent" id="Main">
+                <h1 class="Title">Main</h1>
+            </div>
+            <div class="tabcontent" id="Factory">
+                <h1 class="Title">Factory</h1>
+                <div class="TabFlex" id = "FactoryFlex"></div>
+
+            </div>
+            <div id="buildingQueue"> </div>
+
+
+
+
+            </div>
+        </div>
+
+    </body>
+
+</html>      
