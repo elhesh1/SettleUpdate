@@ -37,10 +37,8 @@ async function setGame() { // this sets up all the functions
     //   sliderValueElement.textContent = slider.value;
     // });
 
-    console.log('cooking')
-    const buttons = document.querySelectorAll('.B');           
+    const buttons = document.querySelectorAll('.B');      // these are the buttons that + or - for jobs     
         buttons.forEach(button => {
-        console.log("cooking2?")
         button.addEventListener('click', buttonAction);
     });
     // reset.addEventListener('click', resett2);
@@ -55,10 +53,10 @@ async function setGame() { // this sets up all the functions
     //         nextW.disabled = false; 
     //     }
     // });
-    // const AdjustB = document.querySelectorAll('.Adjust');
-    //     AdjustB.forEach(AdjB => {
-    //         AdjB.addEventListener('click',changeValueOfInputForJobs);
-    //     });
+    const AdjustB = document.querySelectorAll('.Adjust');       // these are the buttons that control how many people are added for a job button ('.B')
+        AdjustB.forEach(AdjB => {
+            AdjB.addEventListener('click',changeValueOfInputForJobs);
+        });
 
     // document.getElementById('Clear').addEventListener('click', clearJobs);
 
@@ -107,16 +105,99 @@ async function setGame() { // this sets up all the functions
 
 }
 
+function changeValueOfInputForJobs() { // these are the buttons that control how many people are added for a job button ('.B')
+    id = this.id
+    console.log("you clicked this:  ", id)
+    console.log()
+    setVal(getCookie('userID').split('userID=')[1], 'job_modifier',{value: jobMulti[id] } )
+
+    const AdjustB = document.querySelectorAll('.Adjust');
+        AdjustB.forEach(AdjB => {
+            AdjB.className = AdjB.className.replace(" active", "");
+    });
+
+    thisdude = document.getElementById(id);
+    thisdude.className += " active";
+
+    return 
+}
+
+async function setVal(user_id, variable, options) { // change the value for a specific user
+    console.log('setting the value maybe')
+    const data = {};
+    for (let key in options) {
+        if (options[key] !== null && options[key] !== undefined) {
+            data[key] = options[key];
+        }
+    }
+    try {     
+        const response = await fetch(backendpath + `/set/${user_id}/${variable}`, {
+            method: 'PATCH', 
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),  
+        });
+        if (!response.ok) {     // not good :(
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const responseData = await response.json();
+    } catch (error) {       // did not work
+        console.error('There was a problem with your fetch operation:', error);
+    }
+}
+
+async function changeVal(user_id, variable, options) { // change the value for a specific user
+    console.log('changing the value maybe')
+    const data = {};
+    for (let key in options) {
+        if (options[key] !== null && options[key] !== undefined) {
+            data[key] = options[key];
+        }
+    }
+    try {     
+        const response = await fetch(backendpath + `/change/${user_id}/${variable}`, {
+            method: 'PATCH', 
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),  
+        });
+        if (!response.ok) {     // not good :(
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const responseData = await response.json();
+    } catch (error) {       // did not work
+        console.error('There was a problem with your fetch operation:', error);
+    }
+}
 
 async function resett(newV=0) {     // function from resett it is used 
-    console.log("Going to reset the user ----")
-    // document.getElementById("Season").textContent = "Spring";
+    document.getElementById("Season").textContent = "Spring";
     // document.getElementById('One').click();
     // const requestSupply = document.querySelectorAll('.requestSupply');
     // requestSupply.forEach(rs => {
     //     rs.className = rs.className.replace(" active", "");
     // });
-    // resettHelper(newV)
+
+ //   await tabReset();
+    currUserName = getCookie('userID').split('userID=')[1]
+    console.log(" Going to reset this user---    ::::::  ", currUserName)
+    try {
+         const response = await fetch(backendpath + `/reset/${currUserName}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userName: currUserName,
+                    newV: newV
+                }),            });
+            const responseData = await response.json();
+        }
+        catch (error) {       // did not work
+            console.error('Error BROKE BROKE:', error);
+        }
     // .then(() => {
     //     Object.keys(labelMap).forEach(key => {
     //         getValue('contacts/',key) 
@@ -149,30 +230,32 @@ async function buttonAction() {
     let id = this.id
     let jobID = buttonMap[id][0]
     let type = labelMap[jobID][0]
-    console.log("THIS IS the button being updated  ", id)
-    updatee('contact/', jobID, {value: buttonMap[id][1]}) // updates in db
-    .then(() => {                           // retrieves val from db
-        getValue('contacts/',jobID)
-            .then(value => {
-                document.getElementById(type).innerText = value;    
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-                document.getElementById(type).innerText = 'Error fetching data';
-            });
-        getValue('contacts/',6)
-            .then(value => {
-                document.getElementById('A').innerText = value;
-                tooltipSetupBuilding(hoverMap[labelMap[jobID][2]])
-            })
-            .catch(error => {
-                console.error('Error fetching data for jobID 6:', error);
-                document.getElementById('A').innerText = 'Error fetching data';
-            });
-    })
-    .catch(error => {
-        console.error('Error updating data:', error);
-    });
+    let varName = labelMap[jobID][3]
+    console.log("THIS IS the button being updated  ", jobID, type, varName)
+    changeVal(getCookie('userID').split('userID=')[1], varName,{value: buttonMap[id][1] } )
+    // updatee('contact/', jobID, {value: buttonMap[id][1]}) // updates in db
+    // .then(() => {                           // retrieves val from db
+    //     getValue('contacts/',jobID)
+    //         .then(value => {
+    //             document.getElementById(type).innerText = value;    
+    //         })
+    //         .catch(error => {
+    //             console.error('Error fetching data:', error);
+    //             document.getElementById(type).innerText = 'Error fetching data';
+    //         });
+    //     getValue('contacts/',6)
+    //         .then(value => {
+    //             document.getElementById('A').innerText = value;
+    //             tooltipSetupBuilding(hoverMap[labelMap[jobID][2]])
+    //         })
+    //         .catch(error => {
+    //             console.error('Error fetching data for jobID 6:', error);
+    //             document.getElementById('A').innerText = 'Error fetching data';
+    //         });
+    // })
+    // .catch(error => {
+    //     console.error('Error updating data:', error);
+    // });
 }
 
 
