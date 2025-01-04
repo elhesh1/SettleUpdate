@@ -18,15 +18,70 @@ async function takeInventory() {
         i = 0
         Object.keys(bruh).forEach(key => {
             const resource = bruh[key];
-            if (!((resource['value'] == 0) && (resource['always'] == 1))) { // 0s are always shown
-                inventoryValues[i] = []; 
-                inventoryValues[i][0] = key.replace(/_/g, ' ');
-                if (resource['integer'] == 0) {  // 1s are integers
-                    inventoryValues[i][1] =  parseFloat(resource['value']).toFixed(2);
-                } else {
-                    inventoryValues[i][1] =  parseFloat(resource['value']).toFixed(0);
+            if(resource['type'] == 'food') {
+                if (!((resource['value'] == 0) && (resource['always'] == 1))) { // 0s are always shown
+                    inventoryValues[i] = []; 
+                    inventoryValues[i][0] = key.replace(/_/g, ' ');
+                    if (resource['integer'] == 0) {  // 1s are integers
+                        inventoryValues[i][1] =  parseFloat(resource['value']).toFixed(2);
+                    } else {
+                        inventoryValues[i][1] =  parseFloat(resource['value']).toFixed(0);
+                    }
+                    i = i + 1;
                 }
-                i = i + 1;
+
+            }
+        });
+        inventoryValues[i] = []; 
+        i = i + 1;
+        Object.keys(bruh).forEach(key => {
+            const resource = bruh[key];
+            if(resource['type'] == 'raw') {
+                if (!((resource['value'] == 0) && (resource['always'] == 1))) { // 0s are always shown
+                    inventoryValues[i] = []; 
+                    inventoryValues[i][0] = key.replace(/_/g, ' ');
+                    if (resource['integer'] == 0) {  // 1s are integers
+                        inventoryValues[i][1] =  parseFloat(resource['value']).toFixed(2);
+                    } else {
+                        inventoryValues[i][1] =  parseFloat(resource['value']).toFixed(0);
+                    }
+                    i = i + 1;
+                }
+
+            }
+        });
+        Object.keys(bruh).forEach(key => {
+            const resource = bruh[key];
+            if(resource['type'] == 'adv') {
+                if (!((resource['value'] == 0) && (resource['always'] == 1))) { // 0s are always shown
+                    inventoryValues[i] = []; 
+                    inventoryValues[i][0] = key.replace(/_/g, ' ');
+                    if (resource['integer'] == 0) {  // 1s are integers
+                        inventoryValues[i][1] =  parseFloat(resource['value']).toFixed(2);
+                    } else {
+                        inventoryValues[i][1] =  parseFloat(resource['value']).toFixed(0);
+                    }
+                    i = i + 1;
+                }
+
+            }
+        });
+        inventoryValues[i] = []; 
+        i = i + 1;
+        Object.keys(bruh).forEach(key => {
+            const resource = bruh[key];
+            if(resource['type'] == 'tool') {
+                if (!((resource['value'] == 0) && (resource['always'] == 1))) { // 0s are always shown
+                    inventoryValues[i] = []; 
+                    inventoryValues[i][0] = key.replace(/_/g, ' ');
+                    if (resource['integer'] == 0) {  // 1s are integers
+                        inventoryValues[i][1] =  parseFloat(resource['value']).toFixed(2);
+                    } else {
+                        inventoryValues[i][1] =  parseFloat(resource['value']).toFixed(0);
+                    }
+                    i = i + 1;
+                }
+
             }
         });
             return inventoryValues; 

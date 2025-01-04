@@ -239,7 +239,7 @@ async function resett(newV=0) {     // function from resett it is used
     // .then(() => {
     //     getQueue()
     //     buildingsShowing()
-    //     tabSetUp()
+         tabSetUp()
     // })
     // .catch(error => {
     //     console.error('Error updating data:', error);

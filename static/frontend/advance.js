@@ -14,6 +14,7 @@ async function advance() {
     //     });
     //     activeSupplyType=undefined
     // }
+
     //   for (const build in BuildingChange) {
     //     inputs.push({ 'name': build, 'value': BuildingChange[build][0], 'level' : BuildingChange[build][1] });
     //   }
@@ -62,7 +63,7 @@ async function advance() {
 
         }
     }
-    // document.getElementById("P").textContent = data.contacts[5-1].value
+    document.getElementById("P").textContent = data['Population']
     // A = data.contacts[6-1].value
     // if (A < 1) {
     //     let newValuesToPutIn = await getContacts();
@@ -76,25 +77,25 @@ async function advance() {
     // }
     // document.getElementById("A").textContent = A
 
-    // var elements = document.getElementsByClassName("HealthN");
-    // if (elements.length > 0) {
-    //     elements[0].innerText = data.contacts[13 - 1].value;
-    //     elements[1].innerText = data.contacts[13 - 1].value;
-    // }
+    var elements = document.getElementsByClassName("HealthN");
+    if (elements.length > 0) {
+        elements[0].innerText = data['Health'];
+        elements[1].innerText = data['Health'];
+    }
 
-    // if (activeTab == 'FoodT') {
-    //     foodTabSetUp();
-    // }
-    // else if (activeTab == 'BuildingsT') {
-    //          /// will have to update this perhaps
-    //     buildingTabSetUp(data.contacts[5-1].value);
-    // }
-    // else if (activeTab == 'InventoryT'){
-    //     inventoryTabSetUp();
-    // }
-    // else if (activeTab == 'CountriesT') {
-    //     countrySetUp()
-    // }
+    if (activeTab == 'FoodT') {
+        foodTabSetUp();
+    }
+    else if (activeTab == 'BuildingsT') {
+             /// will have to update this perhaps
+        buildingTabSetUp(data.contacts[5-1].value);
+    }
+    else if (activeTab == 'InventoryT'){
+        inventoryTabSetUp();
+    }
+    else if (activeTab == 'CountriesT') {
+        countrySetUp()
+    }
     // document.getElementById('StrengthB').innerText = await getValue('contact/',18)
     
     // var leveldButtons = document.getElementsByClassName("levelButton");

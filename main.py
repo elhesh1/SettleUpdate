@@ -139,28 +139,28 @@ def reset(currUserName):
 
 
 resources = [
-    # name , shown (0s are always shown), integer (1s  only are integers)
-    ['Wheat', 0, 0],
-    ['Fur', 0, 0],
-    ['Raw_Meat', 0, 0],
-    ['Wood', 0, 0],
-    ['Bread', 0, 0],
-    ['Cooked_Meat', 0, 0],
-    ['Wild_Berries', 0, 0],
-    ['Vegtables', 0, 0],
-    ['Iron_Hoe', 0, 1],
-    ['Iron_Sickle', 0, 1],
-    ['Iron_Axe', 0, 1],
-    ['Rifle', 0, 1],
-    ['Bow', 0, 1],
-    ['Iron_Shovel', 0, 1],
-    ['Iron_Pickaxe', 0, 1],
-    ['Clay', 1, 0],
-    ['Iron_Ore', 1, 0],
-    ['People', 1, 0],
-    ['Bricks', 1, 0],
-    ['Iron', 1, 0],
-    ['Anvil', 1, 0]
+    # name , shown (0s are always shown), integer (1s  only are integers), then type
+    ['Wheat', 0, 0, 'raw'],
+    ['Fur', 0, 0,'raw'],
+    ['Raw_Meat', 0, 0,'raw'],
+    ['Wood', 0, 0,'raw'],
+    ['Bread', 0, 0, 'food'],
+    ['Cooked_Meat', 0, 0,'food'],
+    ['Wild_Berries', 0, 0,'food'],
+    ['Vegtables', 0, 0,'food'],
+    ['Iron_Hoe', 0, 1,'tool'],
+    ['Iron_Sickle', 0, 1,'tool'],
+    ['Iron_Axe', 0, 1,'tool'],
+    ['Rifle', 0, 1,'tool'],
+    ['Bow', 0, 1,'tool'],
+    ['Iron_Shovel', 0, 1,'tool'],
+    ['Iron_Pickaxe', 0, 1,'tool'],
+    ['Clay', 1, 0,'raw'],
+    ['Iron_Ore', 1, 0, 'raw'],
+    ['People', 1, 0,'tool'],
+    ['Bricks', 1, 0, 'adv'],
+    ['Iron', 1, 0, 'adv'],
+    ['Anvil', 1, 0, 'adv']
 ]
 
 jobs = [
@@ -185,7 +185,7 @@ def get_resources(currUserName):
 
     for resource in resources:
         resource_value = getattr(user_record, resource[0], 0)  
-        user_resources[resource[0]] = {"value": resource_value, "always": resource[1], "integer" : resource[2]}
+        user_resources[resource[0]] = {"value": resource_value, "always": resource[1], "integer" : resource[2], 'type' : resource[3]}
     return jsonify({"resources": user_resources})
 
 

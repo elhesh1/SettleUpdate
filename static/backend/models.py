@@ -105,6 +105,10 @@ class user(db.Model):
     Population = db.Column(db.Integer, nullable=False, default=0)
     numberofFoods = db.Column(db.Integer, nullable=False, default=0)
 
+
+    Log_Cabin = db.Column(db.Integer, nullable=False, default=0)
+    Town_Hall = db.Column(db.Integer, nullable=False, default=0)
+
     def to_json(self):
         return {
             "name" : self.name,
@@ -199,7 +203,15 @@ class user(db.Model):
                 "Available_type": self.Available_type,
                 "Available_efficiency": self.Available_efficiency
             },
-            'job_modifier' : self.job_modifier
+            'job_modifier' : self.job_modifier,
+
+            "Buildings" : {
+                "Log_Cabin" : self.Log_Cabin,
+                "Town_Hall" : self.Town_Hall
+
+
+
+            }
         }
     
 

@@ -7,7 +7,7 @@ from flask import request, jsonify
 from static.backend.models import user
 
 #from static.backend.variableHelpers import initial_variables
-# import static.backend.citizenActions as citizenActions
+import static.backend.citizenActions as citizenActions
 # import static.backend.buildings as buildings
 # import static.backend.country as country
 import random
@@ -15,16 +15,16 @@ import random
 
 
 
-
-
 @app.route("/advance/<string:currUserName>", methods=["PATCH"])
 def advance(currUserName):
-    print('really doe like really doe?')
     user_record = db.session.query(user).filter_by(name=currUserName).first() 
     if user_record is None:
         return jsonify({"error": "User not found"}), 404
-    # offset = user.query.get(currUserName).id
-    # citizenActions.eat(currUserName)   ##### adjusts health as well #####
+    
+    
+
+    offset = user.query.get(currUserName).id
+    citizenActions.eat(currUserName)   ##### adjusts health as well #####
     # healthFactor = Contact.query.get(13 + offset*contactOffset).value * 0.01 
     # strength = Contact.query.get(18 + offset*contactOffset)
     # seasonObj = Contact.query.get(8 + offset*contactOffset)
@@ -181,10 +181,14 @@ def advancePackage(currUserName):
     week = getattr(user_record, 'week', None)  
     season = getattr(user_record, 'season', None) 
     year = getattr(user_record, 'year', None)  
+    Health = getattr(user_record, 'Health', None)
+    Population = getattr(user_record, 'Population', None)
 
     return jsonify({
         "week": week,
         "season": season,
-        "year": year
+        "year": year,
+        'Health' : Health,
+        'Population' : Population
     }), 200
 

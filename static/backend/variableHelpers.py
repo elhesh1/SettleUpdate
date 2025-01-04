@@ -49,5 +49,19 @@ DEFAULT_VALUES = {
     'RationP' : 100,
     'Health' : 85,
     'numberofFoods' : 4,
-    'Strength' : 92.5
+    'Strength' : 92.5,
+    'Wheat' : 0,
+    'Fur' : 0,
+    'Raw_Meat' : 0,
+    'Wild_Berries' : 0,
+    'Clay' : 0,
+    'Iron_Ore' : 0,
+    'People' : 0,
+    'Bricks' : 0,
+    'Iron' : 0,
+    'Anvil' : 0,
+    'Planted' : 0,
+    'Wood' : 0,
+    'Log_Cabin' : 0,
+    'Town_Hall' : 0
 }
