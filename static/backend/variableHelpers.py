@@ -1,3 +1,4 @@
+# thse are the initial values
 DEFAULT_VALUES = {
     'Farmer_value': 0,
     'Farmer_maximum': 2147483647,
@@ -30,5 +31,23 @@ DEFAULT_VALUES = {
     'Population_value': 50,
     'Population_maximum': 2147483647,
     'Population_minimum': 0,
-    'job_modifier' : 1
+    'job_modifier' : 1,
+    'week' : 1,
+    'season' : 1,
+    'year' : 1620,
+    'Bread' : 12,
+    'Cooked_Meat' : 4,
+    'Vegtables' : 4,
+    'Iron_Hoe' : 10,
+    'Iron_Sickle' : 20,
+    'Iron_Axe' : 10,
+    'Rifle' : 5,
+    'Bow' : 10,
+    'Iron_Shovel' : 10,
+    'Iron_Pickaxe' : 8,
+    'Population' : 50,
+    'RationP' : 100,
+    'Health' : 85,
+    'numberofFoods' : 4,
+    'Strength' : 92.5
 }

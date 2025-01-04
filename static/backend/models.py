@@ -68,11 +68,87 @@ class user(db.Model):
     Available_efficiency = db.Column(db.JSON, nullable=True)
 
     job_modifier = db.Column(db.Integer,nullable=False, default = 1)
+
+    week = db.Column(db.Integer, nullable =False, default = 1)
+    season = db.Column(db.Integer, nullable =False, default = 1)
+    year = db.Column(db.Integer, nullable =False, default = 1620)
+
+    Wheat = db.Column(db.Integer, nullable = False, default = 0)
+    Fur = db.Column(db.Integer, nullable=False, default=0)
+    Raw_Meat = db.Column(db.Integer, nullable=False, default=0)
+    Wood = db.Column(db.Integer, nullable=False, default=0)
+    Bread = db.Column(db.Integer, nullable=False, default=0)
+    Cooked_Meat = db.Column(db.Integer, nullable=False, default=0)
+    Wild_Berries = db.Column(db.Integer, nullable=False, default=0)
+    Vegetables = db.Column(db.Integer, nullable=False, default=0)
+    Iron_Hoe = db.Column(db.Integer, nullable=False, default=0)
+    Iron_Sickle = db.Column(db.Integer, nullable=False, default=0)
+    Iron_Axe = db.Column(db.Integer, nullable=False, default=0)
+    Rifle = db.Column(db.Integer, nullable=False, default=0)
+    Bow = db.Column(db.Integer, nullable=False, default=0)
+    Iron_Shovel = db.Column(db.Integer, nullable=False, default=0)
+    Iron_Pickaxe = db.Column(db.Integer, nullable=False, default=0)
+    Clay = db.Column(db.Integer, nullable=False, default=0)
+    Iron_Ore = db.Column(db.Integer, nullable=False, default=0)
+    People = db.Column(db.Integer, nullable=False, default=0)
+    Bricks = db.Column(db.Integer, nullable=False, default=0)
+    Iron = db.Column(db.Integer, nullable=False, default=0)
+    Anvil = db.Column(db.Integer, nullable=False, default=0)
+    
+    Planted = db.Column(db.Integer, nullable=False, default=0)
+    RationP = db.Column(db.Integer, nullable=False, default=0)
+    Health = db.Column(db.Integer, nullable=False, default=0)
+    Strength = db.Column(db.Integer, nullable=False, default=0)
+    SupplyTime = db.Column(db.Integer, nullable=False, default=0)
+    SupplyShipsGiven = db.Column(db.Integer, nullable=False, default=0)
+    SupplyShipType = db.Column(db.Integer, nullable=False, default=0)
+    Population = db.Column(db.Integer, nullable=False, default=0)
+    numberofFoods = db.Column(db.Integer, nullable=False, default=0)
+
     def to_json(self):
         return {
             "name" : self.name,
             "id" : self.id,
+            "Planted" : self.Planted,
+            "RationP" : self.RationP,
+            "Health" : self.Health,
+            "Strength" : self.Strength,
+            "SupplyTime" : self.SupplyTime,
+            "SupplyShipsGiven" : self.SupplyShipsGiven,
+            "SupplyShipsType" : self.SupplyShipType,
+            "Population" : self.Population,
+            "numberofFoods" : self.numberofFoods ,
 
+            "Time" : {
+            "week" : self.week,
+            "season" : self.season,
+            "year" : self.year,
+            },
+            
+
+            "Resources": {
+                "Wheat": self.Wheat,
+                "Fur": self.Fur,
+                "Raw_Meat": self.Raw_Meat,
+                "Wood": self.Wood,
+                "Bread": self.Bread,
+                "Cooked_Meat": self.Cooked_Meat,
+                "Wild_Berries": self.Wild_Berries,
+                "Vegetables": self.Vegetables,
+                "Iron_Hoe": self.Iron_Hoe,
+                "Iron_Sickle": self.Iron_Sickle,
+                "Iron_Axe": self.Iron_Axe,
+                "Rifle": self.Rifle,
+                "Bow": self.Bow,
+                "Iron_Shovel": self.Iron_Shovel,
+                "Iron_Pickaxe": self.Iron_Pickaxe,
+                "Clay": self.Clay,
+                "Iron_Ore": self.Iron_Ore,
+                "People": self.People,
+                "Bricks": self.Bricks,
+                "Iron": self.Iron,
+                "Anvil": self.Anvil
+            },
 
             "Farmer": {
                 "Farmer_value": self.Farmer_value,

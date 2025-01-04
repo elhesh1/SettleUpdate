@@ -7,7 +7,7 @@ from config import app, db
 #import static.backend.citizenActions
 from static.backend.models import user
 from sqlalchemy import create_engine, Column, Integer, String, func
-#import static.backend.advance as advance
+import static.backend.advance as advance
 #import static.backend.hover as hover
 #import static.backend.buildings as buildings
 from sqlalchemy.exc import IntegrityError
@@ -30,8 +30,6 @@ def set_resource(currUserName,variableName):
     if user_record is None:
         return jsonify({"error": "User not found"}), 404
     data = request.json
-    print('data ', data['value'])
-    print(variableName)
     data = request.json
     if 'value' not in data:
         return jsonify({"error": "Missing 'value' in request body"}), 400
@@ -41,9 +39,15 @@ def set_resource(currUserName,variableName):
         return jsonify({"message": f"{variableName} updated successfully!"}), 200
     except Exception as e:
         db.session.rollback()
-        print(f"Error updating {variableName}: {e}")
         return jsonify({"error": f"Failed to update {variableName}"}), 500
 
+@app.route("/get/<string:currUserName>/<string:variableName>", methods=["GET"])
+def get_resource(currUserName,variableName):
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    if user_record is None:
+        return jsonify({"error": "User not found"}), 404
+    value = getattr(user_record, variableName)
+    return jsonify({variableName: value}), 200
 
 variableHelperTags = {
     'Farmer_value': ['Farmer_maximum', 'Farmer_minimum', 'Farmer_type', 'Farmer_efficiency','job'],
@@ -61,11 +65,6 @@ def change_resource(currUserName,variableName):
     if user_record is None:
         return jsonify({"error": "User not found"}), 404
     data = request.json
-    print('data ', data)
-    print('vname = ' ,variableName)
-
-    print('have we made it this far?   ')
-
     modifier = 1
     data = request.json
 
@@ -84,31 +83,25 @@ def change_resource(currUserName,variableName):
     setattr(user_record, minimum, current_minimum + data.get("minimum", 0))
 
     checking = getattr(user_record, variableName)
-    print('STOP RIGHT HERE  ', og, ' ' , toAdd)
-    print(variableHelperTags[variableName][0]," ", getattr(user_record, maximum, 0))
-    print(variableHelperTags[variableName][1], " ", getattr(user_record, minimum, 0))
-    print(variableName, " ", checking)
+    # print('STOP RIGHT HERE  ', og, ' ' , toAdd)
+    # print(variableHelperTags[variableName][0]," ", getattr(user_record, maximum, 0))
+    # print(variableHelperTags[variableName][1], " ", getattr(user_record, minimum, 0))
+    # print(variableName, " ", checking)
 
     value = checking
     value +=  toAdd
 
     if value < getattr(user_record, minimum):
-        print("too low")
         value = getattr(user_record, minimum)
         toAdd = checking - getattr(user_record, minimum)
     if value > getattr(user_record, maximum):
-        print("too high")
         value = getattr(user_record, maximum)
     actualChange = value - og
 
-    print('actual change  ', actualChange)
     if variableHelperTags[variableName][4] == 'job':
-        print('here we are')
         addBack = 0
         second = getattr(user_record, 'Available_value')
-        print('second here ', second)
         second -= actualChange
-        print('new second ', second)
         if second < getattr(user_record, 'Available_minimum'):
             addBack = second - getattr(user_record, 'Available_minimum')
             second = getattr(user_record, 'Available_minimum')
@@ -124,7 +117,6 @@ def change_resource(currUserName,variableName):
 @app.route("/add_user/<string:name>", methods=["POST"])
 def add_user(name):
     try:
-        print("Attempting to add user...")
         new_user = user(name=name)
         set_user_defaults(new_user)
         db.session.add(new_user)
@@ -136,9 +128,7 @@ def add_user(name):
 
 @app.route('/reset/<string:currUserName>', methods=['PATCH'])
 def reset(currUserName):
-    print(" RESETTTING ", currUserName)
     data = request.json
-    print("DATA   ", data)
     user_record = db.session.query(user).filter_by(name=currUserName).first() 
     if user_record is None:
         return jsonify({"error": "User not found"}), 404
@@ -146,6 +136,35 @@ def reset(currUserName):
         setattr(user_record, column, value)
     db.session.commit()
     return jsonify({"message": "Didn't break everything"}), 201
+
+
+resources = ['Wheat','Fur','Raw_Meat','Wood','Bread','Cooked_Meat','Wild_Berries','Vegtables','Iron_Hoe','Iron_Sickle','Iron_Axe','Rifle','Bow','Iron_Shovel','Iron_Pickaxe','Clay','Iron_Ore','People','Bricks','Iron','Anvil']
+
+@app.route("/resources/<string:currUserName>", methods=["GET"]) 
+def get_resources(currUserName):
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    if user_record is None:
+        return jsonify({"error": "User not found"}), 404
+    print("going to round  ", currUserName)
+
+    user_resources = {}
+
+    for resource in resources:
+        resource_value = getattr(user_record, resource, 0)  
+        user_resources[resource] = resource_value
+
+    return jsonify({"resources": user_resources})
+
+
+
+# def roundResources(currUserName):
+#     user_record = db.session.query(user).filter_by(name=currUserName).first() 
+#     if user_record is None:
+#         return jsonify({"error": "User not found"}), 404
+#     resources = Resource.query.filter(Resource.currUserName == currUserName).all()
+#     for resource in resources:
+#         setattr(user_record,resource,round(getattr(user_record,resource),3)) 
+#     db.session.commit()
 
 if __name__ == "__main__": ##### MUST BE AT BOTTOM
     with app.app_context():
