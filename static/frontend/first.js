@@ -58,7 +58,7 @@ async function setGame() { // this sets up all the functions
             AdjB.addEventListener('click',changeValueOfInputForJobs);
         });
 
-    // document.getElementById('Clear').addEventListener('click', clearJobs);
+     document.getElementById('Clear').addEventListener('click', clearJobs);
 
     // const buttonsB = document.querySelectorAll('.BuildingButton');                
     //     buttonsB.forEach(buttonB => {
@@ -376,3 +376,22 @@ async function openTab(id, value) {
     thisdude = document.getElementById(id);
     thisdude.className += " active";
 }
+
+// async function clearJobs() {
+//     const response = await fetch(backendpath + `/clearJobs/${currUserName}`, {
+//         method: 'PATCH', 
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({}),  
+//     })
+//         for (let key in labelMap) {
+//             if( labelMap[key][1] == "JOB") {
+//                 jobb = document.getElementById(labelMap[key][0]);
+//                 jobb.innerText = 0;
+//             }
+//         }
+//     let av = await getValue('contacts/',6)
+//     aval = document.getElementById('A');
+//     aval.innerText = av
+// }

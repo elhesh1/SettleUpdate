@@ -138,8 +138,30 @@ def reset(currUserName):
     return jsonify({"message": "Didn't break everything"}), 201
 
 
-resources = ['Wheat','Fur','Raw_Meat','Wood','Bread','Cooked_Meat','Wild_Berries','Vegtables','Iron_Hoe','Iron_Sickle','Iron_Axe','Rifle','Bow','Iron_Shovel','Iron_Pickaxe','Clay','Iron_Ore','People','Bricks','Iron','Anvil']
-
+resources = [
+    # name , shown (0s are always shown), integer (1s  only are integers)
+    ['Wheat', 0, 0],
+    ['Fur', 0, 0],
+    ['Raw_Meat', 0, 0],
+    ['Wood', 0, 0],
+    ['Bread', 0, 0],
+    ['Cooked_Meat', 0, 0],
+    ['Wild_Berries', 0, 0],
+    ['Vegtables', 0, 0],
+    ['Iron_Hoe', 0, 1],
+    ['Iron_Sickle', 0, 1],
+    ['Iron_Axe', 0, 1],
+    ['Rifle', 0, 1],
+    ['Bow', 0, 1],
+    ['Iron_Shovel', 0, 1],
+    ['Iron_Pickaxe', 0, 1],
+    ['Clay', 1, 0],
+    ['Iron_Ore', 1, 0],
+    ['People', 1, 0],
+    ['Bricks', 1, 0],
+    ['Iron', 1, 0],
+    ['Anvil', 1, 0]
+]
 @app.route("/resources/<string:currUserName>", methods=["GET"]) 
 def get_resources(currUserName):
     user_record = db.session.query(user).filter_by(name=currUserName).first() 
@@ -150,9 +172,8 @@ def get_resources(currUserName):
     user_resources = {}
 
     for resource in resources:
-        resource_value = getattr(user_record, resource, 0)  
-        user_resources[resource] = resource_value
-
+        resource_value = getattr(user_record, resource[0], 0)  
+        user_resources[resource[0]] = {"value": resource_value, "always": resource[1], "integer" : resource[2]}
     return jsonify({"resources": user_resources})
 
 

@@ -13,20 +13,22 @@ async function takeInventory() {
     let inventoryValues = []; 
     try {
         let values = await getResources(); 
-        console.log("RESOURCES RETURNED:  ", values)
         let bruh = values.resources; 
-        for (let i = 0; i < bruh.length; i++) {
-            let temper = 0
-            if (!((bruh[i]['value'] == 0) && (bruh[i]['always'] == 1))) {
+        console.log( bruh)
+        i = 0
+        Object.keys(bruh).forEach(key => {
+            const resource = bruh[key];
+            if (!((resource['value'] == 0) && (resource['always'] == 1))) { // 0s are always shown
                 inventoryValues[i] = []; 
-                inventoryValues[i][0] = bruh[i]['name'];
-                    if (bruh[i]['integer'] == 0) {
-                        inventoryValues[i][1] =  parseFloat(bruh[i]['value']).toFixed(2);
-                    } else {
-                        inventoryValues[i][1] =  parseFloat(bruh[i]['value']).toFixed(0);
-                    }
+                inventoryValues[i][0] = key.replace(/_/g, ' ');
+                if (resource['integer'] == 0) {  // 1s are integers
+                    inventoryValues[i][1] =  parseFloat(resource['value']).toFixed(2);
+                } else {
+                    inventoryValues[i][1] =  parseFloat(resource['value']).toFixed(0);
+                }
+                i = i + 1;
             }
-        }
+        });
             return inventoryValues; 
     } catch (error) {
         console.error("Error in takeInventory:", error);
@@ -44,7 +46,6 @@ function makeTable(tabI) { // makes function table
             }
             result += "</tr>"; 
         }         
-
     }
     result += "</table>"; 
     return result; 
@@ -52,7 +53,6 @@ function makeTable(tabI) { // makes function table
 
 async function getResources() {
     currUserName = getCookie('userID').split('userID=')[1]
-
     try {
         const response = await fetch(backendpath + `/resources/${currUserName}`);
         if (!response.ok) {

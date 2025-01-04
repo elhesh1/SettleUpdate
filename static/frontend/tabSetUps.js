@@ -2,8 +2,8 @@ async function foodTabSetUp() {
     userName = getCookie('userID').split('userID=')[1]
     document.getElementById('StrengthB').innerText = await getVal('Strength')
     foodParagraphHelper();
-
 }
+
 
 async function buildingTabSetUp(pop, h) { 
     userName = getCookie('userID').split('userID=')[1]
@@ -85,4 +85,12 @@ async function factorySetUp() {
     buttons2.forEach(button2 => {
         button2.addEventListener('click', tradeButton);
     });
+}
+
+async function foodParagraphHelper() {
+    let pop = await getVal('Population')
+    let fp = document.getElementById('FoodParagraph')
+    let totNeeded = Math.round(pop * 0.2) / 10
+    let string =  "Every citizen needs 0.02 food a week to be fully fed. With a population of " + pop + ", " + totNeeded + " food is needed every week to keep them at full strength";
+    fp.innerText = string;
 }
