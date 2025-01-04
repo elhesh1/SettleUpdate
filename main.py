@@ -162,6 +162,18 @@ resources = [
     ['Iron', 1, 0],
     ['Anvil', 1, 0]
 ]
+
+jobs = [
+    ['Farmer','Farmer_value'],
+    ['Hunter','Hunter_value'],
+    ['Baker','Baker_value'],
+    ['Butcher','Butcher_value'],
+    ['Logger','Logger_value'],
+    ['Builder','Builder_value']
+
+
+
+]
 @app.route("/resources/<string:currUserName>", methods=["GET"]) 
 def get_resources(currUserName):
     user_record = db.session.query(user).filter_by(name=currUserName).first() 
@@ -187,6 +199,22 @@ def get_resources(currUserName):
 #         setattr(user_record,resource,round(getattr(user_record,resource),3)) 
 #     db.session.commit()
 
+
+@app.route("/clearJobs/<string:currUserName>", methods = ["PATCH"]) 
+def clearJobs(currUserName):
+
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    if user_record is None:
+        return jsonify({"error": "User not found"}), 404
+    addBack = 0
+
+    for job in jobs:
+        addBack += getattr(user_record,job[1])
+        setattr(user_record,job[1],0)
+    setattr(user_record, 'Available_value', getattr(user_record,'Available_value') + addBack)
+    db.session.commit()
+
+    return jsonify({"message": " Cleared :) "}), 201
 if __name__ == "__main__": ##### MUST BE AT BOTTOM
     with app.app_context():
         db.create_all() # creates all of the models

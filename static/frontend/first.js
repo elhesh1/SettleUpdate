@@ -2,8 +2,8 @@ window.onload = function() {
     setGame();
  }
 
- backendpath = `https://americagame-d4e96c50eefc.herokuapp.com/`
-//backendpath = `http://127.0.0.1:5000`
+// backendpath = `https://americagame-d4e96c50eefc.herokuapp.com/`
+backendpath = `http://127.0.0.1:5000`
 async function setGame() { // this sets up all the functions
     let reset = document.getElementById('reset');
     reset.addEventListener('click', resett);
@@ -377,21 +377,21 @@ async function openTab(id, value) {
     thisdude.className += " active";
 }
 
-// async function clearJobs() {
-//     const response = await fetch(backendpath + `/clearJobs/${currUserName}`, {
-//         method: 'PATCH', 
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({}),  
-//     })
-//         for (let key in labelMap) {
-//             if( labelMap[key][1] == "JOB") {
-//                 jobb = document.getElementById(labelMap[key][0]);
-//                 jobb.innerText = 0;
-//             }
-//         }
-//     let av = await getValue('contacts/',6)
-//     aval = document.getElementById('A');
-//     aval.innerText = av
-// }
+async function clearJobs() {
+    const response = await fetch(backendpath + `/clearJobs/${currUserName}`, {
+        method: 'PATCH', 
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),  
+    })
+        for (let key in labelMap) {
+            if( labelMap[key][1] == "JOB") {
+                jobb = document.getElementById(labelMap[key][0]);
+                jobb.innerText = 0;
+            }
+        }
+    let av = await getVal('Available_value')
+    aval = document.getElementById('A');
+    aval.innerText = av
+}
