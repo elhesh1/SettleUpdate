@@ -171,15 +171,27 @@ jobs = [
     ['Logger','Logger_value'],
     ['Builder','Builder_value']
 
+]
+
+
+buildings = [
+    # name      typeofbuilding    , work
+    ['Log_Cabin','Housing',0,0, 2],
+    ['Town_Hall','Town_Hall',0,0, 50],
+    ['Clay_Pit',"Raw Material Maker", 'Clay_Pit_Workers', 'Clay_Pit_Workers_Max',5],
+    ['Mine',"Raw Material Maker", 'Mine_Workers', 'Mine_Workers_Max',15],
+    ['Kiln',"Second Level", 'Kiln_Workers', 'Kiln_Workers_Max',3],
+    ['Forge',"Second Level", 'Forge_Workers', 'Forge_Workers_Max',3],
+    ['Tool_Shop','Tool_Shop',0,0,50],
 
 
 ]
+
 @app.route("/resources/<string:currUserName>", methods=["GET"]) 
 def get_resources(currUserName):
     user_record = db.session.query(user).filter_by(name=currUserName).first() 
     if user_record is None:
         return jsonify({"error": "User not found"}), 404
-    print("going to round  ", currUserName)
 
     user_resources = {}
 
@@ -188,7 +200,18 @@ def get_resources(currUserName):
         user_resources[resource[0]] = {"value": resource_value, "always": resource[1], "integer" : resource[2], 'type' : resource[3]}
     return jsonify({"resources": user_resources})
 
+@app.route("/buildings/<string:currUserName>", methods=["GET"]) 
+def get_buildings(currUserName):
+    #round perhaps?
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    if user_record is None:
+        return jsonify({"error": "User not found"}), 404
 
+    user_buildings = {}
+    for building in buildings: 
+        building_value = getattr(user_record, building[0], 0)  
+        user_buildings[building[0]] = {"value": building_value, "typeOfBuilding": building[1], "workers" : building[2], 'max' : building[3], 'work' : building[4]}
+    return jsonify({"buildings": user_buildings})
 
 # def roundResources(currUserName):
 #     user_record = db.session.query(user).filter_by(name=currUserName).first() 

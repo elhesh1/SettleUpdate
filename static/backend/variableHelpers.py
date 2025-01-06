@@ -4,7 +4,7 @@ DEFAULT_VALUES = {
     'Farmer_maximum': 2147483647,
     'Farmer_minimum': 0,
     'Farmer_type': None,
-    'Hunter_value': 0,
+    'Hunter_value': 0, 
     'Hunter_maximum': 2147483647,
     'Hunter_minimum': 0,
     'Hunter_type': None,
@@ -35,7 +35,7 @@ DEFAULT_VALUES = {
     'week' : 1,
     'season' : 1,
     'year' : 1620,
-    'Bread' : 12,
+    'Bread' : 1200,
     'Cooked_Meat' : 4,
     'Vegtables' : 4,
     'Iron_Hoe' : 10,
@@ -63,5 +63,13 @@ DEFAULT_VALUES = {
     'Planted' : 0,
     'Wood' : 0,
     'Log_Cabin' : 0,
-    'Town_Hall' : 0
+    'Town_Hall' : 0,
+    'Clay_Pit_Workers' : 0,
+    'Clay_Pit_Workers_Max' : 0,
+    'Mine_Workers' : 0,
+    'Mine_Workers_Max' : 0,
+    'Kiln_Workers' : 0,
+    'Kiln_Workers_Max' : 0,
+    'Forge_Workers' : 0,
+    'Forge_Workers_Max' : 0
 }

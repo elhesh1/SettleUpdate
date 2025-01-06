@@ -25,67 +25,76 @@ def advance(currUserName):
 
     offset = user.query.get(currUserName).id
     citizenActions.eat(currUserName)   ##### adjusts health as well #####
-    # healthFactor = Contact.query.get(13 + offset*contactOffset).value * 0.01 
-    # strength = Contact.query.get(18 + offset*contactOffset)
-    # seasonObj = Contact.query.get(8 + offset*contactOffset)
-    # season = seasonObj.value
-    # strength.value  = round(40 + 0.6* 100*healthFactor,2)
+    healthFactor = getattr(user_record,'Health') * 0.01 
+    season = getattr(user_record, 'season')
+    strength  = round(40 + 0.6* 100*healthFactor,2)
+    setattr(user_record, 'Strength', strength)
     # db.session.commit()
     # citizenActions.build(currUserName) ### including builders
     # country.advance(currUserName)
+
+
     # #cooks
-    # toAdd = 0
-    # cookingPower = citizenActions.CooksEff(currUserName)[2]
-    # wheat = Resource.query.get(2 + offset*resourceOffset)
-    # wheat.value -= cookingPower
-    # left = wheat.value  # wheat left after making the change
-    # if left < 0:
-    #     toAdd = left
-    # wheat.value -= toAdd
-    # bread = Resource.query.get(6 + offset*resourceOffset)
-    # bread.value += cookingPower + toAdd
+    toAdd = 0
+    cookingPower = citizenActions.CooksEff(currUserName)[2]
+    wheat = getattr(user_record, 'Wheat')
+    wheat -= cookingPower
+    left = wheat  # wheat left after making the change
+    if left < 0:
+         toAdd = left
+    wheat -= toAdd
+    bread = getattr(user_record, 'Bread')
+    bread += cookingPower + toAdd
 
-    # #Butchers
-    # toAdd = 0
-    # butcherPower = citizenActions.ButcherEff(currUserName)[2]
-    # rawMeat = Resource.query.get(4 + offset*resourceOffset)
-    # rawMeat.value -= butcherPower
-    # left = rawMeat.value
-    # if left < 0:
-    #     toAdd = left
-    # rawMeat.value -= toAdd
-    # cookedMeat = Resource.query.get(7 + offset*resourceOffset)
-    # cookedMeat.value += butcherPower + toAdd
+    #Butchers
+    toAdd = 0
+    butcherPower = citizenActions.ButcherEff(currUserName)[2]
+    rawMeat = getattr(user_record,'Raw_Meat' )
+    rawMeat -= butcherPower
+    left = rawMeat
+    if left < 0:
+        toAdd = left
+    rawMeat -= toAdd
+    cookedMeat = getattr(user_record,'Cooked_Meat')
+    cookedMeat += butcherPower + toAdd
     
-    # #Hunters
-    # hunterPower = citizenActions.HunterEff(currUserName)[8]
-    # rawMeat.value += hunterPower
-    # fur = Resource.query.get(3 + offset*resourceOffset)
-    # fur.value += hunterPower
+    #Hunters
+    hunterPower = citizenActions.HunterEff(currUserName)[8]
+    rawMeat += hunterPower
+    fur = getattr(user_record, 'Fur')
+    fur += hunterPower
 
-    # #Loggers
-    # wood = Resource.query.get(5 + offset*resourceOffset)
-    # loggerPower = citizenActions.LoggerEff(currUserName)[6]
-    # wood.value += loggerPower
 
-    # #Planters(Farmers)
-    # planted = Contact.query.get(10 + offset*contactOffset)
-    # farmerPower = citizenActions.farmerEff(season,currUserName)[0]
-    # if((season)%4 == 1): #Spring
-    #     planted.value += farmerPower
-    # elif(season == 2):
-    #     berries = Resource.query.get(8 + offset*resourceOffset)
-    #     berries.value += farmerPower
-    # elif((season)%4 == 3):
-    #     toAdd = 0
-    #     planted.value -= farmerPower
-    #     if planted.value < 0:
-    #         toAdd = planted.value
-    #         planted.value -= toAdd
-    #     wheat.value += farmerPower + toAdd
-    # elif((season)%4 == 0):
-    #     planted.value = 0
+    setattr(user_record,'Raw_Meat', rawMeat )
+    setattr(user_record,'Cooked_Meat', cookedMeat)
+    setattr(user_record, 'fur', fur)
 
+    #Loggers
+    wood = getattr(user_record,'Wood' )
+    loggerPower = citizenActions.LoggerEff(currUserName)[6]
+    setattr(user_record, 'Wood', wood + loggerPower)
+
+    #Planters(Farmers)
+    planted = getattr(user_record, 'Planted')
+    farmerPower = citizenActions.farmerEff(season,currUserName)[0]
+    if((season)%4 == 1): #Spring
+        planted +=   farmerPower
+    elif(season == 2):
+        berries = getattr(user_record ,'Wild_Berries')
+        setattr(user_record, 'Wild_Berries', berries + farmerPower)
+    elif((season)%4 == 3):
+        toAdd = 0
+        planted -= farmerPower
+        if planted < 0:
+            toAdd = planted
+            planted -= toAdd
+        wheat += farmerPower + toAdd
+    elif((season)%4 == 0):
+        planted = 0
+    
+    setattr(user_record, 'Bread', bread)
+    setattr(user_record,'Wheat',wheat)
+    setattr(user_record,'Planted',planted)
     # buildings.advanceBuildings(currUserName)
 
     # population = Contact.query.get(5 + offset*contactOffset)

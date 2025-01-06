@@ -10,26 +10,26 @@ async function setGame() { // this sets up all the functions
     console.log("STARTING")
 
     
-    // hoverMap =       {
-    //     'FarmerJobGrid'  : ['FarmerJobToolTip','FarmersToolTipText','Job','farmer',1],
-    //     'HuntersJobGrid' : ['HuntersJobToolTip','HuntersToolTipText','Job','hunter',2],
-    //     'CooksJobGrid' : ['CooksJobToolTip','CooksToolTipText','Job','cook',3],
-    //     'LoggersJobGrid' : ['LoggersJobToolTip','LoggersToolTipText','Job','logger',4],
-    //     'ButchersJobGrid' : ['ButchersJobToolTip','ButchersToolTipText','Job','butcher',11],
-    //     'BuilderJobGrid' : ["BuildersJobToolTip",'BuildersToolTipText','Job','builder',15],
-    //     'topFoodBar' : ['HealthToolTip','HealthToolTipText' , 'Value'],
-    //     'RationGrid' : ['RationToolTip', 'RationToolTipText', 'Value'],
-    //     'Strength' : ['StrengthToolTip','StrengthToolTipText', 'Value'],
-    //     'TownHallBuildGrid' : ['TownHallToolTip','TownHallToolTipText', 'Value', '.TownHall'], 
-    //     'peopleSupply' : ['peopleSupplyToolTip','peopleSupplyToolTipText', 'Supply','peopleSupply'],
-    //     'toolSupply' : ['toolSupplyToolTip','toolSupplyToolTipText', 'Supply','toolSupply'],
-    //     'resourceSupply' : ['resourceSupplyToolTip','resourceSupplyToolTipText', 'Supply','resourceSupply'],
-    //     'EnglandExplanation' : ['englandExplanationToolTip', 'englandExplanationToolTipText', 'other', 'EnglandExplanation'],
-    //     'HealthGrid2' :  ['HealthToolTip','HealthToolTipText' , 'Value'],
-    //     'PlantedGrid' : ['PlantedToolTip', 'PlantedToolTipText', 'Value', 'PlantedGrid'],
-    //     'ToolShopBuildGrid' : ['ToolShopToolTip', 'ToolShopToolTipText','Value', '.ToolShop']
-    // }
-    // await buildingSetUp() /// and country set up
+    hoverMap =       {
+        'FarmerJobGrid'  : ['FarmerJobToolTip','FarmersToolTipText','Job','farmer',1],
+        'HuntersJobGrid' : ['HuntersJobToolTip','HuntersToolTipText','Job','hunter',2],
+        'CooksJobGrid' : ['CooksJobToolTip','CooksToolTipText','Job','cook',3],
+        'LoggersJobGrid' : ['LoggersJobToolTip','LoggersToolTipText','Job','logger',4],
+        'ButchersJobGrid' : ['ButchersJobToolTip','ButchersToolTipText','Job','butcher',11],
+        'BuilderJobGrid' : ["BuildersJobToolTip",'BuildersToolTipText','Job','builder',15],
+        'topFoodBar' : ['HealthToolTip','HealthToolTipText' , 'Value'],
+        'RationGrid' : ['RationToolTip', 'RationToolTipText', 'Value'],
+        'Strength' : ['StrengthToolTip','StrengthToolTipText', 'Value'],
+        'TownHallBuildGrid' : ['TownHallToolTip','TownHallToolTipText', 'Value', '.TownHall'], 
+        'peopleSupply' : ['peopleSupplyToolTip','peopleSupplyToolTipText', 'Supply','peopleSupply'],
+        'toolSupply' : ['toolSupplyToolTip','toolSupplyToolTipText', 'Supply','toolSupply'],
+        'resourceSupply' : ['resourceSupplyToolTip','resourceSupplyToolTipText', 'Supply','resourceSupply'],
+        'EnglandExplanation' : ['englandExplanationToolTip', 'englandExplanationToolTipText', 'other', 'EnglandExplanation'],
+        'HealthGrid2' :  ['HealthToolTip','HealthToolTipText' , 'Value'],
+        'PlantedGrid' : ['PlantedToolTip', 'PlantedToolTipText', 'Value', 'PlantedGrid'],
+        'ToolShopBuildGrid' : ['ToolShopToolTip', 'ToolShopToolTipText','Value', '.ToolShop']
+    }
+    await buildingSetUp() /// and country set up
     var slider = document.getElementById("myRange");
     var sliderValueElement = document.getElementById("sliderValue");
     sliderValueElement.textContent = slider.value;
@@ -148,7 +148,6 @@ async function setVal( variable, options, user_id=currUserName = getCookie('user
 }
 
 async function changeVal(user_id, variable, options) { // change the value for a specific user
-    console.log('changing the value maybe')
     const data = {};
     for (let key in options) {
         if (options[key] !== null && options[key] !== undefined) {
@@ -186,7 +185,6 @@ async function getVal( variableName, currUserName = getCookie('userID').split('u
         }
         const data = await response.json();
         const value = data[variableName];
-        console.log(`Value of ${variableName}:`, value);
         return value;
 
     } catch (error) {
@@ -221,21 +219,21 @@ async function resett(newV=0) {     // function from resett it is used
         catch (error) {       // did not work
             console.error('Error BROKE BROKE:', error);
         }
-    // .then(() => {
-    //     Object.keys(labelMap).forEach(key => {
-    //         getValue('contacts/',key) 
-    //         .then(value => {
-    //             document.getElementById(labelMap[key][0]).innerText = value;
-    //         })
-    //         .catch(error => {
-    //             console.error('Error fetching data:', error);
-    //             document.getElementById(labelMap[key][0]).innerText = 'Error fetching data';
-    //         });
-    //     });
-    // })
-    // .then(() => {
-    //     tableMaker()  
-    // })
+        Object.keys(labelMap).forEach(key => {
+            if (labelMap[key][1] == 'JOB') {
+                getVal(labelMap[key][3]) 
+                .then(value => {
+                    document.getElementById(labelMap[key][0]).innerText = value;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    document.getElementById(labelMap[key][0]).innerText = 'Error fetching data';
+                });
+            }
+    
+        });
+        document.getElementById('A').innerText = '50'; // hardcode :(
+        tableMaker()  
     // .then(() => {
     //     getQueue()
     //     buildingsShowing()
@@ -254,7 +252,6 @@ async function buttonAction() {
     let jobID = buttonMap[id][0]
     let type = labelMap[jobID][0]
     let varName = labelMap[jobID][3]
-    console.log("THIS IS the button being updated  ", jobID, type, varName)
     userName = getCookie('userID').split('userID=')[1]
     changeVal(userName, varName,{value: buttonMap[id][1] } ) // updates in db
     .then(() => {                           // retrieves val from db
@@ -394,4 +391,54 @@ async function clearJobs() {
     let av = await getVal('Available_value')
     aval = document.getElementById('A');
     aval.innerText = av
+}
+
+async function buildingSetUp() {
+     
+    let buildings = await fetchBuildingCostMap();
+    buildings = buildings['buildings']
+ 
+    Object.values(buildings).forEach(details => {
+        console.log(details)
+        buildingSetUpInner(details)
+        
+    });
+
+     return
+}
+
+
+//const buildingNames = {} // id to Name. This is set up automatically  - may be obsolete
+//const namesBuilding = {} // fullname -> array with first element ID
+
+function buildingSetUpInner(currentBuilding, values) {
+    let nameB = currentBuilding
+    console.log("HERE")
+    if (values['work'] > 0 ) {
+        let type = values['type']
+        hoverMap[nameB + 'BuildGrid'] = [nameB + 'ToolTip', nameB + 'Inner', type, nameB, id];
+        let string = '<div class="BuildingGrid" id = "'  + nameB + 'BuildGrid"><h5 class="BuildingTitle" id="' + nameB + '">' + fullName + '</h5><button class="BuildingButtonUp BuildingButton '+ nameB + '" >+'
+        string += '</button> <button class="BuildingButtonDown BuildingButton '+ nameB + '" >-</button><h5 class="BuildingNumberCurrent"  id="'+ nameB + 'Current">0</h5>'
+        if(currentBuilding.typeOfBuilding != "Housing") {
+            string += '<h5 class="BuildingpeopleWorking"  id="' + nameB + 'peopleWorking' +  '">' +  currentBuilding.working['value'] + '</h5>'
+            string += '<h5 class="slash"  id="' + nameB + 'peopleWorking' +  '">' + '/'+ '</h5>'
+            string += '<h5 class="BuildingpeopleCap"  id="' + nameB + 'peopleCap' +  '">' +  currentBuilding.working['maximum'] + '</h5>'
+            string += '<button class="BuildingButtonWorkersUp BuildingButtonWorkers '+ nameB + '" >+</button>'
+            string += '<button class="BuildingButtonWorkersDown BuildingButtonWorkers '+ nameB + '" >-</button>'
+
+        }
+        string += '<h5 class="BuildingNumberAlreadyBuilt"  id="' + nameB + 'currently' +  '">0</h5></div>'
+        const nextW = document.getElementById('building-flex-container');
+        nextW.innerHTML += string; 
+        let hoverString = '<span class="jobToolTip" id="'+ nameB + 'ToolTip">'   
+        hoverString += '<h5 class="ToolTipTitle">'+ fullName + '</h5>'
+        hoverString += '<h3 class="ToolTipText" id="' + nameB + 'ToolTipText">' + type + '</h3>'
+        hoverString += '<div class="flex-container" id="'+ nameB + 'Inner"></div></span>'
+        const grid = document.getElementsByClassName('grid-container')[0];
+       grid.innerHTML += hoverString
+       console.log(grid, "   ", grid.innerHTML)
+    }
+  
+
+    return
 }

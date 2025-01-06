@@ -2,14 +2,14 @@ const labelMap = {// labels but also add type
     1 : ['F','JOB','FarmerJobGrid','Farmer_value'],
     2 : ['H','JOB','HuntersJobGrid','Hunter_value'],
     3 : ['C','JOB','CooksJobGrid','Baker_value'],
-    4 : ['L','JOB','LoggersJobGrid','Butcher_value'],
+    4 : ['L','JOB','LoggersJobGrid','Logger_value'],
     5 : ['P','NOT'],
     6 : ['A','NOT'],
     7 : ['W','NOT'], 
-    11 : ['B', 'JOB','ButchersJobGrid','Logger_value'],
+    11 : ['B', 'JOB','ButchersJobGrid','Butcher_value'],
     15 : ['W2', 'JOB','BuilderJobGrid','Builder_value'],   
 }
-
+ 
 const jobMulti = {
     "One" : 1,
     "Ten" : 10,

@@ -1,13 +1,16 @@
 async function foodTabSetUp() {
     userName = getCookie('userID').split('userID=')[1]
     document.getElementById('StrengthB').innerText = await getVal('Strength')
+    let plantedcount = await getVal('Planted');
+    document.getElementById('Planted').innerText = parseFloat(plantedcount).toFixed(2);
     foodParagraphHelper();
 }
 
 
 async function buildingTabSetUp(pop, h) { 
     userName = getCookie('userID').split('userID=')[1]
-    if (pop == -1) {  pop = await getValue('Population');}
+    console.log("doing this, setting up building")
+    if (pop == -1) {  pop = await getVal('Population');}
     h = await getBuilding(1) 
     housed = h['buildingInfo'].value * h['buildingInfo'].capacity
     housingvalue = document.getElementById('HousingValue');

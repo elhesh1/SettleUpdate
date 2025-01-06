@@ -9,6 +9,17 @@ import static.backend.advance
 #import static.backend.hover as hover
 import static.backend.buildings as buildings
 
+
+#job efficencies
+jobEfficencies = {
+    'Farmer_value': { 'e': 0.1, 'season': {0: 1, 1: 1, 2: 1, 3: 1} },
+    'Hunter_value': { 'e': 0.025, 'season': {0: 1, 1: 1, 2: 1, 3: 1} },
+    'Butcher_value': { 'e': 0.1, 'season': {0: 1, 1: 1, 2: 1, 3: 1} },
+    'Logger_value': { 'e': 0.1, 'season': {0: 0.6, 1: 0.95, 2: 1, 3: 1} },
+    'Builder_value': { 'e': 0.1, 'season': {0: 0.6, 1: 1, 2: 1, 3: 1} },
+    'Baker_value': { 'e': 0.1, 'season': {0: 1, 1: 1, 2: 1, 3: 1} }
+}
+
 nFoodTypes = 0 
 # .filter(Contact.currUserName == currUserName)
 def eat(currUserName):
@@ -260,133 +271,147 @@ def eatHelper(expectedFood,currUserName,user_record):
 #             db.session.commit()
 #             buildbuild(c,i,currUserName)
 
-# def farmerEff(season,currUserName):
-#         offset = user.query.get(currUserName).id
-#         JobValue = Contact.query.get(hover.jobMap['farmer'] + offset*contactOffset)
-#         baseEfficiency = JobValue.efficiency['e']
-#         strength = Contact.query.get(18 + offset*contactOffset).value * 0.01
-#         Season = str(Contact.query.get(8 + offset*contactOffset).value)
-#         seasonEfficiency = JobValue.efficiency['season'][Season]
-#         count = int(JobValue.value)
-#         if int(season) == 1:
-#             IronHoeMax = int(Resource.query.get(10 + offset*resourceOffset).value)
-#             IronHoeEfficiency = 1
-#             NoToolEfficiency = 0.5 
-#             if IronHoeMax >= count:
-#                 UsingIronHoe = count
-#             else:
-#                 UsingIronHoe = IronHoeMax
-#             UsingNoTools = int(count - UsingIronHoe)
-#             if count != 0:
-#                 totalEfficiency = baseEfficiency * seasonEfficiency * strength * ( ((IronHoeEfficiency * UsingIronHoe)+(NoToolEfficiency*UsingNoTools)) / count )
-#             else:
-#                 totalEfficiency = baseEfficiency * seasonEfficiency * IronHoeEfficiency * strength
-#             return count * totalEfficiency, IronHoeEfficiency, UsingIronHoe, UsingNoTools, NoToolEfficiency, totalEfficiency, count, 'Iron Hoe', 'Planted'
-#         elif int(season) == 3: 
-#             IronSickleMax = int(Resource.query.get(11 + offset*resourceOffset).value)
-#             IronSickleEfficiency = 1
-#             NoToolEfficiency = 0.5 
-#             if IronSickleMax >= count:
-#                 UsingIronSickle = count
-#             else:
-#                 UsingIronSickle = IronSickleMax
-#             UsingNoTools = int(count - UsingIronSickle)
-#             if count != 0:
-#                 totalEfficiency = baseEfficiency * seasonEfficiency * strength * ( ((IronSickleEfficiency * UsingIronSickle)+(NoToolEfficiency*UsingNoTools)) / count )
-#             else:
-#                 totalEfficiency = baseEfficiency * seasonEfficiency * IronSickleEfficiency * strength
-#             return  count * totalEfficiency, IronSickleEfficiency, UsingIronSickle, UsingNoTools, NoToolEfficiency, totalEfficiency, count, 'Iron Sickle', 'Harvested'
-#         else:
-#             NoToolEfficiency = 0.18
-#             UsingNoTools = count
-#             totalEfficiency =  NoToolEfficiency * baseEfficiency
-#             return count*totalEfficiency, UsingNoTools, NoToolEfficiency, totalEfficiency, count, 'Berries Foraged' 
+def farmerEff(season,currUserName):
+        offset = user.query.get(currUserName).id
+
+        user_record = db.session.query(user).filter_by(name=currUserName).first() 
+        if user_record is None:
+            return jsonify({"error": "User not found"}), 404
+        
+        baseEfficiency =  jobEfficencies['Farmer_value']['e']
+        strength = getattr(user_record, 'Strength') * 0.01
+        Season = int(getattr(user_record, 'season'))
+        seasonEfficiency = jobEfficencies['Farmer_value']['season'][Season]
+        count = int(getattr(user_record, 'Farmer_value'))
+        print(" farming ", baseEfficiency, strength, Season, seasonEfficiency, count)
+        if int(season) == 1:
+            IronHoeMax = int(getattr(user_record, 'Iron_Hoe'))
+            IronHoeEfficiency = 1
+            NoToolEfficiency = 0.5 
+            if IronHoeMax >= count:
+                UsingIronHoe = count
+            else:
+                UsingIronHoe = IronHoeMax
+            UsingNoTools = int(count - UsingIronHoe)
+            if count != 0:
+                totalEfficiency = baseEfficiency * seasonEfficiency * strength * ( ((IronHoeEfficiency * UsingIronHoe)+(NoToolEfficiency*UsingNoTools)) / count )
+            else:
+                totalEfficiency = baseEfficiency * seasonEfficiency * IronHoeEfficiency * strength
+            return count * totalEfficiency, IronHoeEfficiency, UsingIronHoe, UsingNoTools, NoToolEfficiency, totalEfficiency, count, 'Iron Hoe', 'Planted'
+        elif int(season) == 3: 
+            IronSickleMax = int(getattr(user_record, 'Iron_Sickle'))
+            IronSickleEfficiency = 1
+            NoToolEfficiency = 0.5 
+            if IronSickleMax >= count:
+                UsingIronSickle = count
+            else:
+                UsingIronSickle = IronSickleMax
+            UsingNoTools = int(count - UsingIronSickle)
+            if count != 0:
+                totalEfficiency = baseEfficiency * seasonEfficiency * strength * ( ((IronSickleEfficiency * UsingIronSickle)+(NoToolEfficiency*UsingNoTools)) / count )
+            else:
+                totalEfficiency = baseEfficiency * seasonEfficiency * IronSickleEfficiency * strength
+            return  count * totalEfficiency, IronSickleEfficiency, UsingIronSickle, UsingNoTools, NoToolEfficiency, totalEfficiency, count, 'Iron Sickle', 'Harvested'
+        else:
+            NoToolEfficiency = 0.18
+            UsingNoTools = count
+            totalEfficiency =  NoToolEfficiency * baseEfficiency
+            return count*totalEfficiency, UsingNoTools, NoToolEfficiency, totalEfficiency, count, 'Berries Foraged' 
 
 
-# def LoggerEff(currUserName):
-#     offset = user.query.get(currUserName).id
-#     JobValue = Contact.query.get(hover.jobMap['logger'] + offset*contactOffset)
-#     baseEfficiency = JobValue.efficiency['e']
-#     strength = Contact.query.get(18 + offset*contactOffset).value * 0.01
-#     Season = str(Contact.query.get(8 + offset*contactOffset).value)
-#     seasonEfficiency = JobValue.efficiency['season'][Season]
-#     count = int(JobValue.value)
-#     IronAxeMax = int(Resource.query.get(12 + offset*resourceOffset).value)
-#     IronAxeEfficiency = 1
-#     NoToolEfficiency = 0.5 
-#     if IronAxeMax >= count:
-#         UsingIronAxe = count
-#     else:
-#         UsingIronAxe = IronAxeMax
-#     UsingNoTools = int(count - UsingIronAxe)
-#     if count != 0:
-#         totalEfficiency = baseEfficiency * seasonEfficiency * strength * ( ((IronAxeEfficiency * UsingIronAxe)+(NoToolEfficiency*UsingNoTools)) / count )
-#     else:
-#         totalEfficiency = baseEfficiency * seasonEfficiency * IronAxeEfficiency * strength
-#     return IronAxeEfficiency, UsingIronAxe, UsingNoTools, NoToolEfficiency, totalEfficiency, count, count * totalEfficiency
+def LoggerEff(currUserName):
+    jobtitle = 'Logger_value'
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    strength = getattr(user_record, 'Strength') * 0.01
+    Season = int(getattr(user_record, 'season'))
+    baseEfficiency =  jobEfficencies[jobtitle]['e']
+    seasonEfficiency = jobEfficencies[jobtitle]['season'][Season]
+    count = int(getattr(user_record, jobtitle))
 
-# def HunterEff(currUserName):
-#     offset = user.query.get(currUserName).id
-#     JobValue = Contact.query.get(hover.jobMap['hunter'] + offset*contactOffset)
-#     baseEfficiency = JobValue.efficiency['e']
-#     strength = Contact.query.get(18 + offset*contactOffset).value * 0.01
-#     Season = str(Contact.query.get(8 + offset*contactOffset).value)
-#     seasonEfficiency = JobValue.efficiency['season'][Season]
-#     count = int(JobValue.value)
-#     RifleMax = int(Resource.query.get(13 + offset*resourceOffset).value)
-#     BowMax = int(Resource.query.get(14 + offset*resourceOffset).value)
-#     RifleEfficiency = 1.5
-#     BowEfficiency = 1
-#     NoToolEfficiency = 0.5 
-#     UsingBow = 0
-#     if RifleMax >= count:
-#         UsingRifle = count
-#         UsingNoTools = int(count - UsingRifle)
-#     else:
-#         UsingRifle = RifleMax
-#         noRifle = int(count-UsingRifle)
-#         if BowMax >= noRifle:
-#             UsingBow = noRifle
-#             UsingNoTools = 0
-#         else:
-#             UsingBow = BowMax
-#             UsingNoTools = int(noRifle - BowMax)
-#     if count != 0:
-#         totalEfficiency = baseEfficiency * seasonEfficiency * strength * ( ((RifleEfficiency * UsingRifle)+(BowEfficiency * UsingBow)+(NoToolEfficiency*UsingNoTools)) / count )
-#     else:
-#         totalEfficiency = baseEfficiency * seasonEfficiency * RifleEfficiency * strength
-#     return RifleEfficiency, UsingRifle, BowEfficiency, UsingBow, NoToolEfficiency, UsingNoTools, count, totalEfficiency, count*totalEfficiency
+    IronAxeMax = int(getattr(user_record, 'Iron_Axe' ))
+    IronAxeEfficiency = 1
+    NoToolEfficiency = 0.5 
+    if IronAxeMax >= count:
+        UsingIronAxe = count
+    else:
+        UsingIronAxe = IronAxeMax
+    UsingNoTools = int(count - UsingIronAxe)
+    if count != 0:
+        totalEfficiency = baseEfficiency * seasonEfficiency * strength * ( ((IronAxeEfficiency * UsingIronAxe)+(NoToolEfficiency*UsingNoTools)) / count )
+    else:
+        totalEfficiency = baseEfficiency * seasonEfficiency * IronAxeEfficiency * strength
+    return IronAxeEfficiency, UsingIronAxe, UsingNoTools, NoToolEfficiency, totalEfficiency, count, count * totalEfficiency
 
-# def CooksEff(currUserName):
-#     offset = user.query.get(currUserName).id
-#     JobValue = Contact.query.get(hover.jobMap['cook'] + offset*contactOffset)
-#     baseEfficiency = JobValue.efficiency['e']
-#     strength = Contact.query.get(18 + offset*contactOffset).value * 0.01
-#     Season = str(Contact.query.get(8 + offset*contactOffset).value)
-#     seasonEfficiency = JobValue.efficiency['season'][Season]
-#     count = int(JobValue.value)
-#     totalEfficiency = baseEfficiency * seasonEfficiency * strength
-#     return totalEfficiency, count , count*totalEfficiency 
+def HunterEff(currUserName):
 
-# def ButcherEff(currUserName):
-#     offset = user.query.get(currUserName).id
-#     JobValue = Contact.query.get(hover.jobMap['butcher'] + offset*contactOffset)
-#     baseEfficiency = JobValue.efficiency['e']
-#     strength = Contact.query.get(18 + offset*contactOffset).value * 0.01
-#     Season = str(Contact.query.get(8 + offset*contactOffset).value)
-#     seasonEfficiency = JobValue.efficiency['season'][Season]
-#     count = int(JobValue.value)
-#     totalEfficiency = baseEfficiency * seasonEfficiency * strength
-#     return totalEfficiency, count , count*totalEfficiency 
+    jobtitle = 'Hunter_value'
 
-# def BuilderEff(currUserName):
-#     offset = user.query.get(currUserName).id
-#     JobValue = Contact.query.get(hover.jobMap['builder'] + offset*contactOffset)
-#     baseEfficiency = JobValue.efficiency['e']
-#     strength = Contact.query.get(18 + offset*contactOffset).value * 0.01
-#     Season = str(Contact.query.get(8 + offset*contactOffset).value)
-#     seasonEfficiency = JobValue.efficiency['season'][Season]
-#     count = int(JobValue.value)
-#     totalEfficiency = baseEfficiency * seasonEfficiency * strength
-#     return totalEfficiency, count , count*totalEfficiency 
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    strength = getattr(user_record, 'Strength') * 0.01
+    Season = int(getattr(user_record, 'season'))
+    baseEfficiency =  jobEfficencies[jobtitle]['e']
+    seasonEfficiency = jobEfficencies[jobtitle]['season'][Season]
+    count = int(getattr(user_record, jobtitle))
+
+    RifleMax = int(getattr(user_record, 'Rifle'))
+    BowMax = int(getattr(user_record, 'Bow'))
+    RifleEfficiency = 1.5
+    BowEfficiency = 1
+    NoToolEfficiency = 0.5 
+    UsingBow = 0
+    if RifleMax >= count:
+        UsingRifle = count
+        UsingNoTools = int(count - UsingRifle)
+    else:
+        UsingRifle = RifleMax
+        noRifle = int(count-UsingRifle)
+        if BowMax >= noRifle:
+            UsingBow = noRifle
+            UsingNoTools = 0
+        else:
+            UsingBow = BowMax
+            UsingNoTools = int(noRifle - BowMax)
+    if count != 0:
+        totalEfficiency = baseEfficiency * seasonEfficiency * strength * ( ((RifleEfficiency * UsingRifle)+(BowEfficiency * UsingBow)+(NoToolEfficiency*UsingNoTools)) / count )
+    else:
+        totalEfficiency = baseEfficiency * seasonEfficiency * RifleEfficiency * strength
+    return RifleEfficiency, UsingRifle, BowEfficiency, UsingBow, NoToolEfficiency, UsingNoTools, count, totalEfficiency, count*totalEfficiency
+
+def CooksEff(currUserName):
+    jobtitle = 'Baker_value'
+
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    strength = getattr(user_record, 'Strength') * 0.01
+    Season = int(getattr(user_record, 'season'))
+    baseEfficiency =  jobEfficencies[jobtitle]['e']
+    seasonEfficiency = jobEfficencies[jobtitle]['season'][Season]
+    count = int(getattr(user_record, jobtitle))
+
+    totalEfficiency = baseEfficiency * seasonEfficiency * strength
+    return totalEfficiency, count , count*totalEfficiency 
+
+def ButcherEff(currUserName):
+    jobtitle = 'Butcher_value'
+
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    strength = getattr(user_record, 'Strength') * 0.01
+    Season = int(getattr(user_record, 'season'))
+    baseEfficiency =  jobEfficencies[jobtitle]['e']
+    seasonEfficiency = jobEfficencies[jobtitle]['season'][Season]
+    count = int(getattr(user_record, jobtitle))
+
+    totalEfficiency = baseEfficiency * seasonEfficiency * strength
+    return totalEfficiency, count , count*totalEfficiency 
+
+def BuilderEff(currUserName):
+    jobtitle = 'Builder_value'
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    strength = getattr(user_record, 'Strength') * 0.01
+    Season = int(getattr(user_record, 'season'))
+    baseEfficiency =  jobEfficencies[jobtitle]['e']
+    seasonEfficiency = jobEfficencies[jobtitle]['season'][Season]
+    count = int(getattr(user_record, jobtitle))
+
+    totalEfficiency = baseEfficiency * seasonEfficiency * strength
+    return totalEfficiency, count , count*totalEfficiency 
 

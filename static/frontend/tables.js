@@ -121,3 +121,17 @@ async function getResources() {
         throw error;
     }
 }
+
+async function fetchBuildingCostMap() {
+    currUserName = getCookie('userID').split('userID=')[1]
+    try {
+        const response = await fetch(backendpath + `/buildings/${currUserName}`);
+                if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+                const buildingCostMap = await response.json();        
+        return buildingCostMap;
+    } catch (error) {
+        console.error('Error fetching building cost map:', error);
+    }
+}

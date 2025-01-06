@@ -108,6 +108,20 @@ class user(db.Model):
 
     Log_Cabin = db.Column(db.Integer, nullable=False, default=0)
     Town_Hall = db.Column(db.Integer, nullable=False, default=0)
+    Clay_Pit = db.Column(db.Integer, nullable=False, default=0)
+    Mine = db.Column(db.Integer, nullable=False, default=0)
+    Kiln = db.Column(db.Integer, nullable=False, default=0)
+    Forge = db.Column(db.Integer, nullable=False, default=0)
+    Tool_Shop = db.Column(db.Integer, nullable=False, default=0)
+
+    Clay_Pit_Workers = db.Column(db.Integer, nullable=False, default=0)
+    Clay_Pit_Workers_Max = db.Column(db.Integer, nullable=False, default=0)
+    Mine_Workers = db.Column(db.Integer, nullable=False, default=0)
+    Mine_Workers_Max = db.Column(db.Integer, nullable=False, default=0)
+    Kiln_Workers = db.Column(db.Integer, nullable=False, default=0)
+    Kiln_Workers_Max = db.Column(db.Integer, nullable=False, default=0)
+    Forge_Workers = db.Column(db.Integer, nullable=False, default=0)
+    Forge_Workers_Max = db.Column(db.Integer, nullable=False, default=0)
 
     def to_json(self):
         return {
@@ -207,10 +221,20 @@ class user(db.Model):
 
             "Buildings" : {
                 "Log_Cabin" : self.Log_Cabin,
-                "Town_Hall" : self.Town_Hall
-
-
-
+                "Town_Hall" : self.Town_Hall,
+                "Clay_Pit" : self.Clay_Pit,
+                "Mine" : self.Mine,
+                "Kiln" : self.Kiln,
+                "Forge" : self.Forge,
+                "Tool_Shop" : self.Tool_Shop,
+                "Clay_Pit_Workers" : self.Clay_Pit_Workers,
+                "Clay_Pit_Workers_Max" : self.Clay_Pit_Workers_Max,
+                "Mine_Workers" : self.Mine_Workers,
+                "Mine_Workers_Max" : self.Mine_Workers_Max,
+                "Kiln_Workers" : self.Kiln_Workers,
+                "Kiln_Workers_Max" : self.Kiln_Workers_Max,
+                "Forge_Workers" : self.Forge_Workers,
+                "Forge_Workers_Max" : self.Forge_Workers_Max
             }
         }
     
