@@ -83,10 +83,7 @@ def change_resource(currUserName,variableName):
     setattr(user_record, minimum, current_minimum + data.get("minimum", 0))
 
     checking = getattr(user_record, variableName)
-    # print('STOP RIGHT HERE  ', og, ' ' , toAdd)
-    # print(variableHelperTags[variableName][0]," ", getattr(user_record, maximum, 0))
-    # print(variableHelperTags[variableName][1], " ", getattr(user_record, minimum, 0))
-    # print(variableName, " ", checking)
+ 
 
     value = checking
     value +=  toAdd
@@ -176,13 +173,13 @@ jobs = [
 
 buildings = [
     # name      typeofbuilding    , work
-    ['Log_Cabin','Housing',0,0, 2],
-    ['Town_Hall','Town_Hall',0,0, 50],
+    ['Log_Cabin','Housing','a','a', 2],
+    ['Town_Hall','Town_Hall','a','a', 50],
     ['Clay_Pit',"Raw Material Maker", 'Clay_Pit_Workers', 'Clay_Pit_Workers_Max',5],
     ['Mine',"Raw Material Maker", 'Mine_Workers', 'Mine_Workers_Max',15],
     ['Kiln',"Second Level", 'Kiln_Workers', 'Kiln_Workers_Max',3],
     ['Forge',"Second Level", 'Forge_Workers', 'Forge_Workers_Max',3],
-    ['Tool_Shop','Tool_Shop',0,0,50],
+    ['Tool_Shop','Tool_Shop','a','a',50],
 
 
 ]
@@ -197,7 +194,7 @@ def get_resources(currUserName):
 
     for resource in resources:
         resource_value = getattr(user_record, resource[0], 0)  
-        user_resources[resource[0]] = {"value": resource_value, "always": resource[1], "integer" : resource[2], 'type' : resource[3]}
+        user_resources[resource[0]] = {"name" : resource[0], "value": resource_value, "always": resource[1], "integer" : resource[2], 'type' : resource[3]}
     return jsonify({"resources": user_resources})
 
 @app.route("/buildings/<string:currUserName>", methods=["GET"]) 
@@ -210,8 +207,46 @@ def get_buildings(currUserName):
     user_buildings = {}
     for building in buildings: 
         building_value = getattr(user_record, building[0], 0)  
-        user_buildings[building[0]] = {"value": building_value, "typeOfBuilding": building[1], "workers" : building[2], 'max' : building[3], 'work' : building[4]}
+        user_buildings[building[0]] = {"name" : building[0] , "value": building_value, "typeOfBuilding": building[1], "workers" : getattr(user_record,building[2], -1), 'max' : getattr(user_record,building[3],-1), 'work' : building[4]}
     return jsonify({"buildings": user_buildings})
+
+@app.route("/<string:currUserName>/buildings/addQueue", methods=["PATCH"])
+def create_building_queue(currUserName):
+    print("HERE PATCHING")
+    data = request.json
+    print(" this is the json  ", data)
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    if user_record is None:
+        return jsonify({"error": "User not found"}), 404
+    # queue = getattr(user_record, 'building_queue')
+
+
+    # print(type(queue))
+    # print("length  ", len(queue))
+    # for item in data['dataQ']:
+    #     numbertoAdd = data['dataQ'][item][0] 
+        
+    #     if len(queue) == 0:
+    #         print('Queue is empty, adding new item')
+    #         queue.append((0,item, numbertoAdd)) 
+    #     else:
+    #         last_item = queue[-1]
+    #         if last_item[0] == item:
+    #             print(f"Queue has item '{item}', adding {numbertoAdd} to the existing number")
+    #             queue[-1] = (len(queue)-1, last_item[1], last_item[2] + numbertoAdd) 
+    #         else:
+    #             print(f"Queue has a different item, adding new entry for '{item}'")
+    #             queue.append((len(queue), item, numbertoAdd)) 
+
+    # setattr(user_record, 'building_queue', queue)
+    # print("QUEUE " , queue) # this shows queue  [(0, 'Clay_PitCurrent', 5), (1, 'MineCurrent', 2)]
+
+    user_record.building_queue = [(0, 'Clay_PitCurrent', 5), (1, 'MineCurrent', 2)]
+
+    db.session.commit()
+   # print(type(queue)) # its is type list but should be Column(JSON)
+  #  print("THIS WILL NOT RETURN IT  " ,getattr(user_record, 'building_queue'))
+    return jsonify({"queue": "test"})
 
 # def roundResources(currUserName):
 #     user_record = db.session.query(user).filter_by(name=currUserName).first() 

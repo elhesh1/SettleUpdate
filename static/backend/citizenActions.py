@@ -283,7 +283,6 @@ def farmerEff(season,currUserName):
         Season = int(getattr(user_record, 'season'))
         seasonEfficiency = jobEfficencies['Farmer_value']['season'][Season]
         count = int(getattr(user_record, 'Farmer_value'))
-        print(" farming ", baseEfficiency, strength, Season, seasonEfficiency, count)
         if int(season) == 1:
             IronHoeMax = int(getattr(user_record, 'Iron_Hoe'))
             IronHoeEfficiency = 1

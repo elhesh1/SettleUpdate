@@ -1,6 +1,7 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine, Column, Integer, String, func
+from sqlalchemy.dialects.postgresql import ARRAY,JSON
 
 from static.backend.variableHelpers import DEFAULT_VALUES
 import sys
@@ -123,6 +124,9 @@ class user(db.Model):
     Forge_Workers = db.Column(db.Integer, nullable=False, default=0)
     Forge_Workers_Max = db.Column(db.Integer, nullable=False, default=0)
 
+    building_queue =  Column(JSON)
+    currently_building_queue =  Column(JSON)
+
     def to_json(self):
         return {
             "name" : self.name,
@@ -136,6 +140,8 @@ class user(db.Model):
             "SupplyShipsType" : self.SupplyShipType,
             "Population" : self.Population,
             "numberofFoods" : self.numberofFoods ,
+
+
 
             "Time" : {
             "week" : self.week,
@@ -235,7 +241,9 @@ class user(db.Model):
                 "Kiln_Workers_Max" : self.Kiln_Workers_Max,
                 "Forge_Workers" : self.Forge_Workers,
                 "Forge_Workers_Max" : self.Forge_Workers_Max
-            }
+            },
+            "building_queue" : self.building_queue,
+            "currently_building_queue" : self.currently_building_queue
         }
     
 

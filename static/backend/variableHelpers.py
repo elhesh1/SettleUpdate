@@ -71,5 +71,7 @@ DEFAULT_VALUES = {
     'Kiln_Workers' : 0,
     'Kiln_Workers_Max' : 0,
     'Forge_Workers' : 0,
-    'Forge_Workers_Max' : 0
+    'Forge_Workers_Max' : 0,
+    'building_queue' : [],
+    'currently_building_queue' : []
 }

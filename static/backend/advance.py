@@ -182,7 +182,6 @@ def advance(currUserName):
 
 @app.route("/advancePackage/<string:currUserName>", methods=['GET'])
 def advancePackage(currUserName):
-    print("Advance package")
     user_record = db.session.query(user).filter_by(name=currUserName).first() 
     if user_record is None:
         return jsonify({"error": "User not found"}), 404

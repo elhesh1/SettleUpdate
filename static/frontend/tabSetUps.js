@@ -7,12 +7,12 @@ async function foodTabSetUp() {
 }
 
 
-async function buildingTabSetUp(pop, h) { 
+async function buildingTabSetUp() { 
     userName = getCookie('userID').split('userID=')[1]
     console.log("doing this, setting up building")
-    if (pop == -1) {  pop = await getVal('Population');}
-    h = await getBuilding(1) 
-    housed = h['buildingInfo'].value * h['buildingInfo'].capacity
+    pop = await getVal('Population')
+  
+    housed = getVal('Log_Cabin') * logCabinCapacity 
     housingvalue = document.getElementById('HousingValue');
     string = 'Housing Provided: '+ housed + ' / ' + pop;
     housingvalue.innerText = string;
@@ -39,7 +39,7 @@ function tabSetUp() {
         foodTabSetUp();
     }
     else if (activeTab == 'BuildingsT') {
-        buildingTabSetUp(-1, -1);
+        buildingTabSetUp();
     }
     else if (activeTab == 'InventoryT'){
         inventoryTabSetUp();

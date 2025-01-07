@@ -29,6 +29,9 @@ async function setGame() { // this sets up all the functions
         'PlantedGrid' : ['PlantedToolTip', 'PlantedToolTipText', 'Value', 'PlantedGrid'],
         'ToolShopBuildGrid' : ['ToolShopToolTip', 'ToolShopToolTipText','Value', '.ToolShop']
     }
+    logCabinCapacity = 4
+
+
     await buildingSetUp() /// and country set up
     var slider = document.getElementById("myRange");
     var sliderValueElement = document.getElementById("sliderValue");
@@ -36,6 +39,7 @@ async function setGame() { // this sets up all the functions
     slider.addEventListener("input", function() {
       sliderValueElement.textContent = slider.value;
     });
+    BuildingChange =  new Map();
 
     const buttons = document.querySelectorAll('.B');      // these are the buttons that + or - for jobs     
         buttons.forEach(button => {
@@ -60,10 +64,11 @@ async function setGame() { // this sets up all the functions
 
      document.getElementById('Clear').addEventListener('click', clearJobs);
 
-    // const buttonsB = document.querySelectorAll('.BuildingButton');                
-    //     buttonsB.forEach(buttonB => {
-    //     buttonB.addEventListener('click', buttonActionBuilding);
-    //     });
+    const buttonsB = document.querySelectorAll('.BuildingButton');                
+        buttonsB.forEach(buttonB => {
+            console.log("SETTING UP BB")
+        buttonB.addEventListener('click', buttonActionBuilding);
+        });
     // const buttonsBW = document.querySelectorAll('.BuildingButtonWorkers');                
     //     buttonsBW.forEach(buttonBW => {
     //     buttonBW.addEventListener('click', buttonActionBuildingWorkers);
@@ -123,7 +128,6 @@ function changeValueOfInputForJobs() { // these are the buttons that control how
 }
 
 async function setVal( variable, options, user_id=currUserName = getCookie('userID').split('userID=')[1]) { // change the value for a specific user
-    console.log('setting the value maybe')
     const data = {};
     for (let key in options) {
         if (options[key] !== null && options[key] !== undefined) {
@@ -398,12 +402,18 @@ async function buildingSetUp() {
     let buildings = await fetchBuildingCostMap();
     buildings = buildings['buildings']
  
-    Object.values(buildings).forEach(details => {
-        console.log(details)
-        buildingSetUpInner(details)
-        
-    });
+    for (const details of Object.values(buildings)) {
+        if (details['typeOfBuilding'] === "Raw Material Maker") {
+            await buildingSetUpInner(details);
+        }
+    }
 
+    // Second loop
+    for (const details of Object.values(buildings)) {
+        if (details['typeOfBuilding'] === "Second Level") {
+            await buildingSetUpInner(details);
+        }
+    }
      return
 }
 
@@ -411,18 +421,18 @@ async function buildingSetUp() {
 //const buildingNames = {} // id to Name. This is set up automatically  - may be obsolete
 //const namesBuilding = {} // fullname -> array with first element ID
 
-function buildingSetUpInner(currentBuilding, values) {
-    let nameB = currentBuilding
-    console.log("HERE")
+async function buildingSetUpInner(values) {
+    let nameB = values['name']
+    let fullName = nameB.replace(/_/g, " ")
     if (values['work'] > 0 ) {
         let type = values['type']
-        hoverMap[nameB + 'BuildGrid'] = [nameB + 'ToolTip', nameB + 'Inner', type, nameB, id];
+        hoverMap[nameB + 'BuildGrid'] = [nameB + 'ToolTip', nameB + 'Inner', type, nameB, 'PLACEHOLDER'];
         let string = '<div class="BuildingGrid" id = "'  + nameB + 'BuildGrid"><h5 class="BuildingTitle" id="' + nameB + '">' + fullName + '</h5><button class="BuildingButtonUp BuildingButton '+ nameB + '" >+'
         string += '</button> <button class="BuildingButtonDown BuildingButton '+ nameB + '" >-</button><h5 class="BuildingNumberCurrent"  id="'+ nameB + 'Current">0</h5>'
-        if(currentBuilding.typeOfBuilding != "Housing") {
-            string += '<h5 class="BuildingpeopleWorking"  id="' + nameB + 'peopleWorking' +  '">' +  currentBuilding.working['value'] + '</h5>'
+        if(type != "Housing") {
+            string += '<h5 class="BuildingpeopleWorking"  id="' + nameB + 'peopleWorking' +  '">' +  values['workers'] + '</h5>'
             string += '<h5 class="slash"  id="' + nameB + 'peopleWorking' +  '">' + '/'+ '</h5>'
-            string += '<h5 class="BuildingpeopleCap"  id="' + nameB + 'peopleCap' +  '">' +  currentBuilding.working['maximum'] + '</h5>'
+            string += '<h5 class="BuildingpeopleCap"  id="' + nameB + 'peopleCap' +  '">' +  values['max'] + '</h5>'
             string += '<button class="BuildingButtonWorkersUp BuildingButtonWorkers '+ nameB + '" >+</button>'
             string += '<button class="BuildingButtonWorkersDown BuildingButtonWorkers '+ nameB + '" >-</button>'
 
@@ -436,9 +446,39 @@ function buildingSetUpInner(currentBuilding, values) {
         hoverString += '<div class="flex-container" id="'+ nameB + 'Inner"></div></span>'
         const grid = document.getElementsByClassName('grid-container')[0];
        grid.innerHTML += hoverString
-       console.log(grid, "   ", grid.innerHTML)
     }
-  
-
     return
+}
+
+
+function buttonActionBuilding() {
+    let buildingType = this.className.split(' ')[2];
+    let changeName = buildingType += 'Current'
+    changeNumber = 1
+    if (this.className.includes('BuildingButtonDown')) {
+        changeNumber = -1;
+    }
+
+
+    if (!BuildingChange.has(buildingType)) {
+        BuildingChange.set(buildingType, [0]);
+    }
+    let currentValue = BuildingChange.get(buildingType);
+    currentValue[0] += changeNumber;
+    if (currentValue[0] < 0) {
+        currentValue[0] = 0;
+    }
+    BuildingChange.set(buildingType, currentValue);
+
+
+    const newval = BuildingChange.get(buildingType)[0]; 
+    const element = document.getElementById(changeName);
+    
+    if (element) {
+        element.innerText = newval;  
+    } else {
+        console.error("Element with id:", changeName, "not found.");
+    }
+    
+
 }

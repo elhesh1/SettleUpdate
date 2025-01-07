@@ -1,8 +1,10 @@
 
 async function advance() {   
     currUserName = getCookie('userID').split('userID=')[1]
-    console.log("Advancing", currUserName)
     inputs = []
+    
+
+    await addBuildings(BuildingChange)
     // if (activeSupplyType != undefined) {
     //     console.log(" BRUH 300000")
     //     const response = await fetch(backendpath + `/activeSupplyType/${currUserName}`, {
@@ -15,10 +17,6 @@ async function advance() {
     //     activeSupplyType=undefined
     // }
 
-    //   for (const build in BuildingChange) {
-    //     inputs.push({ 'name': build, 'value': BuildingChange[build][0], 'level' : BuildingChange[build][1] });
-    //   }
-    // const response1 = await fetch(backendpath + `/addCurr/${currUserName}`, {
 
     //     method: 'POST', 
     //     headers: {
@@ -40,7 +38,7 @@ async function advance() {
 
     // BuildingChange = {}
 
-    await advanceJob();              // do jobs
+    await advanceJob();              // do jobs // make sure to reset building queue ids
 
     const response = await fetch(backendpath + `/advancePackage/${currUserName}`); 
     const data = await response.json();
@@ -88,7 +86,7 @@ async function advance() {
     }
     else if (activeTab == 'BuildingsT') {
              /// will have to update this perhaps
-        buildingTabSetUp(data.contacts[5-1].value);
+        buildingTabSetUp();
     }
     else if (activeTab == 'InventoryT'){
         inventoryTabSetUp();
@@ -122,6 +120,8 @@ async function advance() {
     // let cookies = getCookie()
 
     // console.log("COOKIE:  ", cookies)
+    BuildingChange =  new Map();
+
 }
 
 async function advanceJob() {
@@ -137,3 +137,21 @@ async function advanceJob() {
  
 }
 
+async function addBuildings(buildingChange) {
+    console.log("adding building bruh  " , buildingChange)
+    const dataQ = {};
+    console.log(typeof buildingChange)
+    buildingChange.forEach((value, key) => {
+        dataQ[key] = value;
+    });
+
+    const response = await fetch(backendpath + `/${currUserName}/buildings/addQueue`, {
+        method: 'PATCH', 
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({dataQ})  
+    });
+    const data = await response.json();
+    console.log("RESPONSE " , data)
+}
