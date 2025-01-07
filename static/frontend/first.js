@@ -1,15 +1,13 @@
-window.onload = function() {
+ window.onload = function() {
     setGame();
  }
+
 
 // backendpath = `https://americagame-d4e96c50eefc.herokuapp.com/`
 backendpath = `http://127.0.0.1:5000`
 async function setGame() { // this sets up all the functions
-    let reset = document.getElementById('reset');
-    reset.addEventListener('click', resett);
-    console.log("STARTING")
+  
 
-    
     hoverMap =       {
         'FarmerJobGrid'  : ['FarmerJobToolTip','FarmersToolTipText','Job','farmer',1],
         'HuntersJobGrid' : ['HuntersJobToolTip','HuntersToolTipText','Job','hunter',2],
@@ -45,7 +43,6 @@ async function setGame() { // this sets up all the functions
         buttons.forEach(button => {
         button.addEventListener('click', buttonAction);
     });
-    // reset.addEventListener('click', resett2);
     const nextW = document.getElementById('NextW');                 
     nextW.addEventListener('click', async function() {
         nextW.disabled = true; 
@@ -107,7 +104,10 @@ async function setGame() { // this sets up all the functions
     // button6.addEventListener('mouseover', toggleHover,false);
     // button6.addEventListener('mouseleave', toggleHoverOff,false);
     // }); 
-
+    let reset = document.getElementById('reset');
+    reset.addEventListener('click', resett);
+    console.log("STARTING")
+    console.log("SET UP")
 }
 
 function changeValueOfInputForJobs() { // these are the buttons that control how many people are added for a job button ('.B')
@@ -198,6 +198,7 @@ async function getVal( variableName, currUserName = getCookie('userID').split('u
 }
 
 async function resett(newV=0) {     // function from resett it is used 
+    console.log("RESETTING")
     document.getElementById("Season").textContent = "Spring";
     // document.getElementById('One').click();
     // const requestSupply = document.querySelectorAll('.requestSupply');
