@@ -106,8 +106,7 @@ async function setGame() { // this sets up all the functions
     // }); 
     let reset = document.getElementById('reset');
     reset.addEventListener('click', resett);
-    console.log("STARTING")
-    console.log("SET UP")
+
 }
 
 function changeValueOfInputForJobs() { // these are the buttons that control how many people are added for a job button ('.B')

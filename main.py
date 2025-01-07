@@ -211,45 +211,66 @@ def get_buildings(currUserName):
     return jsonify({"buildings": user_buildings})
 
 @app.route("/<string:currUserName>/buildings/addQueue", methods=["PATCH"])
-def create_building_queue(currUserName):
+def create_building_queue(currUserName): # queue is in string form, which is not efficent....
     print("HERE PATCHING")
-#     data = request.json
-#     print(" this is the json  ", data)
-#     user_record = db.session.query(user).filter_by(name=currUserName).first() 
-#     if user_record is None:
-#         return jsonify({"error": "User not found"}), 404
-#     queue = getattr(user_record, 'building_queue')
+    data = request.json
+    print(" this is the json  ", data)
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    if user_record is None:
+        return jsonify({"error": "User not found"}), 404
+    queue = getattr(user_record, 'building_queue')
+    queue = stringQueuetoArray(queue)
+    print("WHAT")
 
-
-#     print(type(queue))
-#     print("length  ", len(queue))
-#     for item in data['dataQ']:
-#         numbertoAdd = data['dataQ'][item][0] 
-        
-#         if len(queue) == 0:
-#             print('Queue is empty, adding new item')
-#             queue.append((0,item, numbertoAdd)) 
-#         else:
-#             last_item = queue[-1]
-#             if last_item[0] == item:
-#                 print(f"Queue has item '{item}', adding {numbertoAdd} to the existing number")
-#                 queue[-1] = (len(queue)-1, last_item[1], last_item[2] + numbertoAdd) 
-#             else:
-#                 print(f"Queue has a different item, adding new entry for '{item}'")
-#                 queue.append((len(queue), item, numbertoAdd)) 
-
-#    # setattr(user_record, 'building_queue', queue)
-#     print("QUEUE " , queue) # this shows queue  [(0, 'Clay_PitCurrent', 5), (1, 'MineCurrent', 2)]
-#     print(type(queue))
+    print(queue)
+    for item in data['dataQ']:
+        print(item)
+        numbertoAdd = str(data['dataQ'][item][0] )
+        if len(queue) == 0:
+            print('Queue is empty, adding new item')
+            queue.append((0,item, numbertoAdd)) 
+        else:
+            last_item = queue[-1]
+            print("LAST ITEM  ", last_item,  "  ", "item  ", item)
+            if last_item[1] == item:
+                print(f"Queue has item '{item}', adding {numbertoAdd} to the existing number")
+                queue[-1] = (len(queue)-1, last_item[1], str(int(last_item[2]) + int(numbertoAdd))) 
+            else:
+                print(f"Queue has a different item, adding new entry for '{item}'")
+                queue.append((len(queue), item, numbertoAdd)) 
+    
+    queue = arrayToStringQueue(queue)
+    setattr(user_record, 'building_queue', queue)
 #     print(type( [(0, 'Clay_PitCurrent', 5), (1, 'MineCurrent', 2)]))
 #     user_record.building_queue =  [(0, 'Clay_PitCurrent', 5), (1, 'MineCurrent', 300)]
 
-#     db.session.commit()
+    db.session.commit()
 #    # print(type(queue)) # its is type list but should be Column(JSON)
 #   #  print("THIS WILL NOT RETURN IT  " ,getattr(user_record, 'building_queue'))
-#     return jsonify({"queue": queue})
-    return jsonify({"message": "Didn't break everything"}), 201
+    return jsonify({"queue": queue})
 
+
+def stringQueuetoArray(queueString):
+
+    items = queueString.split('-')
+    queue = []
+
+    for item in items:
+        if item.strip():  
+            order, name, number = item.split()  
+            queue.append((order, name, int(number)))  
+    return queue
+
+def arrayToStringQueue(queue):
+    queueString = ""
+    print("QUEUEING ", queue)
+    for item in queue:
+        order, name, number = item 
+        queueString += f"{order} {name} {number}-"  
+    if queueString.endswith('-'):
+        queueString = queueString[:-1]
+
+    return queueString
 # def roundResources(currUserName):
 #     user_record = db.session.query(user).filter_by(name=currUserName).first() 
 #     if user_record is None:

@@ -124,8 +124,8 @@ class user(db.Model):
     Forge_Workers = db.Column(db.Integer, nullable=False, default=0)
     Forge_Workers_Max = db.Column(db.Integer, nullable=False, default=0)
 
-    building_queue =  Column(JSON)
-    currently_building_queue =  Column(JSON)
+    building_queue =  Column(db.String, nullable=True)
+    currently_building_queue =  Column(db.String, nullable=True)
 
     def to_json(self):
         return {
