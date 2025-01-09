@@ -284,6 +284,8 @@ def returnHoverString(currUserName,type):
     return jsonify({"string" : hover.hoverString(type,currUserName)})
 
 
+
+
 if __name__ == "__main__": ##### MUST BE AT BOTTOM
     with app.app_context():
         db.create_all() # creates all of the models

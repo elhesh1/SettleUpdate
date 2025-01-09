@@ -270,7 +270,7 @@ async function buttonAction() {
         getVal('Available_value')
             .then(value => {
                 document.getElementById('A').innerText = value;
-               // tooltipSetupBuilding(hoverMap[labelMap[jobID][2]])
+                tooltipSetupBuilding(hoverMap[labelMap[jobID][2]])
             })
             .catch(error => {
                 console.error('Error fetching data for jobID 6:', error);
@@ -431,7 +431,7 @@ async function buildingSetUpInner(values) {
     let nameB = values['name']
     let fullName = nameB.replace(/_/g, " ")
     if (values['work'] > 0 ) {
-        let type = values['type']
+        let type = values['typeOfBuilding']
         hoverMap[nameB + 'BuildGrid'] = [nameB + 'ToolTip', nameB + 'Inner', type, nameB, 'PLACEHOLDER'];
         let string = '<div class="BuildingGrid" id = "'  + nameB + 'BuildGrid"><h5 class="BuildingTitle" id="' + nameB + '">' + fullName + '</h5><button class="BuildingButtonUp BuildingButton '+ nameB + '" >+'
         string += '</button> <button class="BuildingButtonDown BuildingButton '+ nameB + '" >-</button><h5 class="BuildingNumberCurrent"  id="'+ nameB + 'Current">0</h5>'

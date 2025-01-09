@@ -4,14 +4,34 @@ LogCabinCapacity = 4
 
 #building prices
 building_prices = {
-    "Log_Cabin" : {"Work" : 2, "Cost" : {"Wood" : 2}},
-    'Town_Hall' : {"Work" : 0, "Cost" : -1},
-    'Clay_Pit' : {"Work" : 5, "Cost" : {"Wood" : 1} },
-    "Mine" : {"Work" : 15, "Cost" : {"Wood" : 4}},
-    'Kiln' : {"Work" : 3, "Cost" : {"Clay" : 2} },
-    'Forge' : {"Work" : 2, "Cost" :{"Wood" : 4} },
-    'Tool_Shop' : {"Work" : 0, "Cost" : -1}
+    "Log_Cabin" : {"Work" : 2, "Cost" : {"Wood" : 2}  ,"capacity" :  LogCabinCapacity         } ,
+    'Town_Hall' : {"Work" : 0, "Cost" : -1  , "capacity" : 0        },
+    'Clay_Pit' : {"Work" : 5, "Cost" : {"Wood" : 1}, "working" : {"value" : 0, "maximum" : 0, "minimum" : 0}  , 
+            "tools" : {"None" : 0.5, "With" : ['Iron_Shovel',1], "Base" : 0.1},
+            "Inputs" : {}, 
+            "Outputs" : {"17" : 1} ,
+            "capacity" : 5},
+    "Mine" : {"Work" : 15, "Cost" : {"Wood" : 4},    "working" : {"value" : 0,  "maximum" : 0, "minimum" : 0},     
+            "tools" : {"None" : 0.3, "With" : ['Iron_Pickaxe',1.1], "Base" : 0.1}, 
+            "Inputs" : {}, 
+            "Outputs" : {"Iron_Ore" : 1}  ,
+            "capacity" : 4}, 
+    'Kiln' : {"Work" : 3, "Cost" : {"Clay" : 2} ,     "working" : {"value" : 0,  "maximum" : 0, "minimum" : 0},   
+            "tools" : {"None" : 1, "Base" : 0.1}, 
+            "Inputs" : {"Clay" : 1, "Wood" : 0.2}, 
+            "Outputs" : {"Bricks" : 1} ,
+            "capacity" : 4}, 
+    'Forge' : {"Work" : 2, "Cost" :{"Wood" : 4} ,        "working" : {"value" : 0, "maximum" : 0, "minimum" : 0},  
+            "tools" : {"None" : 0.4, "With" : ['Anvil',2],"Base" : 0.1}, 
+            "Inputs" : {"Iron_Ore" : 1, "Wood" : 0.3}, 
+            "Outputs" : {"Iron" : 1} ,
+            "capacity" : 6},
+    'Tool_Shop' : {"Work" : 0, "Cost" : -1 , "capacity" : 0   }
 }
+
+#lol this is kind of useless
+namesToIDs = {'Log_Cabin' : ['Log_Cabin'], 'Town_Hall' : ['Town_Hall'], 'Clay_Pit' : ['Clay_Pit'], 'Mine' : ['Mine'], 'Kiln' : ['Kiln'], 'Forge' : ['Forge'], 'Tool_Shop' : ['Tool_Shop']}
+
 
 from static.backend.models import user
 from flask import request, jsonify
@@ -21,16 +41,15 @@ import os
 two_levels_up = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
 sys.path.insert(0, two_levels_up)
 from config import app, db
-namesToIDs = {'LogCabin' : 1, 'TownHall' : 2, 'ClayPit' : 3, 'Mine' : 4, 'Kiln' : 5, 'Forge' : 6, 'ToolShop' : 7}
 
 
 
 
 
 def housingCapacity(currUserName):
-    offset = user.query.get(currUserName).id
-    logCabin = Building.query.get(1 + offset*buildingOffset)
-    return logCabin.value * logCabin.capacity
+    user_record = db.session.query(user).filter_by(name=currUserName).first()
+    logCabinCount = getattr(user_record,'Log_Cabin')
+    return logCabinCount * LogCabinCapacity
 
 def reactToBuildings(buildingsBuiltThisWeek,currUserName):
     print("going to add buildings to my total")
@@ -49,21 +68,24 @@ def reactToBuildings(buildingsBuiltThisWeek,currUserName):
         return jsonify({"message": f"An error occurred: {str(e)}"}), 500
     
 def buildingsEff(building, currUserName,outputPower=0):
-    offset = user.query.get(currUserName).id
-    strength = round(Contact.query.get(18 + offset*contactOffset).value * 0.01,2)
-    NoToolEfficiency = building.tools['None']
-    count = building.working['value']
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    building_prices[building]
+
+    print("IS THIS THE MAP BRO  ", building_prices[building])
+    currentBuilding = building_prices[building]
+    strength = round(getattr(user_record, 'Strength')* 0.01,2)
+    NoToolEfficiency = currentBuilding['tools']['None']
+    count = currentBuilding['working']['value']
     toolEfficiency = 0
     toolMax = 0
     toolName = "THIS SHOULD BE HIDDEN"
-    if 'With' in building.tools:
+    if 'With' in currentBuilding['tools']:
 
-        toolOfNote = building.tools['With']
-        tool = (Resource.query.get(toolOfNote[0] + offset*resourceOffset)) 
-        toolName = tool.name
-        toolMax = int(tool.value)
+        toolOfNote = currentBuilding['tools']['With']
+        toolName = toolOfNote[0]
+        toolMax = int(getattr(user_record, toolOfNote[0]))
         toolEfficiency = toolOfNote[1]
-    baseEfficiency = building.tools['Base']
+    baseEfficiency = currentBuilding['tools']['Base']
     otherFactors = []
     if toolMax >= count:
         UsingTool = count

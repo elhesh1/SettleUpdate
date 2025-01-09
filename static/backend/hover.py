@@ -1,8 +1,11 @@
-from static.backend.models import Contact, Resource, Building, CurrentlyBuilding, CurrentlyBuildingNeedWork, user,contactOffset,resourceOffset,buildingOffset,countryOffset
+from config import app, db
+from static.backend.models import  user
 import static.backend.buildings as buildings
 import static.backend.citizenActions as citizenActions
-import static.backend.country as country
+#import static.backend.country as country
 def hoverString(typee,currUserName):
+    print("STARTING RIGHT HERE FOR THE HOVERS")
+    print('type   ', typee, '  ', currUserName)
     if typee == 'health':
         return healthString(currUserName)
     if str(typee)[0] == '.': 
@@ -17,15 +20,20 @@ def hoverString(typee,currUserName):
         return plantedString()
     return buildingToString(typee,currUserName)
 
-jobMap = {'farmer': 1, 'hunter': 2, 'cook': 3, 'logger' : 4, 'butcher' : 11, 'builder' : 15}
+jobMap = {'farmer': ['Farmer_value'], 
+          'hunter': ['Hunter_value'], 
+          'cook': ['Baker_value'], 
+          'logger' : ['Logger_value'],
+         'butcher' : ['Butcher_value'],
+           'builder' : ['Builder_value']}
 
 def jobString(typee,currUserName):
-    offset = user.query.get(currUserName).id
-    JobValue = Contact.query.get(jobMap[typee] + offset*contactOffset)
-    season = str(Contact.query.get(8 + offset*contactOffset).value)
-    baseEfficiency = JobValue.efficiency['e']
-    seasonEfficiency = JobValue.efficiency['season'][season]
-    strength = Contact.query.get(18 + offset*contactOffset).value * 0.01
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    JobValue = getattr(user_record, jobMap[typee][0])
+    season = getattr(user_record,'season')
+    baseEfficiency = citizenActions.jobEfficencies[jobMap[typee][0]]['e']
+    seasonEfficiency = citizenActions.jobEfficencies[jobMap[typee][0]]['season'][season]
+    strength = getattr(user_record,'Strength') * 0.01
     string = ''
     string += '<div class="flexitem" style="text-align: center; width: 100%">'
     string += 'Efficiency Factors</div>'
@@ -171,11 +179,11 @@ def jobString(typee,currUserName):
     return string
 
 def healthString(currUserName):
-    offset = user.query.get(currUserName).id
-    nFoodTypes = Contact.query.get(17 + offset*contactOffset).value
-    health = Contact.query.get(13 + offset*contactOffset).value 
-    rationP = Contact.query.get(12 + offset*contactOffset).value
-    pop = Contact.query.get(5 + offset*contactOffset).value
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    nFoodTypes = getattr(user_record,'numberofFoods' )
+    health =   getattr(user_record, 'Health' )
+    rationP =   getattr(user_record, 'RationP')
+    pop =  getattr(user_record, 'Population')
     housed = buildings.housingCapacity(currUserName)
     string = ""
     string += '<div class="flexitem" style="text-align: left; width: 100%">'
@@ -244,7 +252,7 @@ buildingLevelsT = [
 value = buildingLevels[1]['capacity']
 
 def buildingStringUpgrade(typee,currUserName):
-    offset = user.query.get(currUserName).id
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
     buildingString = typee.split(".")[1]
     print("BS ", buildingString)
     building = Building.query.get(buildingMap[buildingString] + offset*buildingOffset)
@@ -292,22 +300,27 @@ def buildingStringUpgrade(typee,currUserName):
     return string  
 
 def buildingToString(typee,currUserName):
-    offset = user.query.get(currUserName).id
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
     string = ''
-    print("Offsets    ", resourceOffset, "   ")
-    print("Offsets    ", buildings.namesToIDs[typee], "   ", buildingOffset, "  ", offset, " ",buildings.namesToIDs[typee] + buildingOffset*offset )
 
     if typee in buildings.namesToIDs:
-        currBuilding = Building.query.get(buildings.namesToIDs[typee] + buildingOffset*offset)
-        costList = currBuilding.cost
+        currBuilding = buildings.namesToIDs[typee][0]
+        costList = buildings.building_prices[currBuilding]['Cost']
+        print("COST LIST ", costList)
+        print('Work   ', (user_record,buildings.building_prices[currBuilding]['Work'])) 
         if costList != None:
             string += '<div class="flexitem" id="Cost" style="text-align: center">' + 'Cost:' + '</div>'
             for val in costList:
-                string  +=' <div class="flexitem" style="display: flex; justify-content: space-between; width: 100%;"><div style="text-align: left; ">' + str(Resource.query.get(int(val) + offset*resourceOffset).name)
+                print("VALLL   ", val)
+                string  +=' <div class="flexitem" style="display: flex; justify-content: space-between; width: 100%;"><div style="text-align: left; ">' + str(val)
                 string += '</div> <div style="text-align: right;">' + str(costList[val]) + '</div></div>'
-        string +=    '<div class="flexitem" style="display: flex; justify-content: space-between; width: 100%;"><div style="text-align: left; ">Work</div> <div style="text-align: right;">' + str(currBuilding.work) +'</div></div>'
+        string +=    '<div class="flexitem" style="display: flex; justify-content: space-between; width: 100%;"><div style="text-align: left; ">Work</div> <div style="text-align: right;">' + str(buildings.building_prices[currBuilding]['Work']) +'</div></div>'
         string += '<div class="flexitem ToolTipLine" width="80%" size="4"></div>'                                # line
-        if currBuilding.working is not None:
+    
+    
+    
+    
+        if  buildings.building_prices[currBuilding]['Work'] is not None and currBuilding != 'Log_Cabin':
                 toolEfficiency, UsingTool, UsingNoTools, NoToolEfficiency, totalEfficiency, count, baseEfficiency, otherFactors, toolName, strength  = buildings.buildingsEff(currBuilding,currUserName) 
                 string += '<div class="flexitem" style="text-align: center; width: 100%">'
                 string += 'Efficiency Factors</div>'
@@ -334,8 +347,9 @@ def buildingToString(typee,currUserName):
                     string += str(NoToolEfficiency)
                     string +=  '</div></div>'
                 string += efficiencyAndCount(totalEfficiency,count)
-                if  currBuilding.Inputs:
-                    Inputs = currBuilding.Inputs
+                print("BREAKING HERE   ",  buildings.building_prices[currBuilding]['Work'] )
+                if  buildings.building_prices[currBuilding]['Inputs']:
+                    Inputs = buildings.building_prices[currBuilding]['Inputs']
                     first = 0
                     for key in Inputs:
                         if first == 0:
@@ -343,15 +357,15 @@ def buildingToString(typee,currUserName):
                             string += '<div class="flexitem" style="display: flex; justify-content: space-between; width: 100%;"><div style="text-align: left; ">'
                             string += 'Input: '
                             string += '</div> <div style="text-align: right;">'
-                            string += '-' + str(round(Inputs[key] * totalEfficiency * count,2))+ ' '  + str(Resource.query.get(int(key) + offset*resourceOffset).name)+ ' ' 
+                            string += '-' + str(round(Inputs[key] * totalEfficiency * count,2))+ ' '  + str(key)+ ' ' 
                             string +=  '</div></div>'
                         else:
                             string += '<div class="flexitem" style="display: flex; justify-content: space-between; width: 100%;"><div style="text-align: left; ">'
                             string += '</div> <div style="text-align: right;">'
-                            string += '-' + str(round(Inputs[key]* totalEfficiency * count,2)) + ' '  + str(Resource.query.get(int(key) + offset*resourceOffset).name) + ' ' 
+                            string += '-' + str(round(Inputs[key]* totalEfficiency * count,2)) + ' '  + str(key) + ' ' 
                             string +=  '</div></div>'
-                if  currBuilding.Outputs:
-                    Outputs = currBuilding.Outputs
+                if  buildings.building_prices[currBuilding]['Outputs']:
+                    Outputs = buildings.building_prices[currBuilding]['Outputs']
                     first = 0
                     for key in Outputs:
                         if first == 0:
@@ -359,19 +373,22 @@ def buildingToString(typee,currUserName):
                             string += '<div class="flexitem" style="display: flex; justify-content: space-between; width: 100%;"><div style="text-align: left; ">'
                             string += 'Outputs: '
                             string += '</div> <div style="text-align: right;">'
-                            string +=  str(round(Outputs[key]* totalEfficiency * count,2)) + ' '  + str(Resource.query.get(int(key) + offset*resourceOffset).name) + ' ' 
+                            string +=  str(round(Outputs[key]* totalEfficiency * count,2)) + ' '  + str(key) + ' ' 
                             string +=  '</div></div>'
                         else:
                             string += '<div class="flexitem" style="display: flex; justify-content: space-between; width: 100%;"><div style="text-align: left; ">'
                             string += '</div> <div style="text-align: right;">'
-                            string +=  str(round(Outputs[key]* totalEfficiency * count,2)) + ' '  + str(Resource.query.get(int(key) + offset*resourceOffset).name) + ' ' 
+                            string +=  str(round(Outputs[key]* totalEfficiency * count,2)) + ' '  + str(key) + ' ' 
                             string +=  '</div></div>'
                 string += '<div class="flexitem ToolTipLine" width="80%" size="4"></div>'                                # line
             #  if currBuilding.Inputs == {}
-        if currBuilding.capacity != 0:
+        print("BREAKING RIGHT HERE  ", buildings.building_prices[currBuilding])
+        print("BREAKING RIGHT HERE  ", buildings.building_prices[currBuilding]['capacity'])
+
+        if buildings.building_prices[currBuilding]['capacity'] != 0:
                 string += '<div class="flexitem" style="display: flex; justify-content: space-between; width: 100%;"><div style="text-align: left; ">Building Capacity:'
                 string += '</div> <div style="text-align: right;">'
-                string +=  str(round(currBuilding.capacity)) 
+                string +=  str(round(buildings.building_prices[currBuilding]['capacity'])) 
                 string +=  '</div></div>'   
 
 
@@ -383,13 +400,11 @@ def buildingToString(typee,currUserName):
 
 
 def description(typee,currUserName):
-    offset = user.query.get(currUserName).id
-    print("This offset:   ", int(buildings.namesToIDs[typee]), "  ", offset, " ", buildingOffset, " ", int(buildings.namesToIDs[typee]) + offset*buildingOffset )
-    currBuilding = Building.query.get(int(buildings.namesToIDs[typee]) + offset*buildingOffset)
-    if typee == 'LogCabin':
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    if typee == 'Log_Cabin':
         string = ''
-        sum = round(currBuilding.value * currBuilding.capacity)
-        string +=  '<div class="flexitem" id="Cost" style="text-align: left; width: 100%">' + 'Each '+ 'log cabin' + ' can house ' +  str(currBuilding.capacity) +  ' people. The ' +  str(currBuilding.value) + " " + 'log cabin' + 's currently built house ' + str(sum) + ' citizens' +  '</div>'
+        sum = round(getattr(user_record, 'Log_Cabin') * buildings.building_prices['Log_Cabin']['capacity'] )
+        string +=  '<div class="flexitem" id="Cost" style="text-align: left; width: 100%">' + 'Each '+ 'log cabin' + ' can house ' +  str(buildings.building_prices['Log_Cabin']['capacity']) +  ' people. The ' +  str(getattr(user_record, 'Log_Cabin')) + " " + 'log cabin' + 's currently built house ' + str(sum) + ' citizens' +  '</div>'
         return string
     return ""
 def plantedString():

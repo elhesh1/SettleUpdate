@@ -1,7 +1,7 @@
 let hoverMap = {}
 const hoverState = new Map();
 const tooltipInProgress = new Map(); 
-
+ 
 async function toggleHover() {
   const id = this.id;
   // console.log (" ID ", id)
@@ -36,6 +36,7 @@ async function toggleHoverOff() {
 }
 
 async function tooltipSetupBuilding(map) {
+  console.log("MAPPPPP  ", map)
     let cost = document.getElementById(map[1]);
     string = ''
     string +='<div class="flexitem ToolTipLine" width="80%" size="4"></div>'  //line
@@ -56,6 +57,7 @@ async function tooltipSetupBuilding(map) {
 }
 
 async function getBuilding(user_id) {
+  currUserName = getCookie('userID').split('userID=')[1]
   try {
       const response = await fetch(backendpath + `/buildings/${user_id}/${currUserName}`); 
       if (!response.ok) {
@@ -85,6 +87,7 @@ async function StrengthString() {
 }
 
 async function hoverString(type) {
+  currUserName = getCookie('userID').split('userID=')[1]
   try {
     const response = await fetch(backendpath + `/hoverString/${type}/${currUserName}`);
     if (!response.ok) {
