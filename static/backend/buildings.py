@@ -4,7 +4,7 @@ LogCabinCapacity = 4
 
 #building prices
 building_prices = {
-    "Log_Cabin" : {"Work" : 2, "Cost" : {"Wood" : 2}  ,"capacity" :  LogCabinCapacity         } ,
+    "Log_Cabin" : {"Work" : 2, "Cost" : {"Wood" : 2}  , "capacity" :  LogCabinCapacity         } ,
     'Town_Hall' : {"Work" : 0, "Cost" : -1  , "capacity" : 0        },
     'Clay_Pit' : {"Work" : 5, "Cost" : {"Wood" : 1}, "working" : {"value" : 0, "maximum" : 0, "minimum" : 0}  , 
             "tools" : {"None" : 0.5, "With" : ['Iron_Shovel',1], "Base" : 0.1},

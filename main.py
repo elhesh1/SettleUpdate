@@ -249,7 +249,8 @@ def returnCurrentBuildings(currUserName):
     if user_record is None:
         return jsonify({"error": "User not found"}), 404
     queue = getattr(user_record, 'building_queue')
-    return jsonify({"queue": queue})
+    currently = getattr(user_record, 'currently_building_queue')
+    return jsonify({"queue": queue, "currently" :  currently})
 
 
 # def roundResources(currUserName):

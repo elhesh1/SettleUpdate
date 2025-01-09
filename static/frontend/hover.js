@@ -36,7 +36,7 @@ async function toggleHoverOff() {
 }
 
 async function tooltipSetupBuilding(map) {
-  console.log("MAPPPPP  ", map)
+  //console.log("MAPPPPP  ", map)
     let cost = document.getElementById(map[1]);
     string = ''
     string +='<div class="flexitem ToolTipLine" width="80%" size="4"></div>'  //line

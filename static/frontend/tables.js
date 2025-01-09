@@ -151,7 +151,7 @@ function stringQueueToArray(queueString) {
 
     return queue;
 }
-async function getQueue() {
+async function getQueue() { 
     try {
         let response = await fetch(backendpath + `/currentContent/${currUserName}`);
         if (!response.ok) {
@@ -160,7 +160,6 @@ async function getQueue() {
         let string = "<table><thead><tr><th>Name</th><th>Value</th><th>  </th><th></th></tr></thead><tbody>";
         const BQueue = await response.json();
         queue = stringQueueToArray(BQueue['queue'])
-        console.log("BUILDING Q RIGHT HERE  ", queue)
         let b2 = BQueue['buildingList'] // b2 is just the list of buildings
         let buildings = BQueue['buildings']
         

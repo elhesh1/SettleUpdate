@@ -183,9 +183,9 @@ def buildbuild(c,i,currUserName):
   #  print(" THIS IS THE  curbuiq  ", currently_building_queue)
 #     global buildingsBuiltThisWeek
 #     temp = c.name
+ ##   print("BUILD BUILD Enter   ", c,  i, "  ", currently_building_queue)
     found_building = False
     if currently_building_queue not in ("", None) and currently_building_queue != []: # THERE IS SOMETHING ALREADY IN THE CURRENTLY BUILDING
-        print('middle  ', i )
         found_building = False
         j = 0
         loopOver = False
@@ -195,9 +195,9 @@ def buildbuild(c,i,currUserName):
                 
 
                 if currently_building[1].split('Current')[0] == c[1].split('Current')[0]:
-                    print("THIS JOHN is NOT empty lmao take a look inside", currently_building)
+             #       print("THIS JOHN is NOT empty lmao take a look inside", currently_building)
                     #currently_building[2]  # this is the work left
-                    print(currently_building[2]  , "   and   ", weeklyBuildPower, "    and ", currently_building_queue[i])
+             #       print(currently_building[2]  , "   and   ", weeklyBuildPower, "    and ", currently_building_queue[i])
                     if weeklyBuildPower >= currently_building[2]:  # We can build the building
                         currently_building = (currently_building[0], currently_building[1], 0)
                         weeklyBuildPower -= currently_building[2]  
@@ -206,21 +206,27 @@ def buildbuild(c,i,currUserName):
 
 
                         buildings_to_add.append((0,currently_building[1] ,0))
-                        print("                                                               Adding a building woohoo")
+                  ##      print("                                                               Adding a building woohoo")
                         current = (getattr(user_record, 'building_queue') ) # show that we have lone less in the Q
                         current = stringQueuetoArray(current)
+                        print("Current i b4  " , current[i])
                         updatingbuildingqueue = (current[i][0], current[i][1], int(current[i][2] - 1))
+                        print('current i after' , updatingbuildingqueue)
                         current[i] = updatingbuildingqueue
+
+
+                        # array = current
+                        # get array and remove all rows that are (x,x, 0)
+                        current = [row for row in current if not( row[2] == 0)]
 
                         setattr(user_record, 'building_queue' ,arrayToStringQueue(current))
 
                         #### WE CAN STILL BUILD DO SOMETHING ABOUT THAT
                     else:
                         # we can't build shit but we can start
-                        print("we can try ", weeklyBuildPower)
+                     ##   print("   we can try ", weeklyBuildPower)
                         currently_building = (currently_building[0], currently_building[1], currently_building[2] - weeklyBuildPower)
                         weeklyBuildPower = 0
-                        print(currently_building)
                         found_building = True  # Exit the loop 
                 currently_building_queue[j] = currently_building
                 currently_building_queue = [item for item in currently_building_queue if item[2] != 0]
@@ -230,28 +236,31 @@ def buildbuild(c,i,currUserName):
 
     if found_building == False:                         # NOTHING IS BEING BUILT - if found building = false we did not find it
         building = c[1].split('Current')[0]
-        print("this is empty  ", building)
+     ##   print("       this is empty  ", building)
         costs = buildings.building_prices[building]['Cost']
-        print(costs)
 
         buildable = 1
         for cost in costs:  #
-            print("COST :   ", cost)
+     ##       print("COST :   ", cost)
             valueWeHave = getattr(user_record, cost)
             
             if costs[cost] <= valueWeHave:
                 print("WE HAVE enough: " , valueWeHave, "  and we need  ", costs[cost])
             else:
-               print("WE DONT HAVE enough: " , valueWeHave, "  and we need  ", costs[cost]) 
+          ##     print("WE DONT HAVE enough: " , valueWeHave, "  and we need  ", costs[cost]) 
                buildable = 0
         
         if buildable == 1:
             # we can start construction on this boy
-            print('we can build')
+         ##   print('we can build')
             for cost in costs:
                 setattr(user_record, cost , getattr(user_record, cost) - costs[cost])
             currently_building_queue.append((1, building, int(buildings.building_prices[building]['Work'])))  
         
+
+
+  ##  print("BUILD BUILD Exit   ", c,  i, "  ", currently_building_queue)
+
 
     buildings_to_add = arrayToStringQueue(buildings_to_add)
     currently_building_queue = arrayToStringQueue(currently_building_queue)
@@ -511,7 +520,7 @@ def BuilderEff(currUserName):
     return totalEfficiency, count , count*totalEfficiency 
 
 def stringQueuetoArray(queueString, intt=1):
-
+    print("Q STRING  :   ", queueString)
     items = queueString.split('-')
     queue = []
     if (intt == 1):
