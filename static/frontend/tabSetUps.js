@@ -17,6 +17,41 @@ async function buildingTabSetUp() {
     string = 'Housing Provided: '+ housed + ' / ' + pop;
     housingvalue.innerText = string;
     
+    const response = await fetch(backendpath + `/buildings/${currUserName}/`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'An unknown error occurred');
+    }
+    const data = await response.json();
+    let buildings = data['buildings']
+
+
+    console.log("BUILDINGS IN THE BUILDING TAB SET UP TYPE SHIT  ",  buildings)
+    a = document.getElementById('TownHallcurrently');
+    a.innerText = buildings['Town_Hall']['value'];
+
+    b = document.getElementById('ToolShopcurrently');
+    b.innerText = buildings['Tool_Shop']['value'];
+
+    c = document.getElementById('Log_Cabincurrently');
+    c.innerText = buildings['Log_Cabin']['value'];
+
+    d = document.getElementById('Clay_Pitcurrently');
+    d.innerText = buildings['Clay_Pit']['value'];
+
+    e = document.getElementById('Minecurrently');
+    e.innerText = buildings['Mine']['value'];
+
+    f = document.getElementById('Forgecurrently');
+    f.innerText = buildings['Forge']['value'];
+
+    g = document.getElementById('Kilncurrently');
+    g.innerText = buildings['Kiln']['value'];
 }
 
 async function inventoryTabSetUp() {
@@ -34,12 +69,12 @@ async function tabReset() {
 
 }
 
-function tabSetUp() {
+async function tabSetUp() {
     if (activeTab == 'FoodT') {
         foodTabSetUp();
     }
     else if (activeTab == 'BuildingsT') {
-        buildingTabSetUp();
+        await buildingTabSetUp();
     }
     else if (activeTab == 'InventoryT'){
         inventoryTabSetUp();

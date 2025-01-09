@@ -39,7 +39,7 @@ async function advance() {
     // BuildingChange = {}
 
     await advanceJob();              // do jobs // make sure to reset building queue ids
-
+    await getQueue();
     const response = await fetch(backendpath + `/advancePackage/${currUserName}`); 
     const data = await response.json();
     let w = data['week'];  
@@ -111,15 +111,7 @@ async function advance() {
     // }); 
 
 
-    // let exdays = 365
-    // let uniqueId = generateUUID();
-
-    // let cname = "name"
-    // setCookie(cname, uniqueId, exdays)
-
-    // let cookies = getCookie()
-
-    // console.log("COOKIE:  ", cookies)
+   
     BuildingChange =  new Map();
 
 }

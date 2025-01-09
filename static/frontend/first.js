@@ -78,32 +78,32 @@ async function setGame() { // this sets up all the functions
     // reset.addEventListener('click', resett2);
 
 
-    // const buttons3 = document.querySelectorAll('.jobGrid');            
-    //     buttons3.forEach(button3 => {
-    //     button3.addEventListener('mouseover', toggleHover,false);
-    //     button3.addEventListener('mouseleave', toggleHoverOff,false);
-    //     });
-    // const buttons4 = document.querySelectorAll('.BuildingGrid');                
-    //     buttons4.forEach(button4 => {
-    //     button4.addEventListener('mouseover', toggleHover,false);
-    //     button4.addEventListener('mouseleave', toggleHoverOff,false);
-    //     });  
+    const buttons3 = document.querySelectorAll('.jobGrid');            
+        buttons3.forEach(button3 => {
+        button3.addEventListener('mouseover', toggleHover,false);
+        button3.addEventListener('mouseleave', toggleHoverOff,false);
+        });
+    const buttons4 = document.querySelectorAll('.BuildingGrid');                
+        buttons4.forEach(button4 => {
+        button4.addEventListener('mouseover', toggleHover,false);
+        button4.addEventListener('mouseleave', toggleHoverOff,false);
+        });  
         
     // getQueue();
     // reset.addEventListener('click', resett2);
     // document.getElementById('InventoryT').click();      //              ///////// Opening Tab ///////////////
     // await showValues();
 
-    // const buttons5 = document.querySelectorAll('.Hover');                
-    // buttons5.forEach(button5 => {
-    // button5.addEventListener('mouseover', toggleHover,false);
-    // button5.addEventListener('mouseleave', toggleHoverOff,false);
-    // });  
-    // const buttons6 = document.querySelectorAll('.HoverSupply');
-    // buttons6.forEach(button6 => {
-    // button6.addEventListener('mouseover', toggleHover,false);
-    // button6.addEventListener('mouseleave', toggleHoverOff,false);
-    // }); 
+    const buttons5 = document.querySelectorAll('.Hover');                
+    buttons5.forEach(button5 => {
+    button5.addEventListener('mouseover', toggleHover,false);
+    button5.addEventListener('mouseleave', toggleHoverOff,false);
+    });  
+    const buttons6 = document.querySelectorAll('.HoverSupply');
+    buttons6.forEach(button6 => {
+    button6.addEventListener('mouseover', toggleHover,false);
+    button6.addEventListener('mouseleave', toggleHoverOff,false);
+    }); 
     let reset = document.getElementById('reset');
     reset.addEventListener('click', resett);
 
@@ -402,6 +402,12 @@ async function buildingSetUp() {
     let buildings = await fetchBuildingCostMap();
     buildings = buildings['buildings']
  
+    for (const details of Object.values(buildings)) {
+        if (details['typeOfBuilding'] === "Housing") {
+            await buildingSetUpInner(details);
+        }
+    }
+
     for (const details of Object.values(buildings)) {
         if (details['typeOfBuilding'] === "Raw Material Maker") {
             await buildingSetUpInner(details);

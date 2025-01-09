@@ -59,7 +59,6 @@ def eat(currUserName):
     return jsonify({"message": " Values updated"}), 201
 
 def eatHelper(expectedFood,currUserName,user_record):
-    offset = user.query.get(currUserName).id
     global nFoodTypes
     FoodTypeValues = [0,0,0,0]
     nFoodTypes = 0
@@ -137,32 +136,129 @@ def eatHelper(expectedFood,currUserName,user_record):
         eatHelper(foodleft,currUserName,user_record)
 
     db.session.commit()
+ 
+def build(currUserName): #16
+    print("FUCKING GOT HERE")
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    if user_record is None:
+        return jsonify({"error": "User not found"}), 404
+    global buildingsBuiltThisWeek
+    buildingsBuiltThisWeek = {}
+    weeklyBuildPower = BuilderEff(currUserName)[2] 
+    setattr(user_record, 'weekly_build_power', weeklyBuildPower)
+    print("BUILD POWER  ", weeklyBuildPower)
+    current = (getattr(user_record, 'building_queue') )
+    print("CURRENT      ", current)
+    current = stringQueuetoArray(current)
+    print("CURRENT      ", current)
 
-# def build(currUserName): #16
+    for i in range( len(current)):        # iterate through each building
+        c = current[i]
+        print("CURRENTLY BUILDING : " , c)
+        buildbuild(c,i,currUserName)
+  
+    
+    buildings.reactToBuildings(buildingsBuiltThisWeek,currUserName)
+    setattr(user_record,'weekly_build_power', 0)
+
+    buildings_to_add = getattr(user_record, 'buildings_to_add')
+    buildings_to_add = stringQueuetoArray(buildings_to_add)
+    print("BUILDLINGS TO ADD  ", buildings_to_add)
+    for building in buildings_to_add:
+        print(" THIS BUILDING 2ah    ", building[1])
+        setattr(user_record, building[1], int((getattr(user_record,building[1])) + 1))
+    setattr(user_record, "buildings_to_add", "")
+    db.session.commit()
+
+
+def buildbuild(c,i,currUserName):
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+
 #     offset = user.query.get(currUserName).id
-#     global weeklyBuildPower
-#     global buildingsBuiltThisWeek
-#     buildingsBuiltThisWeek = {}
-#     weeklyBuildPower = BuilderEff(currUserName)[2] 
-#     index = Contact.query.get(16 + offset*contactOffset).value - 1
-#     current = CurrentlyBuilding.query.filter(CurrentlyBuilding.currUserName == currUserName).all()
-#     for i in range(index, len(current)):        # iterate through each building
-#         c = current[i]
-#         print("CURRENTLY BUILDING : " , current)
-#         buildbuild(c,i,currUserName)
-#     rows = CurrentlyBuilding.query.filter(Resource.currUserName == currUserName).all()
-#     for row in rows:
-#         if row.value == 0:
-#             db.session.delete(row)  
-#     db.session.commit()
-#     buildings.reactToBuildings(buildingsBuiltThisWeek,currUserName)
-
-
-# def buildbuild(c,i,currUserName):
-#     offset = user.query.get(currUserName).id
-#     global weeklyBuildPower
+    weeklyBuildPower = getattr(user_record, 'weekly_build_power')
+    currently_building_queue = getattr(user_record,'currently_building_queue')
+    currently_building_queue = stringQueuetoArray(currently_building_queue,0)
+    buildings_to_add = getattr(user_record, 'buildings_to_add')
+    buildings_to_add = stringQueuetoArray(buildings_to_add)
+  #  print(" THIS IS THE  curbuiq  ", currently_building_queue)
 #     global buildingsBuiltThisWeek
 #     temp = c.name
+    found_building = False
+    if currently_building_queue not in ("", None) and currently_building_queue != []: # THERE IS SOMETHING ALREADY IN THE CURRENTLY BUILDING
+        print('middle  ', i )
+        found_building = False
+        j = 0
+        loopOver = False
+        while currently_building_queue and not found_building and not loopOver:
+            if j in range(len(currently_building_queue)):
+                currently_building = currently_building_queue[j]
+                
+
+                if currently_building[1].split('Current')[0] == c[1].split('Current')[0]:
+                    print("THIS JOHN is NOT empty lmao take a look inside", currently_building)
+                    #currently_building[2]  # this is the work left
+                    print(currently_building[2]  , "   and   ", weeklyBuildPower, "    and ", currently_building_queue[i])
+                    if weeklyBuildPower >= currently_building[2]:  # We can build the building
+                        currently_building = (currently_building[0], currently_building[1], 0)
+                        weeklyBuildPower -= currently_building[2]  
+                        found_building = True  
+
+
+
+                        buildings_to_add.append((0,currently_building[1] ,0))
+                        print("                                                               Adding a building woohoo")
+                        current = (getattr(user_record, 'building_queue') ) # show that we have lone less in the Q
+                        current = stringQueuetoArray(current)
+                        updatingbuildingqueue = (current[i][0], current[i][1], int(current[i][2] - 1))
+                        current[i] = updatingbuildingqueue
+
+                        setattr(user_record, 'building_queue' ,arrayToStringQueue(current))
+
+                        #### WE CAN STILL BUILD DO SOMETHING ABOUT THAT
+                    else:
+                        # we can't build shit but we can start
+                        print("we can try ", weeklyBuildPower)
+                        currently_building = (currently_building[0], currently_building[1], currently_building[2] - weeklyBuildPower)
+                        weeklyBuildPower = 0
+                        print(currently_building)
+                        found_building = True  # Exit the loop 
+                currently_building_queue[j] = currently_building
+                currently_building_queue = [item for item in currently_building_queue if item[2] != 0]
+                j += 1
+            else:
+                loopOver = True
+
+    if found_building == False:                         # NOTHING IS BEING BUILT - if found building = false we did not find it
+        building = c[1].split('Current')[0]
+        print("this is empty  ", building)
+        costs = buildings.building_prices[building]['Cost']
+        print(costs)
+
+        buildable = 1
+        for cost in costs:  #
+            print("COST :   ", cost)
+            valueWeHave = getattr(user_record, cost)
+            
+            if costs[cost] <= valueWeHave:
+                print("WE HAVE enough: " , valueWeHave, "  and we need  ", costs[cost])
+            else:
+               print("WE DONT HAVE enough: " , valueWeHave, "  and we need  ", costs[cost]) 
+               buildable = 0
+        
+        if buildable == 1:
+            # we can start construction on this boy
+            print('we can build')
+            for cost in costs:
+                setattr(user_record, cost , getattr(user_record, cost) - costs[cost])
+            currently_building_queue.append((1, building, int(buildings.building_prices[building]['Work'])))  
+        
+
+    buildings_to_add = arrayToStringQueue(buildings_to_add)
+    currently_building_queue = arrayToStringQueue(currently_building_queue)
+    setattr(user_record,'currently_building_queue',currently_building_queue)
+    setattr(user_record, 'weekly_build_power', weeklyBuildPower)
+    setattr(user_record, 'buildings_to_add', buildings_to_add)
+    db.session.commit()
 
 #     if temp == 2 or temp == 7:
 #         print("update?")
@@ -271,8 +367,8 @@ def eatHelper(expectedFood,currUserName,user_record):
 #             db.session.commit()
 #             buildbuild(c,i,currUserName)
 
+
 def farmerEff(season,currUserName):
-        offset = user.query.get(currUserName).id
 
         user_record = db.session.query(user).filter_by(name=currUserName).first() 
         if user_record is None:
@@ -414,3 +510,29 @@ def BuilderEff(currUserName):
     totalEfficiency = baseEfficiency * seasonEfficiency * strength
     return totalEfficiency, count , count*totalEfficiency 
 
+def stringQueuetoArray(queueString, intt=1):
+
+    items = queueString.split('-')
+    queue = []
+    if (intt == 1):
+        for item in items:
+            if item.strip():  
+                order, name, number = item.split()  
+                queue.append((order, name, int(number) ))  
+    else:
+         for item in items:
+            if item.strip():  
+                order, name, number = item.split()  
+                queue.append((order, name, float(number)))  
+    return queue
+
+def arrayToStringQueue(queue):
+    queueString = ""
+    print("QUEUEING ", queue)
+    for item in queue:
+        order, name, number = item 
+        queueString += f"{order} {name} {number}-"  
+    if queueString.endswith('-'):
+        queueString = queueString[:-1]
+
+    return queueString

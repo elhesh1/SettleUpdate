@@ -124,8 +124,12 @@ class user(db.Model):
     Forge_Workers = db.Column(db.Integer, nullable=False, default=0)
     Forge_Workers_Max = db.Column(db.Integer, nullable=False, default=0)
 
+
+
+    weekly_build_power = db.Column(db.Integer, nullable=False, default=0)
     building_queue =  Column(db.String, nullable=True)
     currently_building_queue =  Column(db.String, nullable=True)
+    buildings_to_add = Column(db.String, nullable=True)
 
     def to_json(self):
         return {
@@ -243,7 +247,9 @@ class user(db.Model):
                 "Forge_Workers_Max" : self.Forge_Workers_Max
             },
             "building_queue" : self.building_queue,
-            "currently_building_queue" : self.currently_building_queue
+            "currently_building_queue" : self.currently_building_queue,
+            "weekly_build_power" : self.weekly_build_power,
+            "buildings_to_add" : self.buildings_to_add
         }
     
 

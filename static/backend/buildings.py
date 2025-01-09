@@ -2,6 +2,17 @@
 # important building variables ig
 LogCabinCapacity = 4
 
+#building prices
+building_prices = {
+    "Log_Cabin" : {"Work" : 2, "Cost" : {"Wood" : 2}},
+    'Town_Hall' : {"Work" : 0, "Cost" : -1},
+    'Clay_Pit' : {"Work" : 5, "Cost" : {"Wood" : 1} },
+    "Mine" : {"Work" : 15, "Cost" : {"Wood" : 4}},
+    'Kiln' : {"Work" : 3, "Cost" : {"Clay" : 2} },
+    'Forge' : {"Work" : 2, "Cost" :{"Wood" : 4} },
+    'Tool_Shop' : {"Work" : 0, "Cost" : -1}
+}
+
 from static.backend.models import user
 from flask import request, jsonify
 #from static.backend.variableHelpers import factoryTrades
@@ -22,14 +33,14 @@ def housingCapacity(currUserName):
     return logCabin.value * logCabin.capacity
 
 def reactToBuildings(buildingsBuiltThisWeek,currUserName):
-    offset = user.query.get(currUserName).id
-    for key in buildingsBuiltThisWeek:
-        CurrentlyBuilding = Building.query.get(key)
-        if CurrentlyBuilding.working is not None:
-            cpw = CurrentlyBuilding.working
-            maximum = CurrentlyBuilding.value * CurrentlyBuilding.capacity
-            CurrentlyBuilding.working =  {'value': int(cpw['value']), 'maximum': int(maximum), 'minimum': int(cpw['minimum'])}
-            db.session.add(CurrentlyBuilding)
+    print("going to add buildings to my total")
+    # for key in buildingsBuiltThisWeek:
+    #     CurrentlyBuilding = Building.query.get(key)
+    #     if CurrentlyBuilding.working is not None:
+    #         cpw = CurrentlyBuilding.working
+    #         maximum = CurrentlyBuilding.value * CurrentlyBuilding.capacity
+    #         CurrentlyBuilding.working =  {'value': int(cpw['value']), 'maximum': int(maximum), 'minimum': int(cpw['minimum'])}
+    #         db.session.add(CurrentlyBuilding)
 
     try:
         db.session.commit()

@@ -135,3 +135,89 @@ async function fetchBuildingCostMap() {
         console.error('Error fetching building cost map:', error);
     }
 }
+
+
+function stringQueueToArray(queueString) {
+    const items = queueString.split('-');
+    const queue = [];
+
+    items.forEach(item => {
+        item = item.trim();  
+        if (item) { 
+            const [order, name, number] = item.split(/\s+/);  
+            queue.push([order, name, parseInt(number, 10)]);  
+        }
+    });
+
+    return queue;
+}
+async function getQueue() {
+    try {
+        let response = await fetch(backendpath + `/currentContent/${currUserName}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        let string = "<table><thead><tr><th>Name</th><th>Value</th><th>  </th><th></th></tr></thead><tbody>";
+        const BQueue = await response.json();
+        queue = stringQueueToArray(BQueue['queue'])
+        console.log("BUILDING Q RIGHT HERE  ", queue)
+        let b2 = BQueue['buildingList'] // b2 is just the list of buildings
+        let buildings = BQueue['buildings']
+        
+        for (let i = 0 ; i < queue.length ; i++) {
+            console.log(queue[i])
+            console.log("THIS IS important it is the buildings", queue[i][1])
+        //     console.log(buildingNames)
+        //     if (building['type'] === undefined) {
+        //         btype = buildingNames[building['name']]
+        //         if (building['name'] == 2){
+        //             btype = 'Town Hall'
+        //         } else if (building['name'] == 7) {
+        //             btype = 'Tool Shop'
+        //         }
+            string += `<tr><td>${queue[i][1].split('Current')[0].replace(/_/g, ' ')}</td><td>${queue[i][2]}</td><td>${' ' }</td></tr>`;
+
+        //     } else {
+        //         console.log("BUIDLINGS", b2)
+
+
+
+                // numberName = buildings[i]['name']
+                // console.log(numberName, "   ", buildingOffset)
+                // while( numberName > buildingOffset) {
+                //     numberName -= buildingOffset
+                //     console.log("NEW NUMBER NAME ", numberName)
+                // }
+                // numberName -= 1
+                // console.log("NUMBER NAME  ; ", numberName)
+                // totalWork = b2[numberName]['work'];
+                
+                // if (totalWork == -1) {
+                //     //// get value from lookuptable
+                //     totalWork = 5
+                // }
+                // progress = totalWork-buildings[i]['value'] 
+                // string +=  '<tr><td colspan="3"><progress id="file" max="'+ totalWork + '" value="' +progress  +'"></progress></td></tr>';
+        //     }
+        }
+
+
+
+
+
+
+        
+        string += "</tbody></table>";
+        buildingQueue.innerHTML = string
+        console.log("STRING : ", string)
+        for (id in b2) {
+            let elementtoUpdate = b2[id].name + 'currently';
+            // console.log("b2  ", b2)
+            // console.log("elementtoTupdate, ", elementtoUpdate)
+            document.getElementById(elementtoUpdate).textContent = b2[parseInt(id)]['value']
+        }
+    } catch (error) {
+        console.error('There was a problem coudlnt get the current buildings :', error);
+        throw error;
+    }
+}

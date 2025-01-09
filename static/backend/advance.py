@@ -23,14 +23,13 @@ def advance(currUserName):
     
     
 
-    offset = user.query.get(currUserName).id
     citizenActions.eat(currUserName)   ##### adjusts health as well #####
     healthFactor = getattr(user_record,'Health') * 0.01 
     season = getattr(user_record, 'season')
     strength  = round(40 + 0.6* 100*healthFactor,2)
     setattr(user_record, 'Strength', strength)
     # db.session.commit()
-    # citizenActions.build(currUserName) ### including builders
+    citizenActions.build(currUserName) ### including builders
     # country.advance(currUserName)
 
 

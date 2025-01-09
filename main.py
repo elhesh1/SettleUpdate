@@ -4,11 +4,11 @@ from static.backend.variableHelpers import DEFAULT_VALUES
 
 from config import app, db
 #from static.backend.models import Contact, Resource, Building, CurrentlyBuilding, CurrentlyBuildingNeedWork, Country, user, contactOffset,resourceOffset,buildingOffset,countryOffset
-#import static.backend.citizenActions
+import static.backend.citizenActions as citizenActions
 from static.backend.models import user
 from sqlalchemy import create_engine, Column, Integer, String, func
 import static.backend.advance as advance
-#import static.backend.hover as hover
+import static.backend.hover as hover
 #import static.backend.buildings as buildings
 from sqlalchemy.exc import IntegrityError
 #from static.backend.variableHelpersDev import initial_variablesD, initial_buildingsD, initial_resourcesD, initial_countriesD
@@ -190,7 +190,7 @@ def get_resources(currUserName):
     if user_record is None:
         return jsonify({"error": "User not found"}), 404
 
-    user_resources = {}
+    user_resources = {} 
 
     for resource in resources:
         resource_value = getattr(user_record, resource[0], 0)  
@@ -219,12 +219,10 @@ def create_building_queue(currUserName): # queue is in string form, which is not
     if user_record is None:
         return jsonify({"error": "User not found"}), 404
     queue = getattr(user_record, 'building_queue')
-    queue = stringQueuetoArray(queue)
-    print("WHAT")
+    queue = citizenActions.stringQueuetoArray(queue)
 
-    print(queue)
     for item in data['dataQ']:
-        print(item)
+       # print(item)
         numbertoAdd = str(data['dataQ'][item][0] )
         if len(queue) == 0:
             print('Queue is empty, adding new item')
@@ -239,38 +237,21 @@ def create_building_queue(currUserName): # queue is in string form, which is not
                 print(f"Queue has a different item, adding new entry for '{item}'")
                 queue.append((len(queue), item, numbertoAdd)) 
     
-    queue = arrayToStringQueue(queue)
+    queue = citizenActions.arrayToStringQueue(queue)
     setattr(user_record, 'building_queue', queue)
-#     print(type( [(0, 'Clay_PitCurrent', 5), (1, 'MineCurrent', 2)]))
-#     user_record.building_queue =  [(0, 'Clay_PitCurrent', 5), (1, 'MineCurrent', 300)]
 
     db.session.commit()
-#    # print(type(queue)) # its is type list but should be Column(JSON)
-#   #  print("THIS WILL NOT RETURN IT  " ,getattr(user_record, 'building_queue'))
+    return jsonify({"queue": queue})
+
+@app.route("/currentContent/<string:currUserName>", methods=["GET"])
+def returnCurrentBuildings(currUserName):
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    if user_record is None:
+        return jsonify({"error": "User not found"}), 404
+    queue = getattr(user_record, 'building_queue')
     return jsonify({"queue": queue})
 
 
-def stringQueuetoArray(queueString):
-
-    items = queueString.split('-')
-    queue = []
-
-    for item in items:
-        if item.strip():  
-            order, name, number = item.split()  
-            queue.append((order, name, int(number)))  
-    return queue
-
-def arrayToStringQueue(queue):
-    queueString = ""
-    print("QUEUEING ", queue)
-    for item in queue:
-        order, name, number = item 
-        queueString += f"{order} {name} {number}-"  
-    if queueString.endswith('-'):
-        queueString = queueString[:-1]
-
-    return queueString
 # def roundResources(currUserName):
 #     user_record = db.session.query(user).filter_by(name=currUserName).first() 
 #     if user_record is None:
@@ -296,6 +277,13 @@ def clearJobs(currUserName):
     db.session.commit()
 
     return jsonify({"message": " Cleared :) "}), 201
+
+
+@app.route("/hoverString/<string:type>/<string:currUserName>",methods=['GET'])
+def returnHoverString(currUserName,type):
+    return jsonify({"string" : hover.hoverString(type,currUserName)})
+
+
 if __name__ == "__main__": ##### MUST BE AT BOTTOM
     with app.app_context():
         db.create_all() # creates all of the models
