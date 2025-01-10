@@ -289,6 +289,16 @@ def buildbuild(c,i,currUserName):
                 setattr(user_record, cost , getattr(user_record, cost) - costs[cost])
             currently_building_queue.append((1, building, int(buildings.building_prices[building]['Work'])))  
         
+            if isinstance(buildings_to_add, list):
+                print(" BUILDINGS TO ADDDD " , buildings_to_add)
+                buildings_to_add = arrayToStringQueue(buildings_to_add)
+            currently_building_queue = arrayToStringQueue(currently_building_queue)
+            setattr(user_record,'currently_building_queue',currently_building_queue)
+            setattr(user_record, 'weekly_build_power', weeklyBuildPower)
+            setattr(user_record, 'buildings_to_add', buildings_to_add)
+            buildbuild(c,i,currUserName)
+            return
+
 
 
   ##  print("BUILD BUILD Exit   ", c,  i, "  ", currently_building_queue)
