@@ -2,7 +2,7 @@ from config import app, db
 from static.backend.models import  user
 import static.backend.buildings as buildings
 import static.backend.citizenActions as citizenActions
-#import static.backend.country as country
+import static.backend.country as country
 def hoverString(typee,currUserName):
     print("STARTING RIGHT HERE FOR THE HOVERS")
     print('type   ', typee, '  ', currUserName)
@@ -191,7 +191,7 @@ def healthString(currUserName):
     string += '</div>'
     string += '<div class="flexitem ToolTipLine" width="80%" size="4"></div>' # line
     string += '<div class="flexitem" style="text-align: left; width: 100%">' 
-    string += 'Your current health of ' + str(health) + ' is affected by your rationing percentage of ' + str(rationP) + ' and number of food groups : ' + str(nFoodTypes) + '. Providing all 4 food groups is good for health, but only 1 is needed.'
+    string += 'Your current health of ' + str(health) + ' is affected by your rationing percentage of ' + str(rationP) + ' and number of food groups : ' + str(nFoodTypes) + '. Providing all 4 food groups (Bread, Meat, Vegetables and Berries) is good for health, but only 1 is needed.'
     string += '</div>'
     string += '<div class="flexitem ToolTipLine" width="80%" size="4"></div>' # line
     string += '<div class="flexitem" style="text-align: left; width: 100%">'
@@ -228,7 +228,7 @@ def toolshopString(int):
     string = ''
     if int == 1:
         string += '<div class="flexitem" style="display: flex; justify-content: space-between; width: 100%;"><div style="text-align: left; ">'
-        string += 'Lets you make your own tools in the factory tab</div>'
+        string += 'Lets you make your own tools in the tool shop (T) tab</div>'
     else:
         string += '<div class="flexitem" style="display: flex; justify-content: space-between; width: 100%;"><div style="text-align: left; ">'
         string += str(int) + '</div>'

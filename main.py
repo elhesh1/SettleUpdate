@@ -12,7 +12,7 @@ import static.backend.hover as hover
 import static.backend.buildings as buildingsFile
 from sqlalchemy.exc import IntegrityError
 #from static.backend.variableHelpersDev import initial_variablesD, initial_buildingsD, initial_resourcesD, initial_countriesD
-#import static.backend.country as country
+import static.backend.country as country
 
 @app.route("/user", methods=["GET"]) # gets all users
 def get_contacts():  
@@ -215,6 +215,13 @@ def get_buildings(currUserName):
         user_buildings[building[0]] = {"name" : building[0] , "value": building_value, "typeOfBuilding": building[1], "workers" : getattr(user_record,building[2], -1), 'max' : getattr(user_record,building[3],-1), 'work' : building[4]}
     return jsonify({"buildings": user_buildings})
 
+
+@app.route("/factoryTab/<string:currUserName>",  methods=["GET"])
+def factoryTabString(currUserName):
+    string = buildingsFile.factoryString(currUserName)
+    return jsonify({"string" : string})
+
+
 @app.route("/<string:currUserName>/buildings/addQueue", methods=["PATCH"])
 def create_building_queue(currUserName): # queue is in string form, which is not efficent....
     print("HERE PATCHING")
@@ -328,6 +335,46 @@ def set_building(currUserName,variableName):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": f"Failed to update {variableName}"}), 500
+
+
+
+@app.route("/countryInnerString/<string:currUserName>",  methods=["GET"])
+def countryInnerString(currUserName):
+    string = country.countryInnerString(currUserName)
+    return jsonify({"string" : string})
+
+@app.route("/countryInnerStringNative/<string:currUserName>",  methods=["GET"])
+def countryInnerStringNative(currUserName):
+    string = country.countryInnerStringNative(currUserName)
+    return jsonify({"string" : string})
+
+
+@app.route("/trade/<string:currUserName>", methods=["PATCH"])
+def trade(currUserName):
+    data = request.json
+    country.trade(data, currUserName)
+    return jsonify({"message": "Simple update test successful"}), 201
+
+
+@app.route("/activeSupplyType/<string:currUserName>", methods=["PATCH"])
+def activeSupplyType(currUserName):
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    data = request.json
+    print("ACTIVE SUPPLY TYPE", data['activeSupplyType'] )
+    supplyType = getattr(user_record,'SupplyShipType')
+    if data['activeSupplyType'] == 'resourceSupply':
+        setattr(user_record,'SupplyShipType',3)
+    elif data['activeSupplyType'] == 'toolSupply':
+        setattr(user_record,'SupplyShipType',2)
+    else:
+        setattr(user_record,'SupplyShipType',1)
+    time  = getattr(user_record,'SupplyTime')
+    given = getattr(user_record,'SupplyShipsGiven')
+    timeleft = int(country.supplyShipIns[given]['time'])
+    setattr(user_record, 'SupplyTime', timeleft)
+    db.session.commit() 
+    return jsonify({"message": "Simple update test successful"}), 201
+
 
 
 if __name__ == "__main__": ##### MUST BE AT BOTTOM

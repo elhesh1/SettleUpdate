@@ -224,11 +224,11 @@ async function getVal( variableName, currUserName = getCookie('userID').split('u
 async function resett(newV=0) {     // function from resett it is used 
     console.log("RESETTING")
     document.getElementById("Season").textContent = "Spring";
-    // document.getElementById('One').click();
-    // const requestSupply = document.querySelectorAll('.requestSupply');
-    // requestSupply.forEach(rs => {
-    //     rs.className = rs.className.replace(" active", "");
-    // });
+    document.getElementById('One').click();
+    const requestSupply = document.querySelectorAll('.requestSupply');
+    requestSupply.forEach(rs => {
+        rs.className = rs.className.replace(" active", "");
+    });
 
  //   await tabReset();
     currUserName = getCookie('userID').split('userID=')[1]
@@ -634,4 +634,78 @@ async function buttonActionBuildingWorkers() {
     await buildingTabSetUp();
     // // + "BuildGrid"
    // await tooltipSetupBuilding(hoverMap[buildingName+ "BuildGrid" ])
+}
+
+
+
+async function countrySetUp() {
+    try {
+        const response = await fetch(backendpath + `/countryInnerString/${currUserName}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        nativeString =      await countrySetUpNative()
+        inner = document.getElementById('countries-flex-container')
+        inner.innerHTML =  data['string']  + nativeString
+        let buttons3 = document.querySelectorAll('.requestSupply');            
+        buttons3.forEach(button3 => {
+            console.log("RIGHTE FUCKING HERE SETTING SHIT UP   ", button3)
+        button3.addEventListener('mouseover', toggleHover,false);
+        button3.addEventListener('mouseleave', toggleHoverOff,false);
+        button3.addEventListener('click', setSupplyType)
+        });
+
+        let buttons2 = document.querySelectorAll('.TradeButton');
+        buttons2.forEach(button2 => {
+            button2.addEventListener('click', tradeButton);
+        });
+    } catch (error) {
+        console.error('There was a problem with your fetch operation:', error);
+        throw error;
+    }
+}
+
+activeSupplyType = undefined
+function setSupplyType() {
+    const requestSupply = document.querySelectorAll('.requestSupply');
+    requestSupply.forEach(rs => {
+        rs.className = rs.className.replace(" active", "");
+    });
+    activeSupplyType = this.id
+    this.classList += " active"
+}
+
+async function tradeButton() { 
+    id = this.id
+    id = id.replace("TradeButton","")
+    try {
+ 
+        const response = await fetch(backendpath + `/trade/${currUserName}`, {
+            method: 'PATCH', 
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({'buttonName' : id}),  
+        });
+    } catch (error) {
+        console.error('There was a problem with your fetch operation:', error);
+        throw error;
+    }
+}
+
+async function countrySetUpNative() {
+    flexInner = document.getElementById('countries-flex-container');
+    try {
+        const response = await fetch(backendpath + `/countryInnerStringNative/${currUserName}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        return data['string'];
+    } catch (error) {
+        console.error('There was a problem with your fetch operation:', error);
+        throw error;
+    }
 }

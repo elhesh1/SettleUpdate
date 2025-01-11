@@ -28,7 +28,7 @@ DEFAULT_VALUES = {
     'Available_maximum': 2147483647,
     'Available_minimum': 0,
     'Available_type': None,
-    'Population_value': 50,
+    'Population': 50,
     'Population_maximum': 2147483647,
     'Population_minimum': 0,
     'job_modifier' : 1,
@@ -37,7 +37,7 @@ DEFAULT_VALUES = {
     'year' : 1620,
     'Bread' : 1200,
     'Cooked_Meat' : 4,
-    'Vegtables' : 4,
+    'Vegetables' : 4,
     'Iron_Hoe' : 10,
     'Iron_Sickle' : 20,
     'Iron_Axe' : 10,
@@ -81,4 +81,8 @@ DEFAULT_VALUES = {
     'currently_building_queue' : "",
     'weekly_build_power' : 0,
     'buildings_to_add' : "",
+    'SupplyTime' : -1,
+    'SupplyShipsGiven' : 0,
+    'SupplyShipType' : 0
+
 }

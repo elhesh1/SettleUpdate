@@ -5,17 +5,17 @@ async function advance() {
     
 
     await addBuildings(BuildingChange)
-    // if (activeSupplyType != undefined) {
-    //     console.log(" BRUH 300000")
-    //     const response = await fetch(backendpath + `/activeSupplyType/${currUserName}`, {
-    //         method: 'PATCH', 
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({activeSupplyType}),  
-    //     });
-    //     activeSupplyType=undefined
-    // }
+    if (activeSupplyType != undefined) { // active supply type is the supply type from England
+        console.log(" BRUH 300000 ", activeSupplyType)
+        const response = await fetch(backendpath + `/activeSupplyType/${currUserName}`, {
+            method: 'PATCH', 
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({activeSupplyType}),  
+        });
+        activeSupplyType=undefined
+    }
 
 
     //     method: 'POST', 

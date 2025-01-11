@@ -9,7 +9,7 @@ from static.backend.models import user
 #from static.backend.variableHelpers import initial_variables
 import static.backend.citizenActions as citizenActions
 import static.backend.buildings as buildingsFile
-# import static.backend.country as country
+import static.backend.country as country
 import random
 
 
@@ -30,7 +30,7 @@ def advance(currUserName):
     setattr(user_record, 'Strength', strength)
     # db.session.commit()
     citizenActions.build(currUserName) ### including builders
-    # country.advance(currUserName)
+    country.advance(currUserName)
 
 
     # #cooks

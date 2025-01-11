@@ -103,7 +103,7 @@ class user(db.Model):
     SupplyTime = db.Column(db.Integer, nullable=False, default=0)
     SupplyShipsGiven = db.Column(db.Integer, nullable=False, default=0)
     SupplyShipType = db.Column(db.Integer, nullable=False, default=0)
-    Population = db.Column(db.Integer, nullable=False, default=0)
+    Population = db.Column(db.Integer, nullable=False, default=0) 
     numberofFoods = db.Column(db.Integer, nullable=False, default=0)
 
 

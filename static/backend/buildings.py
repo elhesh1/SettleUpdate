@@ -135,14 +135,11 @@ def advanceBuildings(currUserName):
 
     for buildingCurr in buildings:
         if   building_prices[buildingCurr]['working'] is not None:  ####### Action involving workers
-            print(" THIS BUIDLING HAS WORKERS FR?  ", buildingCurr)
             if  building_prices[buildingCurr]['Inputs']:
                 input = building_prices[buildingCurr]['Inputs']
                 output = building_prices[buildingCurr]['Outputs']
                 buildingPower = buildingsEff(buildingCurr,currUserName, 1)
                 for key in input:
-                    print("BUDILNGIN DUBULINDIN BUDILING INPUTS   ;  ", input, "  ", output, "  ", buildingPower)
-
                     resource = getattr(user_record, key)
                     ratio = 1
                     if resource  < buildingPower *  input[key]:
@@ -150,52 +147,56 @@ def advanceBuildings(currUserName):
                     buildingPower  *=  ratio
                 for key in input:
                     resource = getattr(user_record, key)
-              #      resource.value -= buildingPower * input[key]
                     setattr(user_record, key ,resource - buildingPower * input[key])
-
                 for key in output:
                     resource = getattr(user_record, key)
-              #      resource.value += buildingPower * output[key]
                     setattr(user_record, key ,resource + buildingPower * output[key])
-
             else:
-                print('no inputs')
                 if building_prices[buildingCurr]['Outputs']:
-                    print('yes outputs')
                     output = building_prices[buildingCurr]['Outputs']
                     buildingPower = buildingsEff(buildingCurr, currUserName,1)
                     for key in output:
                         resource = getattr(user_record, key)
-                        print(resource ," resources")
-                        print(buildingPower )
-                        print( output[key])
-                        print('key  ', key)
                         setattr(user_record, key ,resource + buildingPower * output[key])
     db.session.commit()
 
+
+
+factoryTrades = [
+    
+        ['Iron', 1, 'Iron_Hoe', 1],
+        ['Iron', 1, 'Iron_Sickle', 1],
+        ['Iron', 1, 'Iron_Axe', 1],
+        ['Iron', 1, 'Iron_Shovel', 1],
+        ['Iron', 1, 'Iron_Pickaxe', 1],
+        ['Iron', 4, 'Anvil', 1],
+]
+
+
 def factoryString(currUserName):
-    offset = user.query.get(currUserName).id
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
     string = ''
     string = '<div class="country-flex-container" id="factoryFlex"><div class="factoryGrid" id="factoryGrid">'
-    factoryLevel = Building.query.get(7 + offset*buildingOffset).value
+    factoryLevel = getattr(user_record, 'Tool_Shop')
     string += '<div class="TradeBox">'
     print("factoryLevel", factoryLevel)
     if factoryLevel > 0:
 
         string += "<table  style='border-collapse: collapse;   font-size: 2vh;>"
         for tradeN in range(len(factoryTrades)):
+
             string += "<tr style='height: 3vh;'>"
             print("trade", factoryTrades[tradeN])
-            string += "<td style='width: 6vh;'>" + Resource.query.get(factoryTrades[tradeN][0] + offset*resourceOffset).name +  "</td>"
+            string += "<td style='width: 6vh;'>" + str(factoryTrades[tradeN][0]) +  "</td>"
             string += "<td style='width: 6vh;'>" + str(factoryTrades[tradeN][1]) +  "</td>"
             string += "<td style='width: 6vh;'>&#8594;</td>"
-            string += "<td style='width: 6vh;'>" + Resource.query.get(factoryTrades[tradeN][2] + offset*resourceOffset).name +  "</td>"
+            string += "<td style='width: 6vh;'>" + str(factoryTrades[tradeN][2]) +  "</td>"
             string += "<td style='width: 6vh;'>" + str(factoryTrades[tradeN][3]) +  "</td>"
             string += '<td  style="width: 6vh;"><button class="TradeButton" style="width: 80%;" id="FactoryButton' + str(tradeN) + '" >Make</button></td>'
             string += "</tr>"; 
         string += '</table'
     else:
-        string += 'You havent built a factory yet</h3>'
+        string += 'You havent built a tool shop yet. You can build one in the buildings (B) tab.</h3>'
     string += '</div>'
     string += '</div></div>'
 
