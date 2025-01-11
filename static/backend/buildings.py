@@ -51,15 +51,26 @@ def housingCapacity(currUserName):
     logCabinCount = getattr(user_record,'Log_Cabin')
     return logCabinCount * LogCabinCapacity
 
-def reactToBuildings(buildingsBuiltThisWeek,currUserName):
+def reactToBuildings(currUserName):
     print("going to add buildings to my total")
+    user_record = db.session.query(user).filter_by(name=currUserName).first()
+
+    setattr(user_record, 'Clay_Pit_Workers_Max', getattr(user_record, 'Clay_Pit') * building_prices['Clay_Pit']['capacity'])
+    setattr(user_record, 'Mine_Workers_Max',getattr(user_record, 'Mine')* building_prices['Mine']['capacity'])
+    setattr(user_record, 'Kiln_Workers_Max',getattr(user_record,'Kiln' )* building_prices['Kiln']['capacity'])
+    setattr(user_record, 'Forge_Workers_Max',getattr(user_record, 'Forge' )* building_prices['Forge']['capacity'])
+
+    # print(buildingsBuiltThisWeek)
     # for key in buildingsBuiltThisWeek:
+    #     print("key  ", key)
     #     CurrentlyBuilding = Building.query.get(key)
     #     if CurrentlyBuilding.working is not None:
     #         cpw = CurrentlyBuilding.working
     #         maximum = CurrentlyBuilding.value * CurrentlyBuilding.capacity
     #         CurrentlyBuilding.working =  {'value': int(cpw['value']), 'maximum': int(maximum), 'minimum': int(cpw['minimum'])}
     #         db.session.add(CurrentlyBuilding)
+
+
 
     try:
         db.session.commit()
@@ -76,6 +87,7 @@ def buildingsEff(building, currUserName,outputPower=0):
     strength = round(getattr(user_record, 'Strength')* 0.01,2)
     NoToolEfficiency = currentBuilding['tools']['None']
     count = currentBuilding['working']['value']
+    count = getattr(user_record,  building + '_Workers')
     toolEfficiency = 0
     toolMax = 0
     toolName = "THIS SHOULD BE HIDDEN"
@@ -87,6 +99,8 @@ def buildingsEff(building, currUserName,outputPower=0):
         toolEfficiency = toolOfNote[1]
     baseEfficiency = currentBuilding['tools']['Base']
     otherFactors = []
+    print('building efff ,   ', NoToolEfficiency)
+    print('count   ', )
     if toolMax >= count:
         UsingTool = count
     else:
@@ -103,40 +117,62 @@ def buildingsEff(building, currUserName,outputPower=0):
     return toolEfficiency, UsingTool, UsingNoTools, NoToolEfficiency, totalEfficiency, count, baseEfficiency, otherFactors, toolName, strength
 
 def advanceBuildings(currUserName):
-    offset = user.query.get(currUserName).id
-    buildings = Building.query.filter_by(currUserName=currUserName).all()
-    print("CURRENT BUILDINGS : ", buildings)
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+
+    buildings = ['Mine', 'Kiln', 'Forge', 'Clay_Pit']
+
+
+
+    # building_types = 
+
+    # # Query to filter buildings based on currUserName and specific building types
+    # buildings = user.query.filter(
+    #     user.name == currUserName,
+    #     user.type.in_(building_types)
+    # ).all()
+    # print("CURRENT BUILDINGS : ", buildings)
+
+
     for buildingCurr in buildings:
-        if buildingCurr.working is not None:  ####### Action involving workers
+        if   building_prices[buildingCurr]['working'] is not None:  ####### Action involving workers
             print(" THIS BUIDLING HAS WORKERS FR?  ", buildingCurr)
-            if  buildingCurr.Inputs:
-                input = buildingCurr.Inputs
-                output = buildingCurr.Outputs
+            if  building_prices[buildingCurr]['Inputs']:
+                input = building_prices[buildingCurr]['Inputs']
+                output = building_prices[buildingCurr]['Outputs']
                 buildingPower = buildingsEff(buildingCurr,currUserName, 1)
                 for key in input:
                     print("BUDILNGIN DUBULINDIN BUDILING INPUTS   ;  ", input, "  ", output, "  ", buildingPower)
-                    print("rescourse key : ", int(key), " ", offset, " ", resourceOffset, " ", int(key) + offset*resourceOffset)
 
-                    resource = Resource.query.get(int(key) + offset*resourceOffset)
+                    resource = getattr(user_record, key)
                     ratio = 1
-                    if resource.value  < buildingPower *  input[key]:
-                        ratio = resource.value / (buildingPower*input[key])
+                    if resource  < buildingPower *  input[key]:
+                        ratio = resource / (buildingPower*input[key])
                     buildingPower  *=  ratio
                 for key in input:
-                    resource = Resource.query.get(int(key)+ offset*resourceOffset)
-                    resource.value -= buildingPower * input[key]
+                    resource = getattr(user_record, key)
+              #      resource.value -= buildingPower * input[key]
+                    setattr(user_record, key ,resource - buildingPower * input[key])
 
                 for key in output:
-                    resource = Resource.query.get(int(key)+ offset*resourceOffset)
-                    resource.value += buildingPower * output[key]
+                    resource = getattr(user_record, key)
+              #      resource.value += buildingPower * output[key]
+                    setattr(user_record, key ,resource + buildingPower * output[key])
 
             else:
-                if buildingCurr.Outputs:
-                    output = buildingCurr.Outputs
+                print('no inputs')
+                if building_prices[buildingCurr]['Outputs']:
+                    print('yes outputs')
+                    output = building_prices[buildingCurr]['Outputs']
                     buildingPower = buildingsEff(buildingCurr, currUserName,1)
                     for key in output:
-                        resource = Resource.query.get(int(key) + offset*resourceOffset)
-                        resource.value += buildingPower * output[key]
+                        resource = getattr(user_record, key)
+                        print(resource ," resources")
+                        print(buildingPower )
+                        print( output[key])
+                        print('key  ', key)
+                        setattr(user_record, key ,resource + buildingPower * output[key])
+    db.session.commit()
+
 def factoryString(currUserName):
     offset = user.query.get(currUserName).id
     string = ''

@@ -52,6 +52,7 @@ async function buildingTabSetUp() {
 
     g = document.getElementById('Kilncurrently');
     g.innerText = buildings['Kiln']['value'];
+    await buildingsShowing();
 }
 
 async function inventoryTabSetUp() {
@@ -92,7 +93,7 @@ async function buildingsShowing() {
     let buildings = await fetchBuildingCostMap();
     let currentlyWorkings = document.getElementsByClassName("BuildingpeopleWorking"); // actually keep this one out
    // console.log("curr working  ", currentlyWorkings)
-
+    console.log("BULIDINGS  ", buildings['buildings'])
     for (i = 0; i < currentlyWorkings.length; i++) {        // have to adjust that minus one i think you know whats up ;)
         // console.log(currentlyWorkings[i])
         // console.log("chat is this real ", currentlyWorkings[i].innerText)
@@ -100,11 +101,22 @@ async function buildingsShowing() {
         // console.log(namesBuilding)
         // console.log(namesBuilding[currentlyWorkings[i].id.replace('peopleWorking', '')][0]-1)
         // console.log(buildings.totOffset)
-        currentlyWorkings[i].innerText = buildings.buildings[namesBuilding[currentlyWorkings[i].id.replace('peopleWorking', '')][0]-1-buildings.totOffset ]['working']['value'];
+     //   console.log(currentlyWorkings[i])
+        let elementId = currentlyWorkings[i].id;
+        let jobName = elementId.split("people")[0];
+        console.log(currentlyWorkings[i], "    ", buildings['buildings'][jobName]['workers'] )
+
+        currentlyWorkings[i].innerText = buildings['buildings'][jobName]['workers'];
     }
+
+
     let capWorkings = document.getElementsByClassName('BuildingpeopleCap');
     for (i = 0; i < currentlyWorkings.length; i++) {
-        capWorkings[i].innerText =buildings.buildings[namesBuilding[currentlyWorkings[i].id.replace('peopleWorking', '')][0]-1-buildings.totOffset]['working']['maximum'];
+        let elementId = capWorkings[i].id;
+        let jobName = elementId.split("people")[0];
+      //  console.log(capWorkings[i], "    ", buildings['buildings'][jobName]['max'] )
+
+        capWorkings[i].innerText = buildings['buildings'][jobName]['max'];
     }  
 }
 

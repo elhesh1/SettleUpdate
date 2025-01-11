@@ -8,7 +8,7 @@ from static.backend.models import user
 
 #from static.backend.variableHelpers import initial_variables
 import static.backend.citizenActions as citizenActions
-# import static.backend.buildings as buildings
+import static.backend.buildings as buildingsFile
 # import static.backend.country as country
 import random
 
@@ -94,7 +94,7 @@ def advance(currUserName):
     setattr(user_record, 'Bread', bread)
     setattr(user_record,'Wheat',wheat)
     setattr(user_record,'Planted',planted)
-    # buildings.advanceBuildings(currUserName)
+    buildingsFile.advanceBuildings(currUserName)
 
     # population = Contact.query.get(5 + offset*contactOffset)
 

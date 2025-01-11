@@ -157,7 +157,7 @@ def build(currUserName): #16
         buildbuild(c,i,currUserName)
   
     
-    buildings.reactToBuildings(buildingsBuiltThisWeek,currUserName)
+    buildings.reactToBuildings(currUserName)
     setattr(user_record,'weekly_build_power', 0)
 
     buildings_to_add = getattr(user_record, 'buildings_to_add')

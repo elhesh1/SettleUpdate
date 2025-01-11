@@ -86,7 +86,7 @@ async function advance() {
     }
     else if (activeTab == 'BuildingsT') {
              /// will have to update this perhaps
-        buildingTabSetUp();
+        await buildingTabSetUp();
     }
     else if (activeTab == 'InventoryT'){
         inventoryTabSetUp();
@@ -102,7 +102,7 @@ async function advance() {
     //     leveldButtons[i].className = leveldButtons[i].className.replace(" active", "").trim();
     //     i++;
     // }
-    // await buildingsShowing() 
+    
 
     // const buttons5 = document.querySelectorAll('.HoverSupply');
     // buttons5.forEach(button5 => {
@@ -113,7 +113,7 @@ async function advance() {
 
    
     BuildingChange =  new Map();
-
+    await buildingsShowing() 
 }
 
 async function advanceJob() {

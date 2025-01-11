@@ -66,10 +66,10 @@ async function setGame() { // this sets up all the functions
             console.log("SETTING UP BB")
         buttonB.addEventListener('click', buttonActionBuilding);
         });
-    // const buttonsBW = document.querySelectorAll('.BuildingButtonWorkers');                
-    //     buttonsBW.forEach(buttonBW => {
-    //     buttonBW.addEventListener('click', buttonActionBuildingWorkers);
-    //     });
+    const buttonsBW = document.querySelectorAll('.BuildingButtonWorkers');                
+        buttonsBW.forEach(buttonBW => {
+        buttonBW.addEventListener('click', buttonActionBuildingWorkers);
+        });
     // reset.addEventListener('click', resett2);
     const buttonsBU= document.querySelectorAll('.BuildUpgrade');                
         buttonsBU.forEach(buttonBU => {
@@ -110,10 +110,8 @@ async function setGame() { // this sets up all the functions
     
     let testButton = document.getElementById('test1');
     testButton.addEventListener('click', handleClickT1);
-    console.log("RIGHT HERE CHAT  ", testButton);
     let testButton2 = document.getElementById('test2');
     testButton2.addEventListener('click', handleClickT2);
-    console.log("RIGHT HERE CHAT  ", testButton);
 }
 
 async function handleClickT1() {
@@ -267,8 +265,8 @@ async function resett(newV=0) {     // function from resett it is used
         tableMaker()  
     // .then(() => {
     //     getQueue()
-    //     buildingsShowing()
-         tabSetUp()
+    await buildingsShowing()
+         await tabSetUp()
     // })
     // .catch(error => {
     //     console.error('Error updating data:', error);
@@ -593,4 +591,47 @@ async function buttonActionBuildingUpgrade() {        // get the value of the bu
     // Save the updated state and value back to BuildingChange map
     BuildingChange.set(buildingNum, currentValue);
 
+}
+
+
+async function buttonActionBuildingWorkers() { 
+    let classList = this.className.split(' ')
+    let workerChange = 1
+    let buildingName = classList[2]
+ 
+    if (classList[0] == 'BuildingButtonWorkersDown') {
+        workerChange = -1
+    }
+
+    console.log(" THIS RIGHT HERE DOING IT  ", workerChange, "  ",buildingName )
+
+    const data = {'value' : workerChange};
+    try {     
+        const response = await fetch(backendpath + `/setb/${getCookie('userID').split('userID=')[1]}/${buildingName}`, {
+            method: 'PATCH', 
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),  
+        });
+        if (!response.ok) {     // not good :(
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const responseData = await response.json();
+    } catch (error) {       // did not work
+        console.error('There was a problem with your fetch operation:', error);
+    }
+
+    // await updatee('building/', buildingID, {value: workerChange})
+    // let building = await getBuilding(buildingID) 
+    // currentlyWorking =  building['buildingInfo']['name']   + "peopleWorking"
+    // document.getElementById(currentlyWorking).innerText = building['buildingInfo']['working']['value']
+    let value = await getVal((buildingName+ "_Workers"))
+    console.log(value)
+
+    let Aval = await getVal(('Available_value'))
+    document.getElementById('A').innerText = Aval;
+    await buildingTabSetUp();
+    // // + "BuildGrid"
+   // await tooltipSetupBuilding(hoverMap[buildingName+ "BuildGrid" ])
 }

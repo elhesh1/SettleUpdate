@@ -9,7 +9,7 @@ from static.backend.models import user
 from sqlalchemy import create_engine, Column, Integer, String, func
 import static.backend.advance as advance
 import static.backend.hover as hover
-#import static.backend.buildings as buildings
+import static.backend.buildings as buildingsFile
 from sqlalchemy.exc import IntegrityError
 #from static.backend.variableHelpersDev import initial_variablesD, initial_buildingsD, initial_resourcesD, initial_countriesD
 #import static.backend.country as country
@@ -200,11 +200,16 @@ def get_resources(currUserName):
 @app.route("/buildings/<string:currUserName>", methods=["GET"]) 
 def get_buildings(currUserName):
     #round perhaps?
+    buildingsFile.reactToBuildings(currUserName)
+
     user_record = db.session.query(user).filter_by(name=currUserName).first() 
     if user_record is None:
         return jsonify({"error": "User not found"}), 404
 
     user_buildings = {}
+
+
+
     for building in buildings: 
         building_value = getattr(user_record, building[0], 0)  
         user_buildings[building[0]] = {"name" : building[0] , "value": building_value, "typeOfBuilding": building[1], "workers" : getattr(user_record,building[2], -1), 'max' : getattr(user_record,building[3],-1), 'work' : building[4]}
@@ -219,7 +224,9 @@ def create_building_queue(currUserName): # queue is in string form, which is not
     if user_record is None:
         return jsonify({"error": "User not found"}), 404
     queue = getattr(user_record, 'building_queue')
+
     queue = citizenActions.stringQueuetoArray(queue)
+    queue = [row for row in queue if not( row[2] == 0)]
 
     for item in data['dataQ']:
         print("ITEM   ",item)
@@ -245,7 +252,7 @@ def create_building_queue(currUserName): # queue is in string form, which is not
                 else:
                     print(f"Queue has a different item, adding new entry for '{item}'")
                     queue.append((len(queue), item, numbertoAdd)) 
-    
+    queue = [row for row in queue if not( row[2] == 0)]
     queue = citizenActions.arrayToStringQueue(queue)
     setattr(user_record, 'building_queue', queue)
 
@@ -293,7 +300,34 @@ def clearJobs(currUserName):
 def returnHoverString(currUserName,type):
     return jsonify({"string" : hover.hoverString(type,currUserName)})
 
+@app.route("/setb/<string:currUserName>/<string:variableName>", methods=["PATCH"])
+def set_building(currUserName,variableName):
+    user_record = db.session.query(user).filter_by(name=currUserName).first() 
+    if user_record is None:
+        return jsonify({"error": "User not found"}), 404
+    data = request.json
+    if 'value' not in data:
+        return jsonify({"error": "Missing 'value' in request body"}), 400
+    buildingValue = variableName + '_Workers'
 
+    avaliable = getattr(user_record, 'Available_value')
+    if data['value'] == 1:
+        # plus one
+
+        if avaliable >= 1:
+
+            setattr(user_record,buildingValue , 1 + getattr(user_record,buildingValue))
+            setattr(user_record, 'Available_value', round(avaliable-1) )
+    else:  # minus one
+        setattr(user_record, 'Available_value', round(avaliable+1) )
+        setattr(user_record,buildingValue , getattr(user_record,buildingValue)-1)
+
+    try:
+        db.session.commit()
+        return jsonify({"message": f"{variableName} updated successfully!"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"Failed to update {variableName}"}), 500
 
 
 if __name__ == "__main__": ##### MUST BE AT BOTTOM
