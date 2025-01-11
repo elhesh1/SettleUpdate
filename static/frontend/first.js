@@ -71,10 +71,10 @@ async function setGame() { // this sets up all the functions
     //     buttonBW.addEventListener('click', buttonActionBuildingWorkers);
     //     });
     // reset.addEventListener('click', resett2);
-    // const buttonsBU= document.querySelectorAll('.BuildUpgrade');                
-    //     buttonsBU.forEach(buttonBU => {
-    //     buttonBU.addEventListener('click', buttonActionBuildingUpgrade);
-    //     });
+    const buttonsBU= document.querySelectorAll('.BuildUpgrade');                
+        buttonsBU.forEach(buttonBU => {
+        buttonBU.addEventListener('click', buttonActionBuildingUpgrade);
+        });
     // reset.addEventListener('click', resett2);
 
 
@@ -107,6 +107,33 @@ async function setGame() { // this sets up all the functions
     let reset = document.getElementById('reset');
     reset.addEventListener('click', resett);
 
+    
+    let testButton = document.getElementById('test1');
+    testButton.addEventListener('click', handleClickT1);
+    console.log("RIGHT HERE CHAT  ", testButton);
+    let testButton2 = document.getElementById('test2');
+    testButton2.addEventListener('click', handleClickT2);
+    console.log("RIGHT HERE CHAT  ", testButton);
+}
+
+async function handleClickT1() {
+    console.log("TSET1");
+    await document.getElementById('BuildingsT').click();
+    await document.getElementById('reset').click();
+
+
+    await document.querySelector('.BuildingButtonUp.BuildingButton.Log_Cabin').click();
+    await document.querySelector('.BuildingButtonUp.BuildingButton.Log_Cabin').click();
+    await document.querySelector('.BuildingButtonUp.BuildingButton.Clay_Pit').click();
+    await document.getElementById('NextW').click();
+
+}
+
+async function handleClickT2() {
+    await document.querySelector('.BuildingButtonUp.BuildingButton.Log_Cabin').click();
+    await document.querySelector('.BuildingButtonUp.BuildingButton.Log_Cabin').click();
+    await document.querySelector('.BuildingButtonUp.BuildingButton.Clay_Pit').click();
+    await document.getElementById('NextW').click();
 }
 
 function changeValueOfInputForJobs() { // these are the buttons that control how many people are added for a job button ('.B')
@@ -485,6 +512,85 @@ function buttonActionBuilding() {
     } else {
         console.error("Element with id:", changeName, "not found.");
     }
-    
+}
+
+async function buttonActionBuildingUpgrade() {        // get the value of the building from Building and input that level in BuildingChange...., but make sure its the level and not the value
+    const id = this.id
+    changeName =   BuildingIDs[id][0]
+    buildingNum = BuildingIDs[id][1]
+    changeNumber = BuildingIDs[id][2]
+    console.log("BUILID UPGRADE LEVEL BUTTON" , changeName, " ", buildingNum, " ", changeNumber)
+    console.log("BCHANGE B4  ", BuildingChange)
+    if (!Array.isArray(BuildingChange[buildingNum])) {
+        BuildingChange[buildingNum] = [0,0]; 
+    }
+    const response = await fetch(backendpath + `/buildings/${currUserName}/`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'An unknown error occurred');
+    }
+    const data = await response.json();
+    let buildings = data['buildings']
+    console.log("BUILDINGS RIGHT HERE  ", buildings[buildingNum])
+
+    // // if (BuildingChange[buildingNum][0] == 0){
+    // //     BuildingChange[buildingNum][1] = buildings[buildingNum]['value'] + 1;
+    // //     BuildingChange[buildingNum][0] = 1;
+    // //     thisdude = document.getElementById(id);
+    // //     thisdude.className += " active";
+    // // }
+    // // else {BuildingChange[buildingNum][1] = buildings[buildingNum]['value']
+    // //     BuildingChange[buildingNum][0] = 0;
+    // //     thisdude = document.getElementById(id);
+    // //     thisdude.className = thisdude.className.replace(" active", "").trim();
+    // // }
+
+
+
+    // if (!BuildingChange.has(buildingNum)) {
+    //     BuildingChange.set(buildingNum, [0]);
+    // }
+    // let currentValue = BuildingChange.get(buildingNum);
+    // currentValue[0] += changeNumber;
+    // if (currentValue[0] < 0) {
+    //     currentValue[0] = 0;
+    // }
+    // BuildingChange.set(buildingNum, currentValue);
+
+        // Ensure the map has the buildingNum entry// Ensure the map has the buildingNum entry with two values:
+    // current state (active or inactive) and the building's original value
+    if (!BuildingChange.has(buildingNum)) {
+        BuildingChange.set(buildingNum, [0, buildings[buildingNum]['value']]); // 0 means inactive, store original value
+    }
+
+    // Get the current state and the original value
+    let currentValue = BuildingChange.get(buildingNum);
+
+    // Logic for handling the toggle behavior
+    if (currentValue[0] === 0) {
+        // Building is inactive, so activate it and increment the value by 1
+        currentValue[1] = buildings[buildingNum]['value'] + 1;
+        currentValue[0] = 1;
+
+        // Add 'active' class to the corresponding element
+        let thisdude = document.getElementById(id);
+        thisdude.classList.add("active"); // Safely adds 'active' class
+    } else {
+        // Building is active, so deactivate it and reset the value to the original value
+        currentValue[1] = buildings[buildingNum]['value'];
+        currentValue[0] = 0;
+
+        // Remove 'active' class from the corresponding element
+        let thisdude = document.getElementById(id);
+        thisdude.classList.remove("active"); // Safely removes 'active' class
+    }
+
+    // Save the updated state and value back to BuildingChange map
+    BuildingChange.set(buildingNum, currentValue);
 
 }

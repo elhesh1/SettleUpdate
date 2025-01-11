@@ -4,12 +4,12 @@ LogCabinCapacity = 4
 
 #building prices
 building_prices = {
-    "Log_Cabin" : {"Work" : 2, "Cost" : {"Wood" : 2}  , "capacity" :  LogCabinCapacity         } ,
-    'Town_Hall' : {"Work" : 0, "Cost" : -1  , "capacity" : 0        },
+    "Log_Cabin" : {"Work" : 4, "Cost" : {"Wood" : 2}  , "capacity" :  LogCabinCapacity         } ,
+    'Town_Hall' : {"Work" : 10000, "Cost" : -1  , "capacity" : 0        },
     'Clay_Pit' : {"Work" : 5, "Cost" : {"Wood" : 1}, "working" : {"value" : 0, "maximum" : 0, "minimum" : 0}  , 
             "tools" : {"None" : 0.5, "With" : ['Iron_Shovel',1], "Base" : 0.1},
             "Inputs" : {}, 
-            "Outputs" : {"17" : 1} ,
+            "Outputs" : {"Clay" : 1} ,
             "capacity" : 5},
     "Mine" : {"Work" : 15, "Cost" : {"Wood" : 4},    "working" : {"value" : 0,  "maximum" : 0, "minimum" : 0},     
             "tools" : {"None" : 0.3, "With" : ['Iron_Pickaxe',1.1], "Base" : 0.1}, 
@@ -26,7 +26,7 @@ building_prices = {
             "Inputs" : {"Iron_Ore" : 1, "Wood" : 0.3}, 
             "Outputs" : {"Iron" : 1} ,
             "capacity" : 6},
-    'Tool_Shop' : {"Work" : 0, "Cost" : -1 , "capacity" : 0   }
+    'Tool_Shop' : {"Work" : 10001, "Cost" : -2 , "capacity" : 0   }
 }
 
 #lol this is kind of useless

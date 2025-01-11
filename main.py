@@ -222,20 +222,29 @@ def create_building_queue(currUserName): # queue is in string form, which is not
     queue = citizenActions.stringQueuetoArray(queue)
 
     for item in data['dataQ']:
-       # print(item)
+        print("ITEM   ",item)
         numbertoAdd = str(data['dataQ'][item][0] )
         if len(queue) == 0:
             print('Queue is empty, adding new item')
             queue.append((0,item, numbertoAdd)) 
         else:
-            last_item = queue[-1]
-            print("LAST ITEM  ", last_item,  "  ", "item  ", item)
-            if last_item[1] == item:
-                print(f"Queue has item '{item}', adding {numbertoAdd} to the existing number")
-                queue[-1] = (len(queue)-1, last_item[1], str(int(last_item[2]) + int(numbertoAdd))) 
-            else:
-                print(f"Queue has a different item, adding new entry for '{item}'")
-                queue.append((len(queue), item, numbertoAdd)) 
+            addable = 0
+            if item == "Town_Hall" or item == "Tool_Shop":
+                print("right here")
+                
+                for arrayItem in queue:
+                    if arrayItem[1] == item:
+                        addable = 1
+
+            if addable == 0:
+                last_item = queue[-1]
+                print("LAST ITEM  ", last_item,  "  ", "item  ", item)
+                if last_item[1] == item:
+                    print(f"Queue has item '{item}', adding {numbertoAdd} to the existing number")
+                    queue[-1] = (len(queue)-1, last_item[1], str(int(last_item[2]) + int(numbertoAdd))) 
+                else:
+                    print(f"Queue has a different item, adding new entry for '{item}'")
+                    queue.append((len(queue), item, numbertoAdd)) 
     
     queue = citizenActions.arrayToStringQueue(queue)
     setattr(user_record, 'building_queue', queue)

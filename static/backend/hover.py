@@ -235,17 +235,17 @@ def toolshopString(int):
     return string
 buildingLevels = [
         {"capacity" : 0, "efficiency" : 1},
-        { "capacity" : 10, "efficiency" : 1, "work" : 5, "cost" : {"5" : 5, "20" : 0}, "string" : TH2string()},
-        { "capacity" : 30, "efficiency" : 1.02, "work" : 15,  "cost" : {"5" : 10, "20" : 4, "21" : 3}, "string" : TH3string()},
-        { "capacity" : 30, "efficiency" : 1.02, "work" : 60,  "cost" : {"5" : 20, "20" : 20, "21" : 20}, "string" : TH4string()},
-        { "capacity" : 30, "efficiency" : 1.02, "work" : 9999,  "cost" : {"5" : 9999, "20" : 9999, "21" : 9999}, "string" : TH3string()}
+        { "capacity" : 10, "efficiency" : 1, "work" : 5, "cost" : {"Wood" : 5, "Bricks" : 0}, "string" : TH2string()},
+        { "capacity" : 30, "efficiency" : 1.02, "work" : 15,  "cost" : {"Wood" : 10, "Bricks" : 4, "Iron" : 3}, "string" : TH3string()},
+        { "capacity" : 30, "efficiency" : 1.02, "work" : 60,  "cost" : {"Wood" : 20, "Bricks" : 20, "Iron" : 20}, "string" : TH4string()},
+        { "capacity" : 30, "efficiency" : 1.02, "work" : 9999,  "cost" : {"Wood" : 9999, "Bricks" : 9999, "Iron" : 9999}, "string" : TH3string()}
 
 ]
 buildingLevelsT = [
         {"capacity" : 0, "efficiency" : 1},
-        { "capacity" : 10, "efficiency" : 1, "work" : 8, "cost" : {"5" : 6, "20" : 5}, "string" : toolshopString(1)},
-        { "capacity" : 30, "efficiency" : 1.02, "work" : 150,  "cost" : {"5" : 9999, "20" : 9999, "21" : 9999}, "string" : toolshopString(2)},
-        { "capacity" : 30, "efficiency" : 1.02, "work" : 99099,  "cost" : {"5" : 9999, "20" : 9999, "21" : 9999}, "string" : toolshopString(3)}
+        { "capacity" : 10, "efficiency" : 1, "work" : 8, "cost" : {"Wood" : 6, "Bricks" : 5}, "string" : toolshopString(1)},
+        { "capacity" : 30, "efficiency" : 1.02, "work" : 150,  "cost" : {"Wood" : 9999, "Bricks" : 9999, "Iron" : 9999}, "string" : toolshopString(2)},
+        { "capacity" : 30, "efficiency" : 1.02, "work" : 99099,  "cost" : {"Wood" : 9999, "Bricks" : 9999, "Iron" : 9999}, "string" : toolshopString(3)}
 ]
 
 
@@ -255,16 +255,17 @@ def buildingStringUpgrade(typee,currUserName):
     user_record = db.session.query(user).filter_by(name=currUserName).first() 
     buildingString = typee.split(".")[1]
     print("BS ", buildingString)
-    building = Building.query.get(buildingMap[buildingString] + offset*buildingOffset)
+    buildingName = 'Town_Hall'
     if buildingMap[buildingString] == 2:
-        bl = buildingLevels
+        bl = buildingLevels # Townhall
     else:
-        bl = buildingLevelsT
-    builindgLevel = building.value
+        bl = buildingLevelsT #ToolShop
+        buildingName = 'Tool_Shop'
+    builindgLevel = getattr(user_record, buildingName)
     string = ''
 
     string += '<div class="flexitem" style="text-align: center; width: 100%">'
-    string += 'Current Level: ' + str(building.value)
+    string += 'Current Level: ' + str(getattr(user_record, buildingName))
     string += '</div>'
 
     string += '<div class="flexitem ToolTipLine" width="80%" size="4"></div>' # line
@@ -276,7 +277,7 @@ def buildingStringUpgrade(typee,currUserName):
         for key in costs:
             if  costs[key] != 0:
                 string += '<div class="flexitem" style="display: flex; justify-content: space-between; width: 100%;"><div style="text-align: left; ">'
-                string += str(Resource.query.get(str(int(key) + offset*resourceOffset)).name)+'</div><div style="text-align: right;">'
+                string += str(key)+'</div><div style="text-align: right;">'
                 string +=  str(costs[key]) if builindgLevel+1 < len(bl) else 'Max'
                 string +=  '</div></div>'
 
