@@ -627,13 +627,18 @@ async function buttonActionBuildingWorkers() {
     // currentlyWorking =  building['buildingInfo']['name']   + "peopleWorking"
     // document.getElementById(currentlyWorking).innerText = building['buildingInfo']['working']['value']
     let value = await getVal((buildingName+ "_Workers"))
-    console.log(value)
 
     let Aval = await getVal(('Available_value'))
     document.getElementById('A').innerText = Aval;
     await buildingTabSetUp();
     // // + "BuildGrid"
    // await tooltipSetupBuilding(hoverMap[buildingName+ "BuildGrid" ])
+
+
+   console.log("THIS  THIS  ", buildingName)
+   console.log("THIS   ", buildingName + 'BuildGrid')
+   toggleHoverOff(buildingName + 'BuildGrid')
+   toggleHover(buildingName + 'BuildGrid')
 }
 
 

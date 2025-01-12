@@ -2,9 +2,14 @@ let hoverMap = {}
 const hoverState = new Map();
 const tooltipInProgress = new Map(); 
  
-async function toggleHover() {
-  const id = this.id;
-  // console.log (" ID ", id)
+async function toggleHover(passedId = null) {
+
+  let id = this.id;
+
+
+  if (typeof passedId === 'string' && passedId !== "") {
+    id = passedId
+  }
   // console.log(hoverMap)
   const tab = document.getElementById(hoverMap[id][0]);
   if (tooltipInProgress.get(id)) return;
@@ -22,8 +27,15 @@ async function toggleHover() {
   } 
 }
 
-async function toggleHoverOff() {
-  const id = this.id;
+async function toggleHoverOff(passedId = 0) {
+
+  let id = 0
+  if (typeof passedId === 'string' && passedId !== "") {
+    id = passedId
+
+  } else {
+    id = this.id;
+  }
   const tab = document.getElementById(hoverMap[id][0]);
 
   if (hoverState.has(id) && hoverState.get(id) === 1) {
