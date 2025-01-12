@@ -96,64 +96,69 @@ def advance(currUserName):
     setattr(user_record,'Planted',planted)
     buildingsFile.advanceBuildings(currUserName)
 
-    # population = Contact.query.get(5 + offset*contactOffset)
+    population = getattr(user_record, 'Population')
 
-    # if healthFactor < 0.50:
-    #     percentOff = 0
-    #     diff = (0.6 - healthFactor) *0.6    
-    #     if healthFactor < 0.25:
-    #         diff += (0.3 - healthFactor)*4 # 
-    #         if healthFactor < 0.1:
-    #             diff += (0.1 - healthFactor)*5
-    #     percentOff = diff  * random.randint(10,30) * 0.01 # 5-15,
-    #     oldPop = population.value
-    #     population.value = round(population.value * (1-percentOff),0)
-    #     fallOff =  oldPop - population.value
-    #     available = Contact.query.get(6 + offset*contactOffset)
-    #     available.value -= fallOff
-    #     print(" AVAILABILE VALUE ", available.value)
-    #     if (available.value < 0):
-    #         leftover = round(available.value * -1,0)
-    #         index = 0
-    #         for i in initial_variables:
-    #             index += 1
+
+    jobList = ['Farmer_value', 'Hunter_value', 'Baker_value', 'Butcher_value', 'Logger_value','Builder_value', 'Clay_Pit_Workers','Mine_Workers','Forge_Workers','Kiln_Workers']
+    if healthFactor < 0.50:
+        percentOff = 0
+        diff = (0.6 - healthFactor) *0.6    
+        if healthFactor < 0.25:
+            diff += (0.3 - healthFactor)*4 # 
+            if healthFactor < 0.1:
+                diff += (0.1 - healthFactor)*5
+        percentOff = diff  * random.randint(10,30) * 0.01 # 5-15,
+        oldPop = population
+        population = round(population * (1-percentOff),0)
+        fallOff =  oldPop - population
+        available = getattr(user_record,'Available_value')
+        available -= fallOff
+        print(" AVAILABILE VALUE ", available)
+        if (available < 0):
+            leftover = round(available * -1,0)
+            index = 0
+            print('This is it boy', leftover  )
+            for job in jobList:
+                index += 1
                 
-    #             if i.get('type') == 'JOB':
-    #                 toSubtract = Contact.query.get(index + offset*contactOffset)
-    #                 toSubtract.value -= leftover
-    #                 leftover = 0 
-    #                 if (toSubtract.value < 0):
-    #                     leftover -= toSubtract.value
-    #                     toSubtract.value -= toSubtract.value
-    #                     leftover = round(leftover,0)
-    #                 db.session.add(toSubtract)
-    #                 try:
-    #                     db.session.commit()
-    #                 except Exception as e:
-    #                     db.session.rollback()
-    #         if leftover > 0:
-    #             print("leftover  ", )
-    #             for j in Building.query.filter(Building.currUserName == currUserName).all():
-    #                 print("j ", j)
-    #                 if j.working != None:
-    #                     print(j.working)
-    #                     print("JWOKRVALUE " ,  j.working['value'])
-    #                     j.working['value'] -= leftover
-    #                     leftover = 0
-    #                     if (j.working['value'] < 0):
-    #                         leftover -= j.working['value'] 
-    #                         j.working['value']  -= j.working['value'] 
-    #                         leftover = round(leftover,0)
-    #                     print("  JJJJ ", j.working)
-    #                     newWork = {'value': j.working['value'], 'maximum': j.working['maximum'], 'minimum': j.working['minimum']}
-    #                     print ("newWark", newWork)
-    #                     j.working = {'value': int(j.working['value']), 'maximum': int(j.working['maximum']), 'minimum': int(j.working['minimum'])}
-    #                     db.session.add(j)
-    #                     try:
-    #                         db.session.commit()
-    #                     except Exception as e:
-    #                         db.session.rollback()
-    #                         return jsonify({"message": f"An error occurred: {str(e)}"}), 500
+                toSubtract = getattr(user_record, job)
+                toSubtract -= leftover
+                leftover = 0 
+                if (toSubtract < 0):
+                    leftover -= toSubtract
+                    toSubtract -= toSubtract
+                    leftover = round(leftover,0)
+                setattr(user_record, job, toSubtract)
+                try:
+                    db.session.commit()
+                except Exception as e:
+                    db.session.rollback()
+            available = 0
+        setattr(user_record, 'Available_value', available)          
+        setattr(user_record, 'Population', population)
+            # if leftover > 0:
+            #     print("leftover  ", )
+            #     for j in Building.query.filter(Building.currUserName == currUserName).all():
+            #         print("j ", j)
+            #         if j.working != None:
+            #             print(j.working)
+            #             print("JWOKRVALUE " ,  j.working['value'])
+            #             j.working['value'] -= leftover
+            #             leftover = 0
+            #             if (j.working['value'] < 0):
+            #                 leftover -= j.working['value'] 
+            #                 j.working['value']  -= j.working['value'] 
+            #                 leftover = round(leftover,0)
+            #             print("  JJJJ ", j.working)
+            #             newWork = {'value': j.working['value'], 'maximum': j.working['maximum'], 'minimum': j.working['minimum']}
+            #             print ("newWark", newWork)
+            #             j.working = {'value': int(j.working['value']), 'maximum': int(j.working['maximum']), 'minimum': int(j.working['minimum'])}
+            #             db.session.add(j)
+            #             try:
+            #                 db.session.commit()
+            #             except Exception as e:
+            #                 db.session.rollback()
+            #                 return jsonify({"message": f"An error occurred: {str(e)}"}), 500
 
 
 
@@ -190,12 +195,35 @@ def advancePackage(currUserName):
     year = getattr(user_record, 'year', None)  
     Health = getattr(user_record, 'Health', None)
     Population = getattr(user_record, 'Population', None)
+    A = getattr(user_record, 'Available_value', None)
+    F = getattr(user_record, 'Farmer_value', None)
+    H = getattr(user_record, 'Hunter_value', None)
+    C = getattr(user_record, 'Baker_value', None)
+    L = getattr(user_record,'Logger_value' , None) 
+    B = getattr(user_record, 'Butcher_value', None)
+    W2 = getattr(user_record,'Builder_value' , None)
+
+    CPW = getattr(user_record,'Clay_Pit_Workers' , None)
+    FW = getattr(user_record,'Forge_Workers' , None)
+    MW = getattr(user_record,'Mine_Workers' , None)
+    KW = getattr(user_record,'Kiln_Workers' , None)
 
     return jsonify({
         "week": week,
         "season": season,
         "year": year,
         'Health' : Health,
-        'Population' : Population
+        'Population' : Population,
+        'A' : A,
+        'F' : F,
+        'H' : H,
+        'C' : C,
+        'L' : L,
+        'B' : B,
+        'W2': W2,
+        'CPW' : CPW,
+        'FW' : FW,
+        'MW' : MW,
+        'KW' : KW,
     }), 200
 

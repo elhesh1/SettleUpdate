@@ -62,18 +62,23 @@ async function advance() {
         }
     }
     document.getElementById("P").textContent = data['Population']
+    console.log("THIS IS THE DATA ", data)
     // A = data.contacts[6-1].value
     // if (A < 1) {
     //     let newValuesToPutIn = await getContacts();
     //     newValuesToPutIn = newValuesToPutIn['contacts']
-    //     document.getElementById('F').innerText = newValuesToPutIn[1-1]['value']
-    //     document.getElementById('H').innerText = newValuesToPutIn[2-1]['value']
-    //     document.getElementById('C').innerText = newValuesToPutIn[3-1]['value']
-    //     document.getElementById('L').innerText = newValuesToPutIn[4-1]['value']
-    //     document.getElementById('B').innerText = newValuesToPutIn[11-1]['value']
-    //     document.getElementById('W2').innerText = newValuesToPutIn[15-1]['value']
-    // }
-    // document.getElementById("A").textContent = A
+       document.getElementById('F').innerText = data['F']
+        document.getElementById('H').innerText = data['H']
+        document.getElementById('C').innerText = data['C']
+         document.getElementById('L').innerText = data['L']
+        document.getElementById('B').innerText = data['B']
+      document.getElementById('W2').innerText = data['W2']
+    document.getElementById("A").textContent = data['A']
+
+    document.getElementById("Clay_PitpeopleWorking").textContent = data['CPW']
+    document.getElementById("ForgepeopleWorking").textContent = data['FW']
+    document.getElementById("MinepeopleWorking").textContent = data['MW']
+    document.getElementById("KilnpeopleWorking").textContent = data['KW']
 
     var elements = document.getElementsByClassName("HealthN");
     if (elements.length > 0) {
@@ -110,7 +115,11 @@ async function advance() {
     // button5.addEventListener('mouseleave', toggleHoverOff,false);
     // }); 
 
-
+    const buildingQNumbers = document.querySelectorAll('.BuildingNumberCurrent');
+    buildingQNumbers.forEach(element => {
+        console.log('kmon mang')
+        element.innerText = '0';
+    });
    
     BuildingChange =  new Map();
     await buildingsShowing() 

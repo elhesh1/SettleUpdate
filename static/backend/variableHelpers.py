@@ -35,7 +35,7 @@ DEFAULT_VALUES = {
     'week' : 1,
     'season' : 1,
     'year' : 1620,
-    'Bread' : 1200,
+    'Bread' : 4,
     'Cooked_Meat' : 4,
     'Vegetables' : 4,
     'Iron_Hoe' : 10,

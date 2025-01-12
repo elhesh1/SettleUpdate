@@ -144,7 +144,7 @@ resources = [
     ['Bread', 0, 0, 'food'],
     ['Cooked_Meat', 0, 0,'food'],
     ['Wild_Berries', 0, 0,'food'],
-    ['Vegtables', 0, 0,'food'],
+    ['Vegetables', 0, 0,'food'],
     ['Iron_Hoe', 0, 1,'tool'],
     ['Iron_Sickle', 0, 1,'tool'],
     ['Iron_Axe', 0, 1,'tool'],

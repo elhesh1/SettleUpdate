@@ -137,7 +137,7 @@ def eatHelper(expectedFood,currUserName,user_record):
     db.session.commit()
  
 def build(currUserName): #16
-    print("FUCKING GOT HERE")
+ #   print("FUCKING GOT HERE")
     user_record = db.session.query(user).filter_by(name=currUserName).first() 
     if user_record is None:
         return jsonify({"error": "User not found"}), 404
@@ -149,11 +149,11 @@ def build(currUserName): #16
     current = (getattr(user_record, 'building_queue') )
     #print("CURRENT      ", current)
     current = stringQueuetoArray(current)
-    print("             Starting  the shit      ", current)
+  #  print("             Starting  the shit      ", current)
 
     for i in range( len(current)):        # iterate through each building
         c = current[i]
-        print("                                                                                     CURRENTLY BUILDING : " , c)
+      #  print("                                                                                     CURRENTLY BUILDING : " , c)
         buildbuild(c,i,currUserName)
   
     
@@ -162,16 +162,16 @@ def build(currUserName): #16
 
     buildings_to_add = getattr(user_record, 'buildings_to_add')
     buildings_to_add = stringQueuetoArray(buildings_to_add)
-    print("BUILDLINGS TO ADD  ", buildings_to_add)
+  #  print("BUILDLINGS TO ADD  ", buildings_to_add)
     for building in buildings_to_add:
-        print(" THIS BUILDING 2ah    ", building[1])
+       # print(" THIS BUILDING 2ah    ", building[1])
         setattr(user_record, building[1], int((getattr(user_record,building[1])) + 1))
     setattr(user_record, "buildings_to_add", "")
     db.session.commit()
 
 
 def buildbuild(c,i,currUserName):
-    print('start buildbuild    ', c, i ," "  )
+    #print('start buildbuild    ', c, i ," "  )
     user_record = db.session.query(user).filter_by(name=currUserName).first() 
 
 #     offset = user.query.get(currUserName).id
@@ -298,11 +298,11 @@ def buildbuild(c,i,currUserName):
             work=int(buildings.building_prices[building]['Work'])
             if work == 10000: #Town_Hall
                 work = hover.buildingLevels[int(getattr(user_record,'Town_Hall'))+1]['work']
-                print("town hall")
+          #      print("town hall")
             elif work == 10001: #Tool_Shop
                 work = hover.buildingLevelsT[int(getattr(user_record,'Tool_Shop'))+1]['work']
-                print('tool shop')
-            print("THAT WORK  ", work)
+            #    print('tool shop')
+          #  print("THAT WORK  ", work)
             currently_building_queue.append((1, building, work))  
         
             if isinstance(buildings_to_add, list):
@@ -326,114 +326,7 @@ def buildbuild(c,i,currUserName):
     setattr(user_record, 'weekly_build_power', weeklyBuildPower)
     setattr(user_record, 'buildings_to_add', buildings_to_add)
     db.session.commit()
-
-#     if temp == 2 or temp == 7:
-#         print("update?")
-#         temp += ( offset*buildingOffset)
-    
-#     ### IF the building in the queue is too low check the top. Maybe make it so each building can only "see" its type
-#     if  CurrentlyBuildingNeedWork.query.filter_by(name=temp,  currUserName = currUserName).first() is None:
-#         print(" c:  ", c, " ", temp)
-#         if c.value > 0:             
-#             print("C C C C C ", c )
-#             building = Building.query.get(c.name)   ## dont add offset, its already been calculated
-#             if c.name == 2 or c.name == 7:
-#                 print("update?")
-#                 building = Building.query.get(c.name + offset*buildingOffset)   ## this is for leveled buildings, its wierd ik
-
-#             print("BUILDING COST  " , building.cost)
-#             print("BUILDING COST  " , building.id)
-#             cost = building.cost
-#             work = building.work
-#             print("BL ", building.value)
-#             if (cost == -1):
-#                 cost = hover.buildingLevels[building.value+1]['cost']     # make a call to the level table #######################################
-#             if (work == -1):
-#                 work = hover.buildingLevels[building.value+1]['work']  # make a call the correct table dufus
-#             if c.name == 7:
-#                 cost = hover.buildingLevelsT[building.value+1]['cost']  
-#                 work = hover.buildingLevelsT[building.value+1]['work']
-#             print(" COST ", type(cost), "  ", cost, "really doe")
-
-
-#             good = 0
-#             for key in cost:                       # iterate through each building requeremint
-#                 resource = Resource.query.get(int(key) + offset*resourceOffset)  # '5'
-#                 costA = cost[key]
-#                 if  costA > resource.value:
-#                     good = 1
-#                     print("YOU DO NOT HAVE ENOUGH")
-#                 else:
-#                     print("you have enough ;)")
-#             if good == 0:
-
-#                 for key in cost:                       # iterate through each building requeremint
-#                     resource = Resource.query.get(int(key) + offset*resourceOffset)  # '5'
-#                     costA = cost[key]
-#                     if  costA > resource.value:
-#                         good = 1
-#                         print("THIS IS SO BROKEN BROKEN BROKEN BROKEN BROKEN")
-#                     else:
-#                         print("you have enough ;)")
-#                         resource.value -= costA
-#                         db.session.add(resource)
-
-
-
-
-#                 c.value -= 1
-#                 c.value = round(c.value,0) ### this should be added to ACTIVE. then use up builders. Maybe have an active queue as
-#                 print("HAVE RESOURCES TO BUILD ... ", c )
-#                 db.session.commit()
-#                 if work <= weeklyBuildPower: # we have enough power to build it this week 
-#                     print("ENOUGH POWER TO BUILD ", work, " ", weeklyBuildPower)
-#                     weeklyBuildPower -= work
-#                     building.value += 1
-#                     ###################################### built
-#                     buildingsBuiltThisWeek[building.id] = 1
-#                     db.session.commit()
-#                     buildbuild(c,i,currUserName)
-#                 else:
-#                     c.value += 1
-#                     c.value = round(c.value,0)
-#                     print( "NOT ENOUGH POWER :(", work, " ", weeklyBuildPower)
-#                     currentBuilding = CurrentlyBuildingNeedWork(name = building.id , value = work-weeklyBuildPower , currUserName = currUserName)
-#                     weeklyBuildPower = 0
-#                     db.session.add(currentBuilding)
-#                     db.session.commit()
-#         else:
-#             db.session.rollback()
-#     else:
-#         CurrentlyBuildingNeedsMoreWork = CurrentlyBuildingNeedWork.query.filter_by(name=temp,  currUserName = currUserName).first()
-#         print("YOU ALREADY GOT SOME SHIT IN THERE")
-#         if CurrentlyBuildingNeedsMoreWork.value > weeklyBuildPower:
-#             CurrentlyBuildingNeedsMoreWork.value -= weeklyBuildPower
-#             weeklyBuildPower = 0 
-#             db.session.add(CurrentlyBuildingNeedsMoreWork)
-#             db.session.commit()
-#         else:
-#             weeklyBuildPower -= CurrentlyBuildingNeedsMoreWork.value
-#             buildingType = Building.query.get(CurrentlyBuildingNeedsMoreWork.name) # no offset
-#             buildingType.value += 1
-#             print(buildingType.value)
-#             print("BULIDNG TYPE FR ::::::: ", buildingType.name, " ")
-#             cname = CurrentlyBuildingNeedsMoreWork.name
-#             print(cname)
-#             while cname > buildingOffset:
-#                 cname -= buildingOffset
-#             print("as god intended  ", cname)
-#             newC = CurrentlyBuilding.query.filter_by(name=cname,  currUserName = currUserName).first()
-#             newC.value -= 1
-#             newC.value = round(newC.value,0)
-#            # db.session.query(CurrentlyBuildingNeedWork).delete()
-#             print(" FINISHED>>> ", CurrentlyBuildingNeedsMoreWork.name)
-#             db.session.query(CurrentlyBuildingNeedWork).filter_by(name=CurrentlyBuildingNeedsMoreWork.name,  currUserName = currUserName).delete()
-#             db.session.add(buildingType)
-#             buildingsBuiltThisWeek[buildingType.id] = 1
-#             #################################################
-#             db.session.commit()
-#             buildbuild(c,i,currUserName)
-
+##
 
 def farmerEff(season,currUserName):
 

@@ -64,9 +64,9 @@ def countryInnerStringNative(currUserName):
                 for trade in native['trades']:
                     number += 1
                     string += '<div class="InnerTradeGrid">'        
-                    string +='<h3 class="giveTrade"">' +  str(trade[1]) + ' ' + str(trade[0])  + '</h3>'
+                    string +='<h3 class="giveTrade"">' +  str(trade[1]).replace("_", " ") + ' ' + str(trade[0]).replace("_", " ")  + '</h3>'
                     string += '<span class=arrowTrade>&#8594;</span>'
-                    string +='<h3 class="getTrade"">' + str(trade[3])  + ' ' +  str(trade[2]) +   '</h3>'
+                    string +='<h3 class="getTrade"">' + str(trade[3]).replace("_", " ")  + ' ' +  str(trade[2]).replace("_", " ") +   '</h3>'
                     string += '<button class="TradeButton" id="TradeButton' + cName + str(number) + '" >Trade</button>'
                     string +=  '</div>'
                 string += '</div></div>'

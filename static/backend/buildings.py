@@ -49,7 +49,8 @@ from config import app, db
 def housingCapacity(currUserName):
     user_record = db.session.query(user).filter_by(name=currUserName).first()
     logCabinCount = getattr(user_record,'Log_Cabin')
-    return logCabinCount * LogCabinCapacity
+    print('this is important ngl ', logCabinCount , "   ", building_prices['Log_Cabin']['capacity'])
+    return logCabinCount * building_prices['Log_Cabin']['capacity']
 
 def reactToBuildings(currUserName):
     print("going to add buildings to my total")
@@ -187,10 +188,10 @@ def factoryString(currUserName):
 
             string += "<tr style='height: 3vh;'>"
             print("trade", factoryTrades[tradeN])
-            string += "<td style='width: 6vh;'>" + str(factoryTrades[tradeN][0]) +  "</td>"
+            string += "<td style='width: 6vh;'>" + str(factoryTrades[tradeN][0]).replace("_", " ") +  "</td>"
             string += "<td style='width: 6vh;'>" + str(factoryTrades[tradeN][1]) +  "</td>"
             string += "<td style='width: 6vh;'>&#8594;</td>"
-            string += "<td style='width: 6vh;'>" + str(factoryTrades[tradeN][2]) +  "</td>"
+            string += "<td style='width: 6vh;'>" + str(factoryTrades[tradeN][2]).replace("_", " ") +  "</td>"
             string += "<td style='width: 6vh;'>" + str(factoryTrades[tradeN][3]) +  "</td>"
             string += '<td  style="width: 6vh;"><button class="TradeButton" style="width: 80%;" id="FactoryButton' + str(tradeN) + '" >Make</button></td>'
             string += "</tr>"; 

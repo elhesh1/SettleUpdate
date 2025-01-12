@@ -183,7 +183,8 @@ def healthString(currUserName):
     nFoodTypes = getattr(user_record,'numberofFoods' )
     health =   getattr(user_record, 'Health' )
     rationP =   getattr(user_record, 'RationP')
-    pop =  getattr(user_record, 'Population')
+    pop =  getattr(user_record, 'Population') 
+    print("frfr doing something here?")
     housed = buildings.housingCapacity(currUserName)
     string = ""
     string += '<div class="flexitem" style="text-align: left; width: 100%">'
@@ -338,7 +339,7 @@ def buildingToString(typee,currUserName):
                 string +=  '</div></div>'
                 if toolEfficiency != 0:
                     string += '<div class="flexitem" style="display: flex; justify-content: space-between; width: 100%;"><div style="text-align: left; ">'
-                    string += str(toolName) + '(' + str(UsingTool) +')'
+                    string += str(toolName).replace("_", " ") + '(' + str(UsingTool) +')'
                     string += '</div> <div style="text-align: right;">'
                     string += str(toolEfficiency)
                     string +=  '</div></div>'
@@ -358,12 +359,12 @@ def buildingToString(typee,currUserName):
                             string += '<div class="flexitem" style="display: flex; justify-content: space-between; width: 100%;"><div style="text-align: left; ">'
                             string += 'Input: '
                             string += '</div> <div style="text-align: right;">'
-                            string += '-' + str(round(Inputs[key] * totalEfficiency * count,2))+ ' '  + str(key)+ ' ' 
+                            string += '-' + str(round(Inputs[key] * totalEfficiency * count,2))+ ' '  + str(key).replace("_", " ")+ ' ' 
                             string +=  '</div></div>'
                         else:
                             string += '<div class="flexitem" style="display: flex; justify-content: space-between; width: 100%;"><div style="text-align: left; ">'
                             string += '</div> <div style="text-align: right;">'
-                            string += '-' + str(round(Inputs[key]* totalEfficiency * count,2)) + ' '  + str(key) + ' ' 
+                            string += '-' + str(round(Inputs[key]* totalEfficiency * count,2)) + ' '  + str(key).replace("_", " ") + ' ' 
                             string +=  '</div></div>'
                 if  buildings.building_prices[currBuilding]['Outputs']:
                     Outputs = buildings.building_prices[currBuilding]['Outputs']
@@ -374,12 +375,12 @@ def buildingToString(typee,currUserName):
                             string += '<div class="flexitem" style="display: flex; justify-content: space-between; width: 100%;"><div style="text-align: left; ">'
                             string += 'Outputs: '
                             string += '</div> <div style="text-align: right;">'
-                            string +=  str(round(Outputs[key]* totalEfficiency * count,2)) + ' '  + str(key) + ' ' 
+                            string +=  str(round(Outputs[key]* totalEfficiency * count,2)) + ' '  + str(key).replace("_", " ")+ ' ' 
                             string +=  '</div></div>'
                         else:
                             string += '<div class="flexitem" style="display: flex; justify-content: space-between; width: 100%;"><div style="text-align: left; ">'
                             string += '</div> <div style="text-align: right;">'
-                            string +=  str(round(Outputs[key]* totalEfficiency * count,2)) + ' '  + str(key) + ' ' 
+                            string +=  str(round(Outputs[key]* totalEfficiency * count,2)) + ' '  + str(key).replace("_", " ") + ' ' 
                             string +=  '</div></div>'
                 string += '<div class="flexitem ToolTipLine" width="80%" size="4"></div>'                                # line
             #  if currBuilding.Inputs == {}

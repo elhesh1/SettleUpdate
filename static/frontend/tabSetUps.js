@@ -9,10 +9,9 @@ async function foodTabSetUp() {
 
 async function buildingTabSetUp() { 
     userName = getCookie('userID').split('userID=')[1]
-    console.log("doing this, setting up building")
     pop = await getVal('Population')
   
-    housed = getVal('Log_Cabin') * logCabinCapacity 
+    housed = await getVal('Log_Cabin') * 4  // 
     housingvalue = document.getElementById('HousingValue');
     string = 'Housing Provided: '+ housed + ' / ' + pop;
     housingvalue.innerText = string;
