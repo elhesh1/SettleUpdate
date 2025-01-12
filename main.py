@@ -316,18 +316,19 @@ def set_building(currUserName,variableName):
     if 'value' not in data:
         return jsonify({"error": "Missing 'value' in request body"}), 400
     buildingValue = variableName + '_Workers'
-
+    maximumValue = buildingValue + '_Max'
     avaliable = getattr(user_record, 'Available_value')
     if data['value'] == 1:
         # plus one
 
         if avaliable >= 1:
-
-            setattr(user_record,buildingValue , 1 + getattr(user_record,buildingValue))
-            setattr(user_record, 'Available_value', round(avaliable-1) )
+            if getattr(user_record, buildingValue) < getattr(user_record, maximumValue):
+                setattr(user_record,buildingValue , round(1 + getattr(user_record,buildingValue)))
+                setattr(user_record, 'Available_value', round(avaliable-1) )
     else:  # minus one
-        setattr(user_record, 'Available_value', round(avaliable+1) )
-        setattr(user_record,buildingValue , getattr(user_record,buildingValue)-1)
+        if getattr(user_record, buildingValue) != 0:
+            setattr(user_record, 'Available_value', round(avaliable+1) )
+            setattr(user_record,buildingValue , getattr(user_record,buildingValue)-1)
 
     try:
         db.session.commit()

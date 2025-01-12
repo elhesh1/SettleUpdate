@@ -67,7 +67,7 @@ async function advance() {
     // if (A < 1) {
     //     let newValuesToPutIn = await getContacts();
     //     newValuesToPutIn = newValuesToPutIn['contacts']
-       document.getElementById('F').innerText = data['F']
+       document.getElementById('F').innerText = data['F'] 
         document.getElementById('H').innerText = data['H']
         document.getElementById('C').innerText = data['C']
          document.getElementById('L').innerText = data['L']

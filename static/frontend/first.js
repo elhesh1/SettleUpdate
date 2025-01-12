@@ -108,11 +108,55 @@ async function setGame() { // this sets up all the functions
     reset.addEventListener('click', resett);
 
     
-    let testButton = document.getElementById('test1');
-    testButton.addEventListener('click', handleClickT1);
-    let testButton2 = document.getElementById('test2');
-    testButton2.addEventListener('click', handleClickT2);
+    // let testButton = document.getElementById('test1');
+    // testButton.addEventListener('click', handleClickT1);
+    // let testButton2 = document.getElementById('test2');
+    // testButton2.addEventListener('click', handleClickT2);
+    await document.getElementById('InventoryT').click();
+    await setupbasic()
 }
+
+
+async function setupbasic() {
+    // week, season, year, available, jobs, pop // health
+    const response = await fetch(backendpath + `/advancePackage/${currUserName}`); 
+    const data = await response.json();
+
+
+    document.getElementById('W').innerText = await getVal('week')
+    document.getElementById('Season').innerText = await getVal('week')
+
+    s = await getVal('season')
+    switch(s) { 
+        case 1:
+            document.getElementById("Season").textContent = "Spring"; break;
+        case 2:
+            document.getElementById("Season").textContent = "Summer";  break; 
+        case 3:
+            document.getElementById("Season").textContent = "Fall"; break;
+        case 0:
+            document.getElementById("Season").textContent = "Winter"; 
+            let y = data['year']
+            document.getElementById("Year").textContent = y; 
+            break;
+
+    }
+    document.getElementById("P").textContent = data['Population']
+    console.log("THIS IS THE DATA ", data)
+    // A = data.contacts[6-1].value
+    // if (A < 1) {
+    //     let newValuesToPutIn = await getContacts();
+    //     newValuesToPutIn = newValuesToPutIn['contacts']
+       document.getElementById('F').innerText = data['F'] 
+        document.getElementById('H').innerText = data['H']
+        document.getElementById('C').innerText = data['C']
+         document.getElementById('L').innerText = data['L']
+        document.getElementById('B').innerText = data['B']
+      document.getElementById('W2').innerText = data['W2']
+    document.getElementById("A").textContent = data['A']
+    await document.getElementById('One').click();
+}
+
 
 async function handleClickT1() {
     console.log("TSET1");
@@ -223,6 +267,8 @@ async function getVal( variableName, currUserName = getCookie('userID').split('u
 
 async function resett(newV=0) {     // function from resett it is used 
     console.log("RESETTING")
+    await document.getElementById('InventoryT').click();
+
     document.getElementById("Season").textContent = "Spring";
     document.getElementById('One').click();
     const requestSupply = document.querySelectorAll('.requestSupply');
@@ -271,7 +317,7 @@ async function resett(newV=0) {     // function from resett it is used
     // .catch(error => {
     //     console.error('Error updating data:', error);
     // });
-
+    await setupbasic()
 }
 
 
