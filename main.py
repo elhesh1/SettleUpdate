@@ -322,6 +322,7 @@ def set_building(currUserName,variableName):
         # plus one
 
         if avaliable >= 1:
+            
             if getattr(user_record, buildingValue) < getattr(user_record, maximumValue):
                 setattr(user_record,buildingValue , round(1 + getattr(user_record,buildingValue)))
                 setattr(user_record, 'Available_value', round(avaliable-1) )

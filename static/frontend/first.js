@@ -63,7 +63,6 @@ async function setGame() { // this sets up all the functions
 
     const buttonsB = document.querySelectorAll('.BuildingButton');                
         buttonsB.forEach(buttonB => {
-            console.log("SETTING UP BB")
         buttonB.addEventListener('click', buttonActionBuilding);
         });
     const buttonsBW = document.querySelectorAll('.BuildingButtonWorkers');                
@@ -106,18 +105,34 @@ async function setGame() { // this sets up all the functions
     }); 
     let reset = document.getElementById('reset');
     reset.addEventListener('click', resett);
-
-    
-    // let testButton = document.getElementById('test1');
-    // testButton.addEventListener('click', handleClickT1);
-    // let testButton2 = document.getElementById('test2');
-    // testButton2.addEventListener('click', handleClickT2);
     await document.getElementById('InventoryT').click();
     await setupbasic()
+    let week = await getVal('week')
+    if (week == '1') {
+        // open modal
+        let modal = document.getElementById("modal1");
+        modal.style.display = "block";
+        const btnMs = document.querySelectorAll('.skip_tutorial');                
+            btnMs.forEach(btnM => {
+
+            btnM.addEventListener("click", function() {
+                modal = document.getElementById("modal" + this.id[0])
+                modal.style.display = "none";
+              });
+         });
+
+
+
+        const nextButtonModal = document.querySelectorAll('.nextM');                
+             nextButtonModal.forEach(nextButtonM => {
+            nextButtonM.addEventListener('click', nextModal);
+            });
+    }
 }
 
 
 async function setupbasic() {
+    await getQueue()
     // week, season, year, available, jobs, pop // health
     const response = await fetch(backendpath + `/advancePackage/${currUserName}`); 
     const data = await response.json();
@@ -142,46 +157,21 @@ async function setupbasic() {
 
     }
     document.getElementById("P").textContent = data['Population']
-    console.log("THIS IS THE DATA ", data)
-    // A = data.contacts[6-1].value
-    // if (A < 1) {
-    //     let newValuesToPutIn = await getContacts();
-    //     newValuesToPutIn = newValuesToPutIn['contacts']
-       document.getElementById('F').innerText = data['F'] 
-        document.getElementById('H').innerText = data['H']
-        document.getElementById('C').innerText = data['C']
-         document.getElementById('L').innerText = data['L']
-        document.getElementById('B').innerText = data['B']
-      document.getElementById('W2').innerText = data['W2']
+    document.getElementById('F').innerText = data['F'] 
+    document.getElementById('H').innerText = data['H']
+    document.getElementById('C').innerText = data['C']
+    document.getElementById('L').innerText = data['L']
+    document.getElementById('B').innerText = data['B']
+    document.getElementById('W2').innerText = data['W2']
     document.getElementById("A").textContent = data['A']
     await document.getElementById('One').click();
 }
 
 
-async function handleClickT1() {
-    console.log("TSET1");
-    await document.getElementById('BuildingsT').click();
-    await document.getElementById('reset').click();
 
-
-    await document.querySelector('.BuildingButtonUp.BuildingButton.Log_Cabin').click();
-    await document.querySelector('.BuildingButtonUp.BuildingButton.Log_Cabin').click();
-    await document.querySelector('.BuildingButtonUp.BuildingButton.Clay_Pit').click();
-    await document.getElementById('NextW').click();
-
-}
-
-async function handleClickT2() {
-    await document.querySelector('.BuildingButtonUp.BuildingButton.Log_Cabin').click();
-    await document.querySelector('.BuildingButtonUp.BuildingButton.Log_Cabin').click();
-    await document.querySelector('.BuildingButtonUp.BuildingButton.Clay_Pit').click();
-    await document.getElementById('NextW').click();
-}
 
 function changeValueOfInputForJobs() { // these are the buttons that control how many people are added for a job button ('.B')
     id = this.id
-    console.log("you clicked this:  ", id)
-    console.log()
     setVal('job_modifier',{value: jobMulti[id] } )
 
     const AdjustB = document.querySelectorAll('.Adjust');
@@ -266,9 +256,7 @@ async function getVal( variableName, currUserName = getCookie('userID').split('u
 }
 
 async function resett(newV=0) {     // function from resett it is used 
-    console.log("RESETTING")
     await document.getElementById('InventoryT').click();
-
     document.getElementById("Season").textContent = "Spring";
     document.getElementById('One').click();
     const requestSupply = document.querySelectorAll('.requestSupply');
@@ -276,9 +264,7 @@ async function resett(newV=0) {     // function from resett it is used
         rs.className = rs.className.replace(" active", "");
     });
 
- //   await tabReset();
     currUserName = getCookie('userID').split('userID=')[1]
-    console.log(" Going to reset this user---    ::::::  ", currUserName)
     try {
          const response = await fetch(backendpath + `/reset/${currUserName}`, {
                 method: 'PATCH',
@@ -372,22 +358,19 @@ async function getAllUsers() {
 document.addEventListener('DOMContentLoaded', async (event) => {
 
     cookies = getCookie()
-    console.log("COOKIES  ", cookies)
     if (cookies.includes("userID")) {
         console.log("Already set this one up")
     }
     else {
-        console.log("set up a new cookie")
         uu = generateUUID()
         setCookie('userID', uu, 365)
         
     }
     // set up a new 
-    console.log("Test1")
 
     cookie = getCookie()
     cookie = cookie.split('userID=')[1]
-    console.log("COOKIE  ::::   ", cookie)
+    //console.log("COOKIE  ::::   ", cookie)
     const response = await fetch(backendpath + `/add_user/${cookie}`, {
         method: 'POST',
         headers: {
@@ -759,4 +742,18 @@ async function countrySetUpNative() {
         console.error('There was a problem with your fetch operation:', error);
         throw error;
     }
+}
+
+function nextModal() {
+    console.log("NEXT")
+    numbertoClose = this.id[4]
+    numbertoOpen = this.id[5]
+    console.log("CLOSE  ", numbertoClose,   "modal" + numbertoClose, "   Open ", numbertoOpen, "modal" + numbertoOpen)
+
+
+    let close = document.getElementById("modal" +numbertoClose)
+    close.style.display = 'none'
+    let open = document.getElementById("modal" +numbertoOpen)
+    open.style.display = 'block'
+
 }

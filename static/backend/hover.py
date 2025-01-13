@@ -233,7 +233,7 @@ def toolshopString(int):
     else:
         string += '<div class="flexitem" style="display: flex; justify-content: space-between; width: 100%;"><div style="text-align: left; ">'
         string += str(int) + '</div>'
-    return string
+    return string 
 buildingLevels = [
         {"capacity" : 0, "efficiency" : 1},
         { "capacity" : 10, "efficiency" : 1, "work" : 5, "cost" : {"Wood" : 5, "Bricks" : 0}, "string" : TH2string()},

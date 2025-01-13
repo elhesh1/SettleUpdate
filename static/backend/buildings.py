@@ -43,9 +43,6 @@ sys.path.insert(0, two_levels_up)
 from config import app, db
 
 
-
-
-
 def housingCapacity(currUserName):
     user_record = db.session.query(user).filter_by(name=currUserName).first()
     logCabinCount = getattr(user_record,'Log_Cabin')
@@ -61,18 +58,6 @@ def reactToBuildings(currUserName):
     setattr(user_record, 'Kiln_Workers_Max',getattr(user_record,'Kiln' )* building_prices['Kiln']['capacity'])
     setattr(user_record, 'Forge_Workers_Max',getattr(user_record, 'Forge' )* building_prices['Forge']['capacity'])
 
-    # print(buildingsBuiltThisWeek)
-    # for key in buildingsBuiltThisWeek:
-    #     print("key  ", key)
-    #     CurrentlyBuilding = Building.query.get(key)
-    #     if CurrentlyBuilding.working is not None:
-    #         cpw = CurrentlyBuilding.working
-    #         maximum = CurrentlyBuilding.value * CurrentlyBuilding.capacity
-    #         CurrentlyBuilding.working =  {'value': int(cpw['value']), 'maximum': int(maximum), 'minimum': int(cpw['minimum'])}
-    #         db.session.add(CurrentlyBuilding)
-
-
-
     try:
         db.session.commit()
     except Exception as e:
@@ -83,7 +68,6 @@ def buildingsEff(building, currUserName,outputPower=0):
     user_record = db.session.query(user).filter_by(name=currUserName).first() 
     building_prices[building]
 
-    print("IS THIS THE MAP BRO  ", building_prices[building])
     currentBuilding = building_prices[building]
     strength = round(getattr(user_record, 'Strength')* 0.01,2)
     NoToolEfficiency = currentBuilding['tools']['None']
@@ -100,8 +84,6 @@ def buildingsEff(building, currUserName,outputPower=0):
         toolEfficiency = toolOfNote[1]
     baseEfficiency = currentBuilding['tools']['Base']
     otherFactors = []
-    print('building efff ,   ', NoToolEfficiency)
-    print('count   ', )
     if toolMax >= count:
         UsingTool = count
     else:
@@ -121,18 +103,6 @@ def advanceBuildings(currUserName):
     user_record = db.session.query(user).filter_by(name=currUserName).first() 
 
     buildings = ['Mine', 'Kiln', 'Forge', 'Clay_Pit']
-
-
-
-    # building_types = 
-
-    # # Query to filter buildings based on currUserName and specific building types
-    # buildings = user.query.filter(
-    #     user.name == currUserName,
-    #     user.type.in_(building_types)
-    # ).all()
-    # print("CURRENT BUILDINGS : ", buildings)
-
 
     for buildingCurr in buildings:
         if   building_prices[buildingCurr]['working'] is not None:  ####### Action involving workers
@@ -162,7 +132,6 @@ def advanceBuildings(currUserName):
     db.session.commit()
 
 
-
 factoryTrades = [
     
         ['Iron', 1, 'Iron_Hoe', 1],
@@ -172,7 +141,6 @@ factoryTrades = [
         ['Iron', 1, 'Iron_Pickaxe', 1],
         ['Iron', 4, 'Anvil', 1],
 ]
-
 
 def factoryString(currUserName):
     user_record = db.session.query(user).filter_by(name=currUserName).first() 

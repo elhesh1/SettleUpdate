@@ -30,7 +30,7 @@ async function buildingTabSetUp() {
     let buildings = data['buildings']
 
 
-    console.log("BUILDINGS IN THE BUILDING TAB SET UP TYPE SHIT  ",  buildings)
+  //  console.log("BUILDINGS IN THE BUILDING TAB SET UP TYPE SHIT  ",  buildings)
     a = document.getElementById('TownHallcurrently');
     a.innerText = buildings['Town_Hall']['value'];
 

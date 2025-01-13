@@ -136,34 +136,7 @@ def advance(currUserName):
             available = 0
         setattr(user_record, 'Available_value', available)          
         setattr(user_record, 'Population', population)
-            # if leftover > 0:
-            #     print("leftover  ", )
-            #     for j in Building.query.filter(Building.currUserName == currUserName).all():
-            #         print("j ", j)
-            #         if j.working != None:
-            #             print(j.working)
-            #             print("JWOKRVALUE " ,  j.working['value'])
-            #             j.working['value'] -= leftover
-            #             leftover = 0
-            #             if (j.working['value'] < 0):
-            #                 leftover -= j.working['value'] 
-            #                 j.working['value']  -= j.working['value'] 
-            #                 leftover = round(leftover,0)
-            #             print("  JJJJ ", j.working)
-            #             newWork = {'value': j.working['value'], 'maximum': j.working['maximum'], 'minimum': j.working['minimum']}
-            #             print ("newWark", newWork)
-            #             j.working = {'value': int(j.working['value']), 'maximum': int(j.working['maximum']), 'minimum': int(j.working['minimum'])}
-            #             db.session.add(j)
-            #             try:
-            #                 db.session.commit()
-            #             except Exception as e:
-            #                 db.session.rollback()
-            #                 return jsonify({"message": f"An error occurred: {str(e)}"}), 500
-
-
-
-
-    #         available.value = 0
+ 
 
     week = getattr(user_record, 'week')
     week += 1

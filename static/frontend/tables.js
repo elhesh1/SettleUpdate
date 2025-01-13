@@ -14,7 +14,7 @@ async function takeInventory() {
     try {
         let values = await getResources(); 
         let bruh = values.resources; 
-        console.log( bruh)
+       // console.log( bruh)
         i = 0
         Object.keys(bruh).forEach(key => {
             const resource = bruh[key];
@@ -159,50 +159,40 @@ async function getQueue() {
         }
         let string = "<table><thead><tr><th>Name</th><th>Value</th><th>  </th><th></th></tr></thead><tbody>";
         const BQueue = await response.json();
+        console.log("BQ  ", BQueue['currently'])
         queue = stringQueueToArray(BQueue['queue'])
         let b2 = BQueue['buildingList'] // b2 is just the list of buildings
-        let buildings = BQueue['buildings']
-        
         for (let i = 0 ; i < queue.length ; i++) {
-            console.log(queue[i])
-            console.log("THIS IS important it is the buildings", queue[i][1])
-        //     console.log(buildingNames)
-        //     if (building['type'] === undefined) {
-        //         btype = buildingNames[building['name']]
-        //         if (building['name'] == 2){
-        //             btype = 'Town Hall'
-        //         } else if (building['name'] == 7) {
-        //             btype = 'Tool Shop'
-        //         }
+
             string += `<tr><td>${queue[i][1].split('Current')[0].replace(/_/g, ' ')}</td><td>${queue[i][2]}</td><td>${' ' }</td></tr>`;
+            
+            const parts = BQueue['currently'].split('-');
+            for (let j = 0; j < parts.length; j += 1) {
+           
+                if (queue[i][1].split('Current')[0] == parts[j].split(' ')[1]) {
 
-        //     } else {
-        //         console.log("BUIDLINGS", b2)
+                    totalWork = buildingPrices[queue[i][1].split('Current')[0]];
 
-
-
-                // numberName = buildings[i]['name']
-                // console.log(numberName, "   ", buildingOffset)
-                // while( numberName > buildingOffset) {
-                //     numberName -= buildingOffset
-                //     console.log("NEW NUMBER NAME ", numberName)
-                // }
-                // numberName -= 1
-                // console.log("NUMBER NAME  ; ", numberName)
-                // totalWork = b2[numberName]['work'];
-                
-                // if (totalWork == -1) {
-                //     //// get value from lookuptable
-                //     totalWork = 5
-                // }
-                // progress = totalWork-buildings[i]['value'] 
-                // string +=  '<tr><td colspan="3"><progress id="file" max="'+ totalWork + '" value="' +progress  +'"></progress></td></tr>';
-        //     }
+                    if (totalWork == 10000) { // make this future proof -- its not :(
+                        Thlevel = await getVal('Town_Hall')
+                        console.log("RIGHT HERE DOGG ", Thlevel)
+                        if (Thlevel == 0) { totalWork = 5}
+                        if (Thlevel == 1) { totalWork = 15}
+                        if (Thlevel == 2) { totalWork = 60}
+                        if (Thlevel == 3) { totalWork = 5000}
+                    }   
+                    else if (totalWork == 10001)  {
+                        TSlevel = await  getVal('Tool_Shop')
+                        if (TSlevel == 0) { totalWork = 8}
+                        if (TSlevel == 1) { totalWork = 150}
+                        if (TSlevel == 2) { totalWork = 5000}
+                    }  
+                    progress = totalWork - parts[j].split(' ')[2]
+                    string +=  '<tr><td colspan="3"><progress id="file" max="'+ totalWork + '" value="' +progress  +'"></progress></td></tr>';
+                }
+            }
+ 
         }
-
-
-
-
 
 
         

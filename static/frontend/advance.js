@@ -117,7 +117,6 @@ async function advance() {
 
     const buildingQNumbers = document.querySelectorAll('.BuildingNumberCurrent');
     buildingQNumbers.forEach(element => {
-        console.log('kmon mang')
         element.innerText = '0';
     });
    
@@ -139,9 +138,9 @@ async function advanceJob() {
 }
 
 async function addBuildings(buildingChange) {
-    console.log("adding building bruh  " , buildingChange)
+  //  console.log("adding building bruh  " , buildingChange)
     const dataQ = {};
-    console.log(typeof buildingChange)
+  //  console.log(typeof buildingChange)
     buildingChange.forEach((value, key) => {
         dataQ[key] = value;
     });
@@ -154,5 +153,5 @@ async function addBuildings(buildingChange) {
         body: JSON.stringify({dataQ})  
     });
     const data = await response.json();
-    console.log("RESPONSE " , data)
+  //  console.log("RESPONSE " , data)
 }

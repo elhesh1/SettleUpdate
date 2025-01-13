@@ -47,3 +47,14 @@ const BuildingShown = {
     2 : 'xAM',
 }
 
+const buildingPrices = {
+    'Log_Cabin' : 4,
+    'Town_Hall' : 10000,
+    'Clay_Pit' : 5,
+    'Mine' : 15,
+    'Kiln' : 3,
+    'Forge' : 2,
+    'Tool_Shop' : 10001
+
+
+}

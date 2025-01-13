@@ -509,3 +509,20 @@ align-self: center;
 #toolSupply { grid-column: 2/span 1;}
 #resourceSupply { grid-column: 3/span 1;}
 #EnglandExplanation {     text-align: center;}
+
+.modal {display: none; 
+    position: fixed;
+    z-index: 1; 
+    align-self: center;
+    justify-self: center;
+    width: 150vh; 
+    height: 100vh; 
+    overflow: auto; 
+    background-color: rgb(255, 255, 255); 
+}
+
+.tutorialpic {
+    justify-self: center;
+
+
+}
