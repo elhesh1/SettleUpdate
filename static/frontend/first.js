@@ -1,6 +1,6 @@
- window.onload = function() {
-    setGame();
- }
+//  window.onload = function() {
+//     setGame();
+//  }
 
 
 backendpath = `https://americagame-d4e96c50eefc.herokuapp.com/`
@@ -356,7 +356,7 @@ async function getAllUsers() {
 
 
 document.addEventListener('DOMContentLoaded', async (event) => {
-
+    console.log("Set up that shit")
     cookies = getCookie()
     if (cookies.includes("userID")) {
         console.log("Already set this one up")
@@ -380,6 +380,7 @@ document.addEventListener('DOMContentLoaded', async (event) => {
     });
     const responseData = await response.json();
    // countrySetUpNative();
+   setGame();
 });
 
 function getCookie() {
