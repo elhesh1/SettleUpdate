@@ -198,8 +198,6 @@ def buildbuild(c,i,currUserName):
            #     print("RIGHT HERE   MISTAKE  ", currently_building_queue, "   ", currently_building)
 
                 if currently_building[1].split('Current')[0] == c[1].split('Current')[0]:
-             #       print("THIS JOHN is NOT empty lmao take a look inside", currently_building)
-                    #currently_building[2]  # this is the work left
              #       print(currently_building[2]  , "   and   ", weeklyBuildPower, "    and ", currently_building_queue[i])
                     if weeklyBuildPower >= currently_building[2]:  # We can build the building
                         weeklyBuildPower -= currently_building[2]  
@@ -207,8 +205,6 @@ def buildbuild(c,i,currUserName):
                       #  print(" RIGH HERE DOING SOME SUBTRACTING   ", weeklyBuildPower, currently_building, "    and   ", currently_building[2])
                         
                         found_building = True  
-
-
 
                         buildings_to_add.append((0,currently_building[1] ,0))
                   ##      print("                                                               Adding a building woohoo")
@@ -341,8 +337,8 @@ def farmerEff(season,currUserName):
         count = int(getattr(user_record, 'Farmer_value'))
         if int(season) == 1:
             IronHoeMax = int(getattr(user_record, 'Iron_Hoe'))
-            IronHoeEfficiency = 1
-            NoToolEfficiency = 0.5 
+            IronHoeEfficiency = 1.25
+            NoToolEfficiency = 0.55
             if IronHoeMax >= count:
                 UsingIronHoe = count
             else:
